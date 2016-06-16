@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/bespeak_tab_color_nor" />
+            <corners android:bottomRightRadius="5dp" android:topRightRadius="5dp" android:bottomLeftRadius="0dp" android:topLeftRadius="0dp" />
+            <stroke android:color="@color/bespeak_tab_color_nor" android:width="2dp"></stroke>
+        </shape>
+    </item>
+
+    <item android:state_focused="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/bespeak_tab_color_nor" />
+            <corners android:bottomRightRadius="5dp" android:topRightRadius="5dp" android:bottomLeftRadius="0dp" android:topLeftRadius="0dp"/>
+            <stroke android:color="@color/bespeak_tab_color_nor" android:width="2dp"></stroke>
+        </shape>
+    </item>
+
+    <item android:state_checked="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/bespeak_tab_color_nor" />
+            <corners android:bottomRightRadius="5dp" android:topRightRadius="5dp" android:bottomLeftRadius="0dp" android:topLeftRadius="0dp"/>
+            <stroke android:color="@color/bespeak_tab_color_nor" android:width="2dp"></stroke>
+        </shape>
+    </item>
+
+    <item >
+        <shape android:shape="rectangle">
+            <solid android:color="@color/bespeak_tab_color_act" />
+            <corners android:bottomRightRadius="5dp" android:topRightRadius="5dp" android:bottomLeftRadius="0dp" android:topLeftRadius="0dp"/>
+            <stroke android:color="@color/bespeak_tab_color_nor" android:width="2dp"></stroke>
+        </shape>
+    </item>
+
+</selector>

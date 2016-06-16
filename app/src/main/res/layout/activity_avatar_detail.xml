@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:orientation="horizontal" >-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/tv_toolbar_title"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textColor="@color/white"-->
+                <!--android:textSize="18sp" />-->
+        <!--</LinearLayout>-->
+    </android.support.v7.widget.Toolbar>
+
+
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
+
+            <FrameLayout
+                android:id="@+id/btn_user_icon"
+                style="@style/clickablelayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    style="@style/text_style_user_detail1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/user_icon" />
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    app:fadeDuration="300"
+                    app:roundAsCircle="true"
+                    app:actualImageScaleType="focusCrop"
+                    android:layout_gravity="right|center_vertical"
+                    android:layout_marginRight="30dp"
+                    android:id="@+id/image_userdetail_icon"
+                    app:placeholderImage="@color/colorPrimary"
+                    app:placeholderImageScaleType="fitCenter"/>
+
+
+                <ProgressBar
+                    android:id="@+id/progress_user_icon"
+                    style="?android:attr/progressBarStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/ic_arrow_right"
+                    android:layout_gravity="right|center_vertical" />
+            </FrameLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_size"
+                android:layout_gravity="bottom"
+                android:background="@color/divider" />
+
+            <FrameLayout
+                android:id="@+id/btn_user_name"
+                style="@style/clickablelayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    style="@style/text_style_user_detail1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/name" />
+
+                <TextView
+                    android:id="@+id/tv_userdetail_name"
+                    style="@style/text_style_user_detail2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|center_vertical"
+                    android:background="@color/transparent"
+                    android:text="@string/unknown_name"
+                    android:gravity="right" />
+            </FrameLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_size"
+                android:background="@color/divider" />
+
+            <LinearLayout
+                android:id="@+id/layout_user_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <FrameLayout
+                    android:id="@+id/btn_user_phone"
+                    style="@style/clickablelayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        style="@style/text_style_user_detail1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/user_phone" />
+
+                    <TextView
+                        android:id="@+id/tv_userdetail_phone"
+                        style="@style/text_style_user_detail2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableRight="@drawable/ic_arrow_right"
+                        android:drawablePadding="10dp"
+                        android:paddingRight="10dp"
+                        android:layout_gravity="right|center_vertical"
+                        android:background="@color/transparent"
+                        android:gravity="right"
+                        android:minWidth="200dp" />
+                </FrameLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/divider_size"
+                    android:background="@color/divider" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_size"
+                android:layout_gravity="bottom"
+                android:background="@color/divider" />
+
+            <LinearLayout
+                android:id="@+id/layout_user_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <FrameLayout
+                    android:id="@+id/btn_user_email"
+                    style="@style/clickablelayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        style="@style/text_style_user_detail1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/user_email" />
+
+                    <TextView
+                        android:id="@+id/tv_userdetail_email"
+                        style="@style/text_style_user_detail2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|center_vertical"
+                        android:background="@color/transparent"
+                        android:gravity="right"
+                        android:drawableRight="@drawable/ic_arrow_right"
+                        android:drawablePadding="10dp"
+                        android:paddingRight="10dp"
+                        android:minWidth="200dp" />
+                </FrameLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/divider_size"
+                    android:background="@color/divider" />
+
+                <LinearLayout
+                    android:id="@+id/btn_user_area"
+                    style="@style/clickablelayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical" >
+
+                    <TextView
+                        style="@style/text_style_user_detail1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/user_area" />
+
+                    <TextView
+                        android:id="@+id/tv_userdetail_area"
+                        style="@style/text_style_user_detail2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|center_vertical"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:drawableRight="@drawable/ic_arrow_right"
+                        android:drawablePadding="10dp"
+                        android:paddingRight="10dp"
+                        android:background="@color/transparent"
+                        android:gravity="right"
+                        android:minWidth="200dp"
+                        android:text="" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/divider_size"
+                    android:layout_gravity="bottom"
+                    android:background="@color/divider" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btn_user_goodat"
+                style="@style/clickablelayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal" >
+
+                <TextView
+                    style="@style/text_style_user_detail1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/user_goodat" />
+
+                <TextView
+                    android:id="@+id/tv_userdetail_goodat"
+                    style="@style/text_style_user_detail2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:background="@color/transparent"
+                    android:gravity="right"
+                    android:drawableRight="@drawable/ic_arrow_right"
+                    android:drawablePadding="10dp"
+                    android:paddingRight="10dp"
+                    android:text="@string/default_introduction" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_size"
+                android:layout_gravity="bottom"
+                android:background="@color/divider" />
+
+            <FrameLayout
+                android:id="@+id/btn_user_company"
+                style="@style/clickablelayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    style="@style/text_style_user_detail1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/user_company" />
+
+                <TextView
+                    android:id="@+id/tv_userdetail_company"
+                    style="@style/text_style_user_detail2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/ic_arrow_right"
+                    android:drawablePadding="10dp"
+                    android:paddingRight="10dp"
+                    android:layout_gravity="right|center_vertical"
+                    android:text="@string/default_company" />
+            </FrameLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_size"
+                android:layout_gravity="bottom"
+                android:background="@color/divider" />
+
+            <FrameLayout
+                android:id="@+id/btn_user_upload_files"
+                style="@style/clickablelayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    style="@style/text_style_user_detail1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/upload_verify_files" />
+
+                <TextView
+                    android:id="@+id/tv_userdetail_verify_status"
+                    style="@style/text_style_user_detail2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/ic_arrow_right"
+                    android:drawablePadding="10dp"
+                    android:paddingRight="10dp"
+                    android:layout_gravity="right|center_vertical"
+                    android:text="@string/verify_status" />
+            </FrameLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_size"
+                android:background="@color/divider" />
+
+
+            <FrameLayout
+                android:id="@+id/btn_user_working_life"
+                style="@style/clickablelayout"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    style="@style/text_style_user_detail1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/user_working_life" />
+
+                <TextView
+                    android:id="@+id/tv_userdetail_workinglife"
+                    style="@style/text_style_user_detail2"
+                    android:layout_width="wrap_content"
+                    android:drawableRight="@drawable/ic_arrow_right"
+                    android:drawablePadding="10dp"
+                    android:paddingRight="10dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|center_vertical"
+                    android:text="@string/default_working_life" />
+            </FrameLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_size"
+                android:background="@color/divider" />
+
+
+            <FrameLayout
+                android:id="@+id/btn_user_introduction"
+                style="@style/clickablelayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    style="@style/text_style_user_detail1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/user_introduction" />
+
+                <TextView
+                    android:id="@+id/tv_userdetail_introduction"
+                    style="@style/text_style_user_detail2"
+                    android:layout_width="wrap_content"
+                    android:drawableRight="@drawable/ic_arrow_right"
+                    android:drawablePadding="10dp"
+                    android:paddingRight="10dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|center_vertical"
+                    android:text="@string/default_introduction" />
+            </FrameLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_size"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="10dp"
+                android:background="@color/divider" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

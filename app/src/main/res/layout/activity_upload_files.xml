@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+    <android.support.v7.widget.Toolbar
+        android:id="@id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
+
+        <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:orientation="horizontal" >-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/tv_toolbar_title"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textColor="@color/white"-->
+        <!--android:textSize="18sp" />-->
+        <!--</LinearLayout>-->
+    </android.support.v7.widget.Toolbar>
+
+    <FrameLayout
+        android:id="@+id/btn_file_1"
+        style="@style/clickablelayout"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:drawablePadding="5dp"
+            android:drawableLeft="@drawable/ic_x"
+            android:layout_gravity="center_vertical"
+            android:text="法律职业资格证书" />
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/image_uploadfile_1"
+            app:placeholderImage="@color/colorPrimary"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="right|center_vertical" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/btn_file_2"
+        style="@style/clickablelayout"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textSize="16sp"
+            android:drawablePadding="5dp"
+            android:drawableLeft="@drawable/ic_x"
+            android:text="律师执业证书" />
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/image_uploadfile_2"
+            app:placeholderImage="@color/colorPrimary"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="right|center_vertical" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/btn_file_3"
+        style="@style/clickablelayout"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:drawablePadding="5dp"
+            android:drawableLeft="@drawable/ic_x"
+            android:textSize="16sp"
+            android:text="执业证书年检页" />
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/image_uploadfile_3"
+            app:placeholderImage="@color/colorPrimary"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="right|center_vertical" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/btn_file_4"
+        style="@style/clickablelayout"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:drawablePadding="5dp"
+            android:drawableLeft="@drawable/ic_x"
+            android:layout_gravity="center_vertical"
+            android:text="身份证正面照" />
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/image_uploadfile_4"
+            app:placeholderImage="@color/colorPrimary"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="right|center_vertical" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/btn_file_5"
+        style="@style/clickablelayout"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textSize="16sp"
+            android:drawablePadding="5dp"
+            android:drawableLeft="@drawable/ic_x"
+            android:text="身份证反面照" />
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/image_uploadfile_5"
+            app:placeholderImage="@color/colorPrimary"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="right|center_vertical" />
+    </FrameLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="保存"
+        android:layout_margin="16dp"
+        android:textColor="@color/text_color_selector_white_black"
+        android:background="@drawable/common_btn_selector"
+        android:id="@+id/btn_upload_commit" />
+
+
+</LinearLayout>

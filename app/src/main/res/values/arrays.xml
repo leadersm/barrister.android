@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="hours">
+        <item>"00:00~00:30"</item>
+        <item>"00:30~01:00"</item>
+        <item>"01:00~01:30"</item>
+        <item>"01:30~02:00"</item>
+        <item>"02:00~02:30"</item>
+        <item>"02:30~03:00"</item>
+        <item>"03:00~03:30"</item>
+        <item>"03:30~04:00"</item>
+        <item>"04:00~04:30"</item>
+        <item>"04:30~05:00"</item>
+        <item>"05:00~05:30"</item>
+        <item>"05:30~06:00"</item>
+        <item>"06:00~06:30"</item>
+        <item>"06:30~07:00"</item>
+        <item>"07:00~07:30"</item>
+        <item>"07:30~08:00"</item>
+        <item>"08:00~08:30"</item>
+        <item>"08:30~09:00"</item>
+        <item>"09:00~09:30"</item>
+        <item>"09:30~10:00"</item>
+        <item>"10:00~10:30"</item>
+        <item>"10:30~11:00"</item>
+        <item>"11:00~11:30"</item>
+        <item>"11:30~12:00"</item>
+        <item>"12:00~12:30"</item>
+        <item>"12:30~13:00"</item>
+        <item>"13:00~13:30"</item>
+        <item>"13:30~14:00"</item>
+        <item>"14:00~14:30"</item>
+        <item>"14:30~15:00"</item>
+        <item>"15:00~16:30"</item>
+        <item>"15:30~16:00"</item>
+        <item>"16:00~16:30"</item>
+        <item>"16:30~17:00"</item>
+        <item>"17:00~17:30"</item>
+        <item>"17:30~18:00"</item>
+        <item>"18:00~18:30"</item>
+        <item>"18:30~19:00"</item>
+        <item>"19:00~19:30"</item>
+        <item>"19:30~20:00"</item>
+        <item>"20:00~20:30"</item>
+        <item>"20:30~21:00"</item>
+        <item>"21:00~21:30"</item>
+        <item>"21:30~22:00"</item>
+        <item>"22:00~22:30"</item>
+        <item>"22:30~23:00"</item>
+        <item>"23:00~23:30"</item>
+        <item>"23:30~00:00"</item>
+    </array>
+</resources>

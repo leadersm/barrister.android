@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary">
+
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/consult_tab_bespeak"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:gravity="center"
+                android:checked="true"
+                android:padding="10dp"
+                android:background="@drawable/tab_left_selector"
+                android:text="@string/bespeak_consult"
+                android:textColor="@color/bespeak_tab_textcolor_selector" />
+
+            <RadioButton
+                android:id="@+id/consult_tab_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:gravity="center"
+                android:padding="10dp"
+                android:background="@drawable/tab_right_selector"
+                android:text="@string/phone_consult"
+                android:textColor="@color/bespeak_tab_textcolor_selector" />
+
+        </RadioGroup>
+
+
+    </FrameLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </android.support.v4.view.ViewPager>
+</LinearLayout>

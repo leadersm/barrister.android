@@ -1,0 +1,17 @@
+<Banks >
+    <Bank name="工商银行" pinyin="gsyh">icon_bank_gs.png</Bank>
+    <Bank name="中国银行" pinyin="zgyh">icon_bank_zg.png</Bank>
+    <Bank name="招商银行" pinyin="zsyh">icon_bank_zs.png</Bank>
+    <Bank name="建设银行" pinyin="jsyh">icon_bank_js.png</Bank>
+    <Bank name="交通银行" pinyin="jtyh">icon_bank_jt.png</Bank>
+    <Bank name="农业银行" pinyin="nyyh">icon_bank_ny.png</Bank>
+    <Bank name="邮政储蓄" pinyin="yzcx">icon_bank_yc.png</Bank>
+    <Bank name="民生银行" pinyin="msyh">icon_bank_ms.png</Bank>
+    <Bank name="浦发银行" pinyin="pfyh">icon_bank_pf.png</Bank>
+    <Bank name="北京银行" pinyin="bjyh">icon_bank_bj.png</Bank>
+    <Bank name="广大银行" pinyin="gdyh">icon_bank_gd.png</Bank>
+    <Bank name="广发银行" pinyin="gdyh">icon_bank_gf.png</Bank>
+    <Bank name="华夏银行" pinyin="hxyh">icon_bank_hx.png</Bank>
+    <Bank name="兴业银行" pinyin="xyyh">icon_bank_xy.png</Bank>
+    <Bank name="中信银行" pinyin="zxyh">icon_bank_zx.png</Bank>
+</Banks>

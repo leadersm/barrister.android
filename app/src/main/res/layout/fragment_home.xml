@@ -1,0 +1,306 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_common">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/tab_home"
+                android:textColor="#efefef"
+                android:textSize="20sp" />
+        </FrameLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <!-- TODO: Update blank fragment layout -->
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="150dp">
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/viewpager_home_images"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal|top">
+                    <!--<android.support.v4.view.PagerTabStrip-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:id="@+id/pagertabstrip"-->
+                    <!--android:layout_gravity="right|bottom" />-->
+
+                </android.support.v4.view.ViewPager>
+
+                <com.lsm.barrister.ui.widget.CirclePageIndicator
+                    android:id="@+id/indicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_gravity="bottom"
+                    android:padding="10dp" />
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/bg_common"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:src="@drawable/circle_status_red"
+                        android:id="@+id/image_home_staus" />
+
+                    <TextView
+                        android:id="@+id/tv_home_accept_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        android:textSize="16sp"
+                        android:gravity="center"
+                        android:text="当前状态：接受预约" />
+                </LinearLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_height="50dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="订单统计"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:layout_gravity="center_vertical"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/tv_home_order_qty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="累计订单23"
+                        android:drawableRight="@drawable/ic_arrow_right"
+                        android:drawablePadding="10dp"
+                        android:layout_gravity="right|center_vertical" />
+                </FrameLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/divider_size"
+                    android:background="@color/divider" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:layout_margin="10dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_home_yue"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="30dp"
+                            android:id="@+id/image_yue" />
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="余额"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:layout_toRightOf="@+id/image_yue"
+                            android:layout_marginBottom="5dp"
+                            android:id="@+id/textview_yue" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="100"
+                            android:layout_toRightOf="@+id/image_yue"
+                            android:layout_below="@+id/textview_yue"
+                            android:id="@+id/tv_home_yue" />
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="@dimen/divider_size"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/divider" />
+
+                    <RelativeLayout
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:layout_margin="10dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_home_income"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="30dp"
+                            android:id="@+id/image_income" />
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="余额"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:layout_toRightOf="@+id/image_income"
+                            android:layout_marginBottom="5dp"
+                            android:id="@+id/textview_income" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="100"
+                            android:layout_toRightOf="@+id/image_income"
+                            android:layout_below="@+id/textview_income"
+                            android:id="@+id/tv_home_income" />
+                    </RelativeLayout>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/divider_size"
+                    android:background="@color/divider" />
+
+                <Button
+                    android:id="@+id/btn_get_money"
+                    android:layout_width="200dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/ic_getmoney_bg"
+                    android:textColor="@color/text_color_selector_white_black"
+                    android:layout_margin="10dp"
+                    android:text="提现" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:background="@color/white">
+
+                <FrameLayout
+                    android:id="@+id/btn_home_more_cases"
+                    android:clickable="true"
+                    android:background="@drawable/layout_selector"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:text="@string/case_list" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/see_more"
+                        android:drawableRight="@drawable/ic_arrow_right"
+                        android:drawablePadding="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_gravity="right|center_vertical" />
+                </FrameLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/divider_size"
+                    android:background="@color/divider" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerview_home_cases"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:background="@color/white">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:text="待办事项" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/divider_size"
+                    android:background="@color/divider" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerview_home_todos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+
+</android.support.design.widget.CoordinatorLayout>
+

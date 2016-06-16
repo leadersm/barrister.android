@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bottomBarContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="vertical" >
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_size"
+        android:background="@color/divider" />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|fill_horizontal"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/func_menu_home"
+            style="@style/func_menu_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:drawableTop="@drawable/func_main_home_selector"
+            android:text="HOME" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:src="@drawable/footer_menu_line" />
+
+        <RadioButton
+            android:id="@+id/func_menu_my_orders"
+            style="@style/func_menu_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/func_main_myorders_selector"
+            android:visibility="visible"
+            android:text="我的订单" />
+
+        <ImageView
+            android:id="@+id/divider_dubao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:visibility="visible"
+            android:src="@drawable/footer_menu_line" />
+
+        <RadioButton
+            android:id="@+id/func_menu_learning_center"
+            style="@style/func_menu_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/func_main_learning_selector"
+            android:text="学习中心" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:src="@drawable/footer_menu_line" />
+
+        <RadioButton
+            android:id="@+id/func_menu_avatar_center"
+            style="@style/func_menu_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/func_main_avatar_selector"
+            android:text="个人中心" />
+
+    </RadioGroup>
+
+</LinearLayout>

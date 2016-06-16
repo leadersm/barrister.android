@@ -1,0 +1,201 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_common">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/tab_avatar_center"
+                android:textColor="#efefef"
+                android:textSize="20sp" />
+        </FrameLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:id="@+id/btn_user_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/white"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/image_avatar"
+                android:layout_width="54dp"
+                android:layout_height="54dp"
+                app:actualImageScaleType="focusCrop"
+                app:fadeDuration="300"
+                app:placeholderImage="@color/colorPrimary"
+                app:placeholderImageScaleType="fitCenter"
+                app:roundAsCircle="true" />
+
+            <TextView
+                android:id="@+id/tv_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="注册|登录"
+                android:textSize="17sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/btn_my_account"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/layout_selector"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="20dp"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:clickable="true"
+            android:drawableLeft="@drawable/ic_me_account"
+            android:drawablePadding="10dp"
+            android:text="我的账户" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/divider"/>
+        <TextView
+            android:id="@+id/btn_my_msg"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/layout_selector"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="20dp"
+            android:drawablePadding="10dp"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:drawableLeft="@drawable/ic_me_message"
+            android:clickable="true"
+            android:text="我的消息" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/divider"/>
+        <FrameLayout
+            android:id="@+id/btn_authentication"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:clickable="true"
+            android:background="@drawable/layout_selector"
+            android:layout_gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|left"
+                android:textColor="@color/black"
+                android:layout_marginLeft="20dp"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawablePadding="10dp"
+                android:drawableLeft="@drawable/ic_me_verify_status_ok"
+                android:text="认证状态" />
+
+            <TextView
+                android:id="@+id/tv_authentication_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|right"
+                android:layout_marginRight="15dp"
+                android:textSize="14sp"
+                android:text="未认证" />
+
+        </FrameLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/divider"/>
+        <TextView
+            android:id="@+id/btn_my_bispeak_settings"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/layout_selector"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="20dp"
+            android:clickable="true"
+            android:drawablePadding="10dp"
+            android:textColor="@color/black"
+            android:drawableLeft="@drawable/ic_me_jiedan"
+            android:textSize="14sp"
+            android:text="预约设置" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/divider"/>
+        <FrameLayout
+            android:id="@+id/btn_contact_us"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:clickable="true"
+            android:background="@drawable/layout_selector"
+            android:layout_gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|left"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:layout_marginLeft="20dp"
+                android:gravity="center_vertical"
+                android:drawablePadding="10dp"
+                android:drawableLeft="@drawable/ic_me_contact"
+                android:text="联系我们" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|right"
+                android:layout_marginRight="15dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp"
+                android:text="400-958-9595" />
+
+        </FrameLayout>
+
+
+        <TextView
+            android:id="@+id/btn_settings"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/layout_selector"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="20dp"
+            android:textSize="14sp"
+            android:clickable="true"
+            android:drawableLeft="@drawable/ic_me_settings"
+            android:drawablePadding="10dp"
+            android:textColor="@color/black"
+            android:text="@string/settings" />
+
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>
