@@ -10,6 +10,8 @@ package com.lsm.barrister.app;
  */
 public class Constants {
 
+    public static String PUSH_ID = "";
+
     //主题id
     public static final int THEME = 0;
     //调试开关

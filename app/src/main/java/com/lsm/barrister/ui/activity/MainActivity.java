@@ -1,5 +1,7 @@
 package com.lsm.barrister.ui.activity;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,6 +13,8 @@ import android.view.MenuItem;
 import com.androidquery.AQuery;
 import com.lsm.barrister.R;
 import com.lsm.barrister.app.AppConfig;
+import com.lsm.barrister.app.AppManager;
+import com.lsm.barrister.app.UserHelper;
 import com.lsm.barrister.data.entity.User;
 import com.lsm.barrister.ui.fragment.AvaterCenterFragment;
 import com.lsm.barrister.ui.fragment.HomeFragment;
@@ -20,6 +24,8 @@ import com.lsm.barrister.ui.widget.BottomNavigationItem;
 import com.lsm.barrister.ui.widget.BottomNavigationView;
 
 import java.util.HashMap;
+
+import cn.jpush.android.api.JPushInterface;
 
 
 /**
@@ -202,4 +208,38 @@ public class MainActivity extends BaseActivity {
         }
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        AppManager.setMainActivityRunning(true);
+
+        // 启动推送服务
+        JPushInterface.resumePush(getApplicationContext());
+
+    }
+
+
+
+    /**
+     * 程序退出销毁
+     */
+    @Override
+    protected void onDestroy() {
+
+        UserHelper.getInstance().clearListeners();
+
+        super.onDestroy();
+
+        AppManager.setMainActivityRunning(false);
+
+        AppManager.getAppManager().finishAllActivity();
+
+        //取消通知
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        manager.cancelAll();
+
+    }
+
 }

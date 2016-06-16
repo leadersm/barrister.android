@@ -192,8 +192,6 @@ public class AppConfig {
 
     /**
      * 保存版本�?
-     *
-     * @param context
      * @param version
      */
     public void saveVersionCode(int version) {
@@ -261,8 +259,6 @@ public class AppConfig {
 
     /**
      * 离线是否推�?消息
-     *
-     * @param ctx
      * @return
      */
     public boolean isPushMsgOfflineEnabled() {
@@ -272,8 +268,6 @@ public class AppConfig {
     /**
      * 设置离线推�?消息�?��
      *
-     * @param ctx
-     * @param b
      */
     public void setPushMsgOfflineEnabled(boolean b) {
         sp.edit().putBoolean(MODE_PUSH_MSG_OFFLINE_ENABLED, b).commit();
@@ -288,8 +282,6 @@ public class AppConfig {
 
     /**
      * 设置设备注册标志
-     *
-     * @param ctx
      * @param b
      */
     public void setDeviceRegistered(boolean b) {
@@ -298,9 +290,6 @@ public class AppConfig {
 
     /**
      * 保存推�?id
-     *
-     * @param ctx
-     * @param regId
      */
     public void setPushId(String regId) {
         sp.edit().putString(PUSH_REG_ID, regId).commit();
@@ -318,9 +307,6 @@ public class AppConfig {
 
     /**
      * 获取正文字体大小
-     *
-     * @param ctx
-     * @return
      */
     public String getTextSize(Context ctx) {
         return sp.getString(TEXT_SIZE, TEXT_SIZE_MIDDLE);
@@ -328,9 +314,6 @@ public class AppConfig {
 
     /**
      * 设置正文字体大小
-     *
-     * @param ctx
-     * @param TEXTSIZE
      */
     public void setTextSize(Context ctx, String TEXTSIZE) {
         DLog.d(TAG, "setTextSize:" + TEXTSIZE);
@@ -349,9 +332,6 @@ public class AppConfig {
 
     /**
      * 获取Cookie
-     *
-     * @param ctx
-     * @return
      */
     public String getCookie() {
         return sp.getString(COOKIE, "");
@@ -369,8 +349,6 @@ public class AppConfig {
 
     /**
      * 获取密码MD5Cookie
-     *
-     * @param context
      */
     public String getUserPwdCookie() {
         return sp.getString(COOKIE_PWD, null);
@@ -378,8 +356,6 @@ public class AppConfig {
 
     /**
      * 保存第三方id
-     *
-     * @param context
      */
     public void saveCookieTicketKey(String ticket) {
         DLog.d(TAG, "saveCookieTicketKey:" + ticket);
@@ -389,9 +365,6 @@ public class AppConfig {
 
     /**
      * 获取第三方id
-     *
-     * @param context
-     * @return
      */
     public String getCookieTicketKey() {
         return sp.getString(COOKIE_USER_TICKET, null);
@@ -407,9 +380,6 @@ public class AppConfig {
 
     /**
      * 设置强制更新
-     *
-     * @param context
-     * @param b
      */
     public void setForceUpdate(boolean b) {
         editor.putBoolean(FORCE_UPDATE, b).commit();
@@ -427,8 +397,6 @@ public class AppConfig {
 
     /**
      * 移除
-     *
-     * @param context
      * @param key
      */
     public void remove(String key) {
@@ -558,6 +526,16 @@ public class AppConfig {
             e.printStackTrace();
         }
     }
+
+    public String getPushTag(Context ctx) {
+        return sp.getString("pushTag", null);
+    }
+
+    public void setPushTag(String tag) {
+        sp.edit().putString("pushTag", tag).commit();
+    }
+
+
 
     public List<Bank> getBanks() {
         return banks;
