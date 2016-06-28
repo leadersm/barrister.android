@@ -2,6 +2,7 @@ package com.lsm.barrister.ui.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -28,7 +29,7 @@ import java.io.File;
 /****
  * 用户详情信息页
  */
-public class AvatarDetailActivity extends BaseActivity {
+public class AvatarDetailActivity extends BaseActivity implements UserHelper.UserActionListener{
 
     private static final String TAG = AvatarDetailActivity.class.getSimpleName();
 
@@ -46,14 +47,30 @@ public class AvatarDetailActivity extends BaseActivity {
 
         user = AppConfig.getUser(this);
 
-        if(user==null){
+        if (user == null) {
             System.err.println("没有找到用户。。。");
             return;
         }
 
-        DLog.d(TAG,user.toString());
+        DLog.d(TAG, user.toString());
 
-        if(!TextUtils.isEmpty(user.getUserIcon())){
+        init();
+
+        UserHelper.getInstance().addOnUserActionListener(this);
+    }
+
+    private void init() {
+        aq.id(R.id.tv_userdetail_name).text(user.getName());
+        aq.id(R.id.btn_user_name).clicked(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TextUtils.isEmpty(user.getName())) {
+                    UIHelper.goModifyInfoActivity(AvatarDetailActivity.this, User.KEY_NAME, user.getName());
+                }
+            }
+        });
+
+        if (!TextUtils.isEmpty(user.getUserIcon())) {
             SimpleDraweeView userIconView = (SimpleDraweeView) findViewById(R.id.image_userdetail_icon);
             userIconView.setImageURI(Uri.parse(user.getUserIcon()));
         }
@@ -83,7 +100,7 @@ public class AvatarDetailActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 // TODO 邮箱
-                UIHelper.goModifyInfoActivity(AvatarDetailActivity.this,User.KEY_EMAIL, user.getEmail());
+                UIHelper.goModifyInfoActivity(AvatarDetailActivity.this, User.KEY_EMAIL, user.getEmail());
             }
         });
 
@@ -94,7 +111,7 @@ public class AvatarDetailActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 // TODO 地区（省+市）
-                UIHelper.goModifyInfoActivity(AvatarDetailActivity.this,User.KEY_AREA, user.getArea());
+                UIHelper.goModifyInfoActivity(AvatarDetailActivity.this, User.KEY_AREA, user.getArea());
             }
         });
 
@@ -104,34 +121,34 @@ public class AvatarDetailActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 // TODO 邮箱
-                UIHelper.goModifyInfoActivity(AvatarDetailActivity.this,User.KEY_GOOD_AT, user.getGoodAt());
+                UIHelper.goModifyBizActivity(AvatarDetailActivity.this,User.KEY_GOOD_AT);
             }
         });
 
-        aq.id(R.id.tv_userdetail_company).text(user.getCompany());
+        aq.id(R.id.tv_userdetail_company).text(user.getLawOffice());
         //律所
         aq.id(R.id.btn_user_company).clicked(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // TODO 律所
-                UIHelper.goModifyInfoActivity(AvatarDetailActivity.this,User.KEY_COMPANY,user.getCompany());
+                UIHelper.goModifyInfoActivity(AvatarDetailActivity.this, User.KEY_COMPANY, user.getLawOffice());
             }
         });
 
         String statusString = null;
-        int statusColor = 0xcccccc;
-        if(TextUtils.isEmpty(user.getVerifyStatus()) || user.getVerifyStatus().equals(User.STATUS_UNAUTHERIZED)){
+        int statusColor = Color.parseColor("#cccccc");
+        if (TextUtils.isEmpty(user.getVerifyStatus()) || user.getVerifyStatus().equals(User.STATUS_UNAUTHERIZED)) {
             statusString = "未认证";
-            statusColor = 0xcccccc;
-        }else if(user.getVerifyStatus().equals(User.STATUS_SUCCESS)){
+            statusColor = Color.parseColor("#cccccc");
+        } else if (user.getVerifyStatus().equals(User.STATUS_SUCCESS)) {
             statusString = "认证成功";
-            statusColor = 0x31F77E;
-        }else if(user.getVerifyStatus().equals(User.STATUS_VERIFYING)){
+            statusColor = Color.parseColor("#31F77E");//0x31F77E;
+        } else if (user.getVerifyStatus().equals(User.STATUS_VERIFYING)) {
             statusString = "验证中";
-            statusColor = 0x59E1FA;
-        }else if(user.getVerifyStatus().equals(User.STATUS_FAILED)){
+            statusColor = Color.parseColor("#59E1FA");//0x59E1FA;
+        } else if (user.getVerifyStatus().equals(User.STATUS_FAILED)) {
             statusString = "认证失败";
-            statusColor = 0xFF0000;
+            statusColor =  Color.parseColor("#FF0000");//0xFF0000;
         }
 
         aq.id(R.id.tv_userdetail_verify_status).text(statusString).textColor(statusColor);
@@ -141,11 +158,11 @@ public class AvatarDetailActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 
-                if(user.getVerifyStatus().equals(User.STATUS_UNAUTHERIZED)){
+                if (user.getVerifyStatus().equals(User.STATUS_UNAUTHERIZED)) {
                     UIHelper.goUploadFilesActitiy(AvatarDetailActivity.this);
-                }else if(user.getVerifyStatus().equals(User.STATUS_SUCCESS)){
-                }else if(user.getVerifyStatus().equals(User.STATUS_VERIFYING)){
-                }else if(user.getVerifyStatus().equals(User.STATUS_FAILED)){
+                } else if (user.getVerifyStatus().equals(User.STATUS_SUCCESS)) {
+                } else if (user.getVerifyStatus().equals(User.STATUS_VERIFYING)) {
+                } else if (user.getVerifyStatus().equals(User.STATUS_FAILED)) {
                     UIHelper.goUploadFilesActitiy(getApplicationContext());
                 }
             }
@@ -153,12 +170,13 @@ public class AvatarDetailActivity extends BaseActivity {
 
 
         //工作年限需要重新计算，后台给出参加工作时间，根据当前年-开始时间
-        aq.id(R.id.tv_userdetail_workinglife).text(user.getWorkingStartYear());
-        //工作年限
+        aq.id(R.id.tv_userdetail_workinglife).text(user.getEmploymentYears());
+        //从业时间
         aq.id(R.id.btn_user_working_life).clicked(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                // TODO 邮箱employmentYears
+                UIHelper.goModifyInfoActivity(AvatarDetailActivity.this, User.KEY_EMPLOYMENT_YEAR, user.getEmploymentYears());
             }
         });
 
@@ -168,9 +186,83 @@ public class AvatarDetailActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 // TODO 个人简介
-                UIHelper.goModifyInfoActivity(AvatarDetailActivity.this,User.KEY_INTRODUCTION,user.getIntroduction());
+                UIHelper.goModifyInfoActivity(AvatarDetailActivity.this, User.KEY_INTRODUCTION, user.getIntroduction());
             }
         });
+    }
+
+    private void updateUserInfo() {
+        aq.id(R.id.tv_userdetail_name).text(user.getName());
+
+        if (!TextUtils.isEmpty(user.getUserIcon())) {
+            SimpleDraweeView userIconView = (SimpleDraweeView) findViewById(R.id.image_userdetail_icon);
+            userIconView.setImageURI(Uri.parse(user.getUserIcon()));
+        }
+
+        //头像
+        aq.id(R.id.btn_user_icon).clicked(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showChoosePicDialog();
+            }
+        });
+
+        aq.id(R.id.tv_userdetail_phone).text(user.getPhone());
+
+        //电话
+        aq.id(R.id.btn_user_phone).clicked(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        aq.id(R.id.tv_userdetail_email).text(user.getEmail());
+
+        aq.id(R.id.tv_userdetail_area).text(user.getArea());
+
+        aq.id(R.id.tv_userdetail_goodat).text(user.getGoodAt());
+
+        aq.id(R.id.tv_userdetail_company).text(user.getLawOffice());
+
+        String statusString = null;
+        int statusColor = Color.parseColor("#cccccc");
+        if (TextUtils.isEmpty(user.getVerifyStatus()) || user.getVerifyStatus().equals(User.STATUS_UNAUTHERIZED)) {
+            statusString = "未认证";
+            statusColor = Color.parseColor("#cccccc");
+        } else if (user.getVerifyStatus().equals(User.STATUS_SUCCESS)) {
+            statusString = "认证成功";
+            statusColor = Color.parseColor("#31F77E");//0x31F77E;
+        } else if (user.getVerifyStatus().equals(User.STATUS_VERIFYING)) {
+            statusString = "验证中";
+            statusColor = Color.parseColor("#59E1FA");//0x59E1FA;
+        } else if (user.getVerifyStatus().equals(User.STATUS_FAILED)) {
+            statusString = "认证失败";
+            statusColor =  Color.parseColor("#FF0000");//0xFF0000;
+        }
+
+        aq.id(R.id.tv_userdetail_verify_status).text(statusString).textColor(statusColor);
+
+        //资质上传
+        aq.id(R.id.btn_user_upload_files).clicked(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (user.getVerifyStatus().equals(User.STATUS_UNAUTHERIZED)) {
+                    UIHelper.goUploadFilesActitiy(AvatarDetailActivity.this);
+                } else if (user.getVerifyStatus().equals(User.STATUS_SUCCESS)) {
+                } else if (user.getVerifyStatus().equals(User.STATUS_VERIFYING)) {
+                } else if (user.getVerifyStatus().equals(User.STATUS_FAILED)) {
+                    UIHelper.goUploadFilesActitiy(getApplicationContext());
+                }
+            }
+        });
+
+        //工作年限需要重新计算，后台给出参加工作时间，根据当前年-开始时间
+        aq.id(R.id.tv_userdetail_workinglife).text(user.getEmploymentYears());
+
+
+        aq.id(R.id.tv_userdetail_introduction).text(user.getIntroduction());
     }
 
     private void setupToolbar() {
@@ -299,15 +391,19 @@ public class AvatarDetailActivity extends BaseActivity {
                     e.printStackTrace();
                 }
 
-            }else if(requestCode == Constants.REQUEST_CODE_FROM_USER_DETAIL){
+            } else if (requestCode == Constants.REQUEST_CODE_FROM_USER_DETAIL) {
 
                 String key = data.getStringExtra(Constants.KEY);
                 String content = data.getStringExtra(Constants.KEY_CONTENT);
 
-                switch (key){
+                switch (key) {
+                    case User.KEY_NAME:
+                        user.setName(content);
+                        aq.id(R.id.tv_userdetail_name).text(user.getName());
+                        break;
                     case User.KEY_COMPANY:
-                        user.setCompany(content);
-                        aq.id(R.id.tv_userdetail_company).text(user.getCompany());
+                        user.setLawOffice(content);
+                        aq.id(R.id.tv_userdetail_company).text(user.getLawOffice());
                         break;
                     case User.KEY_AREA:
                         user.setArea(content);
@@ -321,9 +417,15 @@ public class AvatarDetailActivity extends BaseActivity {
                         user.setIntroduction(content);
                         aq.id(R.id.tv_userdetail_introduction).text(user.getIntroduction());
                         break;
+                    case User.KEY_EMPLOYMENT_YEAR:
+                        user.setEmploymentYears(content);
+                        aq.id(R.id.tv_userdetail_workinglife).text(user.getEmploymentYears());
+                        break;
                 }
 
-                AppConfig.setUser(getApplicationContext(),user);
+                AppConfig.setUser(getApplicationContext(), user);
+
+                UserHelper.getInstance().notifyUpdateUser();
 
             }
         } else {
@@ -334,7 +436,7 @@ public class AvatarDetailActivity extends BaseActivity {
 
     private void upload(File file) throws Exception {
 
-        new UploadUserIconReq(this,file).execute(new Action.Callback<String>(){
+        new UploadUserIconReq(this, file).execute(new Action.Callback<User>() {
 
             @Override
             public void progress() {
@@ -349,19 +451,20 @@ public class AvatarDetailActivity extends BaseActivity {
             }
 
             @Override
-            public void onCompleted(String result) {
-                if(!TextUtils.isEmpty(result)){
+            public void onCompleted(User user) {
+
+                if (user != null) {
+
                     //上传成功
                     FileUtils.deleteFile(tempFile);
 
-                    //通知主页左菜单更换用户头像
-                    UserHelper.getInstance().notityUserIconOrNicknameChanged();
+                    AvatarDetailActivity.this.user.setUserIcon(user.getUserIcon());
 
-                    User user = AppConfig.getUser(getApplicationContext());
+                    AppConfig.setUser(AvatarDetailActivity.this, AvatarDetailActivity.this.user);
 
-                    user.setUserIcon(result);
+                    //更新用户信息
+                    UserHelper.getInstance().notifyUpdateUser();
 
-                    AppConfig.setUser(AvatarDetailActivity.this, user);
                 }
             }
         });
@@ -419,5 +522,30 @@ public class AvatarDetailActivity extends BaseActivity {
     }
 
 
+    @Override
+    public void onSSOLoginCallback(User user) {
 
+    }
+
+    @Override
+    public void onLoginCallback(User user) {
+
+    }
+
+    @Override
+    public void onLogoutCallback() {
+
+    }
+
+    @Override
+    public void onUpdateUser() {
+        this.user = AppConfig.getUser(this);
+        updateUserInfo();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        UserHelper.getInstance().removeListener(this);
+    }
 }

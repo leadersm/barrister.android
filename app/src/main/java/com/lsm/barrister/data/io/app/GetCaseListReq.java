@@ -2,9 +2,9 @@ package com.lsm.barrister.data.io.app;
 
 import android.content.Context;
 
+import com.google.gson.reflect.TypeToken;
 import com.lsm.barrister.data.io.Action;
 import com.lsm.barrister.data.io.IO;
-import com.lsm.barrister.data.io.Test;
 
 /**
  * Created by lvshimin on 16/5/8.
@@ -40,7 +40,7 @@ public class GetCaseListReq extends Action {
     @Override
     public CommonResult parse(String json) throws Exception {
 
-        IO.GetCaseListResult result = Test.getCaseListResult(20);//getFromGson(json, new TypeToken<IO.GetCaseListResult>() {});
+        IO.GetCaseListResult result = getFromGson(json, new TypeToken<IO.GetCaseListResult>() {});//Test.getCaseListResult(20);//
 
         if (result != null) {
 

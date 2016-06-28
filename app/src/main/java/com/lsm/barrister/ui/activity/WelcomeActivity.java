@@ -5,6 +5,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
@@ -13,8 +14,11 @@ import com.lsm.barrister.app.AppConfig;
 import com.lsm.barrister.app.Constants;
 import com.lsm.barrister.app.VersionHelper;
 import com.lsm.barrister.data.entity.User;
+import com.lsm.barrister.push.PushUtil;
 import com.lsm.barrister.ui.UIHelper;
 import com.lsm.barrister.utils.DLog;
+
+import cn.jpush.android.api.JPushInterface;
 
 
 /**
@@ -27,11 +31,42 @@ public class WelcomeActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setupPush();
+
         setContentView(R.layout.activity_welcome);
 
         initAppInfo();
 
         handler.sendEmptyMessageDelayed(MSG_WHAT_GO, DELAYED);
+    }
+
+    private void setupPush() {
+        if (AppConfig.getInstance().getPushId(this) == null) {
+            String pushId = JPushInterface.getRegistrationID(this);
+            DLog.d(TAG, "pushId:" + pushId);
+        }
+
+        String pushTag = AppConfig.getInstance().getPushTag(this);
+
+        //设置别名，防止内外网推送混乱
+        if (Constants.DEBUG) {
+
+            DLog.d(TAG, "推送设置：内网接收");
+
+            if (TextUtils.isEmpty(pushTag) || !pushTag.equals(Constants.TAG_LAN)) {
+                PushUtil.getInstance().setTag(Constants.TAG_LAN);
+            }
+
+        } else {
+
+            DLog.d(TAG, "推送设置：外网接收");
+            if (TextUtils.isEmpty(pushTag) || !pushTag.equals(Constants.TAG_WAN)) {
+                PushUtil.getInstance().setTag(Constants.TAG_WAN);
+            }
+
+        }
+
     }
 
     private static final int MSG_WHAT_GO = 0;

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheckBox xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:button="@null"
+    android:minHeight="20dp"
+    android:orientation="vertical"
+    android:text="业务类型"
+    android:layout_margin="5dp"
+    android:textSize="16sp"
+    android:gravity="center"
+    android:padding="7dp"
+    android:background="@drawable/biz_item_selector"
+    android:id="@+id/tv_modify_biz"
+    android:textColor="@color/text_color_selector_black_white"/>

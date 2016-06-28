@@ -7,12 +7,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.lsm.barrister.R;
+import com.lsm.barrister.app.AppManager;
 
 public class BaseActivity extends AppCompatActivity {
     public ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        AppManager.getAppManager().addActivity(this);
+
         progressDialog = new ProgressDialog(this);
 
     }

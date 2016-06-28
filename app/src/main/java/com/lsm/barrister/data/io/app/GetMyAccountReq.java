@@ -2,9 +2,9 @@ package com.lsm.barrister.data.io.app;
 
 import android.content.Context;
 
+import com.google.gson.reflect.TypeToken;
 import com.lsm.barrister.data.io.Action;
 import com.lsm.barrister.data.io.IO;
-import com.lsm.barrister.data.io.Test;
 
 /**
  * Created by lvshimin on 16/5/8.
@@ -36,7 +36,7 @@ public class GetMyAccountReq extends Action{
     @Override
     public CommonResult parse(String json) throws Exception {
 
-        IO.GetAccountResult result = Test.getMyAccount();//getFromGson(json, new TypeToken<IO.GetAccountResult>() {});
+        IO.GetAccountResult result = getFromGson(json, new TypeToken<IO.GetAccountResult>() {});//Test.getMyAccount();//
 
         if(result!=null){
 

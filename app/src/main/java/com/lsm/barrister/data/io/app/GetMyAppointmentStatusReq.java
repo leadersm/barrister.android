@@ -2,9 +2,9 @@ package com.lsm.barrister.data.io.app;
 
 import android.content.Context;
 
+import com.google.gson.reflect.TypeToken;
 import com.lsm.barrister.data.io.Action;
 import com.lsm.barrister.data.io.IO;
-import com.lsm.barrister.data.io.Test;
 
 /**
  * Created by lvshimin on 16/5/8.
@@ -35,7 +35,7 @@ public class GetMyAppointmentStatusReq extends Action{
     @Override
     public CommonResult parse(String json) throws Exception {
 
-        IO.GetAppointmentStatusResult result = Test.getAppointmentStatusResult();//getFromGson(json, new TypeToken<IO.GetAppointmentStatusResult>() {});
+        IO.GetAppointmentStatusResult result = getFromGson(json, new TypeToken<IO.GetAppointmentStatusResult>() {});//Test.getAppointmentStatusResult();//
 
         if(result!=null){
 

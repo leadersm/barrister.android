@@ -285,21 +285,24 @@ public class MyOrdersFragment extends Fragment {
 
                 @Override
                 public void onError(int errorCode, String msg) {
+                    mSwipeRefreshLayout.setRefreshing(false);
                     mEmptyController.showError(errorCode,msg);
-                    UIHelper.showToast(getContext(),msg);
+//                    UIHelper.showToast(getContext(),msg);
                 }
 
                 @Override
                 public void onCompleted(IO.GetMyOrdersResult getMyOrdersResult) {
+
+                    mSwipeRefreshLayout.setRefreshing(false);
+
                     mRefreshResult = getMyOrdersResult;
 
-                    if(mRefreshResult.orderItems !=null){
+                    if(mRefreshResult.orders !=null){
+                        mEmptyController.showContent();
 
                         items.clear();
-                        items.addAll(mRefreshResult.orderItems);
+                        items.addAll(mRefreshResult.orders);
                         mAdapter.notifyDataSetChanged();
-
-                        mEmptyController.showContent();
 
                     }else {
 
@@ -335,9 +338,9 @@ public class MyOrdersFragment extends Fragment {
                         @Override
                         public void onCompleted(IO.GetMyOrdersResult getMyOrdersResult) {
 
-                            if(getMyOrdersResult.orderItems !=null){
+                            if(getMyOrdersResult.orders !=null){
 
-                                items.addAll(getMyOrdersResult.orderItems);
+                                items.addAll(getMyOrdersResult.orders);
 
                                 mAdapter.notifyDataSetChanged();
 

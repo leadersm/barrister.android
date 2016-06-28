@@ -14,7 +14,7 @@
         app:fadeDuration="300"
         app:roundAsCircle="true"
         app:actualImageScaleType="focusCrop"
-        app:placeholderImage="@color/colorPrimary"
+        app:placeholderImage="@color/placeholder"
         app:placeholderImageScaleType="fitCenter"/>
 
     <LinearLayout

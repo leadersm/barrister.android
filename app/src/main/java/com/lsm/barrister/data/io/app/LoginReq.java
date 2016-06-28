@@ -2,9 +2,9 @@ package com.lsm.barrister.data.io.app;
 
 import android.content.Context;
 
+import com.google.gson.reflect.TypeToken;
 import com.lsm.barrister.data.io.Action;
 import com.lsm.barrister.data.io.IO;
-import com.lsm.barrister.data.io.Test;
 
 /**
  * Created by lvshimin on 16/5/8.
@@ -45,7 +45,7 @@ public class LoginReq extends Action {
     @Override
     public CommonResult parse(String json) throws Exception {
 
-        IO.LoginResult result = Test.getLoginResult();//getFromGson(json,new TypeToken<IO.LoginResult>(){});
+        IO.LoginResult result = getFromGson(json,new TypeToken<IO.LoginResult>(){});//Test.getLoginResult();//
 
         if(result!=null){
 
@@ -57,9 +57,9 @@ public class LoginReq extends Action {
 
             return result;
 
-        }else{
-            throw new Exception("解析错误");
         }
+
+        return null;
 
     }
 

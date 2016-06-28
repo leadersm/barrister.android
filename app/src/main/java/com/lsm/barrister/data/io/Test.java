@@ -64,7 +64,7 @@ public class Test {
         user.setId("1");
         user.setEmail("78783606@qq.com");
         user.setArea("北京市，朝阳区");
-        user.setCompany("xx律师事务所");
+        user.setLawOffice("xx律师事务所");
         user.setAddress("北京市，西直门，D10-11");
         user.setAge("30");
         user.setGender("男");
@@ -77,7 +77,7 @@ public class Test {
         user.setState("北京市");
         user.setCity("朝阳区");
         user.setUserIcon("");
-        user.setWorkingStartYear("1995-01-01");
+        user.setEmploymentYears("1995-01-01");
 
         result.user = user;
 
@@ -118,7 +118,7 @@ public class Test {
         result.totalIncome = "1500";
         result.orderQty = 200;
 
-        List<OrderItem> orderItems = getMyOrdersResult(3).orderItems;
+        List<OrderItem> orderItems = getMyOrdersResult(3).orders;
         List<Case> caseList = getCaseListResult(3).cases;
 
         result.todoList = orderItems;
@@ -159,7 +159,7 @@ public class Test {
         IO.GetLunboAdsResult result = new IO.GetLunboAdsResult();
         result.resultCode = 200;
         result.resultMsg = "success";
-        result.ads = getAds();
+        result.list = getAds();
         return  result;
     }
 
@@ -231,7 +231,7 @@ public class Test {
             item.setCaseType("1");
             orderItems.add(item);
         }
-        result.orderItems = orderItems;
+        result.orders = orderItems;
 
         return result;
     }
@@ -296,7 +296,7 @@ public class Test {
         user.setId("1");
         user.setEmail("78783606@qq.com");
         user.setArea("北京市，朝阳区");
-        user.setCompany("xx律师事务所");
+        user.setLawOffice("xx律师事务所");
         user.setAddress("北京市，西直门，D10-11");
         user.setAge("30");
         user.setGender("男");
@@ -309,7 +309,7 @@ public class Test {
         user.setState("北京市");
         user.setCity("朝阳区");
         user.setUserIcon("");
-        user.setWorkingStartYear("1995-01-01");
+        user.setEmploymentYears("1995-01-01");
 
         result.user = user;
         return result;

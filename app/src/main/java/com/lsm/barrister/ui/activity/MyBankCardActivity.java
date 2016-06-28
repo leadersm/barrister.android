@@ -36,7 +36,6 @@ public class MyBankCardActivity extends BaseActivity {
 
         bankCard = (Account.BankCard) getIntent().getSerializableExtra(KEY);
 
-        DLog.d(TAG, bankCard.toString());
 
         List<AppConfig.Bank> banks = AppConfig.getInstance().getBanks();
         if (banks == null || banks.isEmpty()) {
@@ -44,6 +43,9 @@ public class MyBankCardActivity extends BaseActivity {
         }
 
         if (bankCard != null) {
+
+            DLog.d(TAG, bankCard.toString());
+
             aq.id(R.id.layout_bankcard_detail).visible();
             aq.id(R.id.btn_bankcard_add).gone();
             aq.id(R.id.tv_bankcard_bankname).text(bankCard.getBankCardName());

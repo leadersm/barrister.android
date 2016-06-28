@@ -12,12 +12,6 @@ android {
         versionName "1.0"
         multiDexEnabled true
     }
-    sourceSets {
-        main {
-
-            jniLibs.srcDirs = ['libs']
-        }
-    }
 
     buildTypes {
         release {
@@ -30,32 +24,24 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile files('libs/okhttputils-2_3_8.jar')
     compile 'com.android.support:appcompat-v7:23.2.1'
     compile 'com.android.support:design:23.2.1'
     compile 'com.google.code.gson:gson:2.6.2'
-    compile 'com.android.support:support-v4:23.2.1'
-    compile 'com.android.support:recyclerview-v7:23.2.1'
-    compile files('libs/AQuery.jar')
     compile 'com.inkapplications.viewpageindicator:library:2.4.3'
     compile('com.facebook.fresco:fresco:0.9.0') {
         exclude group: 'com.parse.bolts',
                 module: 'bolts-android'
     }
+    compile files('libs/AQuery.jar')
+    compile files('libs/okhttputils-2_3_8.jar')
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
-    compile files('libs/pinyin4j-2.5.0.jar')
-    compile files('libs/Yuntx_FullLib_v5.2.0r.jar')
-    compile files('libs/baidumapapi_base_v3_6_1.jar')
-    compile files('libs/baidumapapi_map_v3_6_1.jar')
-    compile files('libs/baidumapapi_search_v3_6_1.jar')
-    compile files('libs/locSDK_6.13.jar')
     compile 'com.ogaclejapan.smarttablayout:library:1.6.0@aar'
     //audio
     compile 'net.the4thdimension:audio-wife:1.0.3'
     compile 'io.card:android-sdk:5.3.4'
     compile 'org.jsoup:jsoup:1.8.3'
-    compile files('libs/bolts-android-1.1.4.jar')
     compile files('libs/jpush-android-2.1.5.jar')
     compile files('libs/BaiduLBS_Android.jar')
     compile files('libs/greendao-1.3.7.jar')
+    compile files('libs/bolts-android-1.1.4.jar')
 }

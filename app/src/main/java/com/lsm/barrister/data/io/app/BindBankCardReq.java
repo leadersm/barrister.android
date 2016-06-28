@@ -2,23 +2,32 @@ package com.lsm.barrister.data.io.app;
 
 import android.content.Context;
 
+import com.google.gson.reflect.TypeToken;
 import com.lsm.barrister.app.AppConfig;
 import com.lsm.barrister.data.entity.User;
 import com.lsm.barrister.data.io.Action;
 import com.lsm.barrister.data.io.IO;
-import com.lsm.barrister.data.io.Test;
 
 /**
  * Created by lvshimin on 16/5/8.
  * 绑定银行卡接口
- * <p/>
+ * <p>
  * bindBankCard
  *   提交方式：post
- *   参数:userId,verifyCode,cardNum（卡号）,cardholderName（持卡人姓名），bankName(银行名称)，bankAddress(开户行)
+ *   参数:userId,verifyCode,
+ *      cardNum（卡号）,
+ *      cardholderName（持卡人姓名），
+ *      phone
+ *      bankName(银行名称)，
+ *      bankAddress(开户行),
+ *      cardType,
+ *      logoName
+ *      image
+ *
  *   返回值：resultCode，resultMsg  ；
  *   备注：是否提供更改？？TBD
  */
-public class BindBankCardReq extends Action{
+public class BindBankCardReq extends Action {
 
     String cardNum;
     String cardholderName;
@@ -28,8 +37,8 @@ public class BindBankCardReq extends Action{
     String bankAddress;
     String logoName;
 
-//    cardNum, cardholderName,bankType, bankName, bankAddress
-    public BindBankCardReq(Context context, String cardNum, String cardholderName,String cardholderPhone, String cardType, String bankName, String bankAddress,String logoName) {
+    //    cardNum, cardholderName,bankType, bankName, bankAddress
+    public BindBankCardReq(Context context, String cardNum, String cardholderName, String cardholderPhone, String cardType, String bankName, String bankAddress, String logoName) {
         super(context);
         this.cardNum = cardNum;
         this.cardholderName = cardholderName;
@@ -39,18 +48,18 @@ public class BindBankCardReq extends Action{
         this.bankAddress = bankAddress;
         this.logoName = logoName;
 
-        params("cardNum",cardNum);
-        params("cardholderName",cardholderName);
-        params("bankPhone",cardholderPhone);
-        params("bankName",bankName);
-        params("bankAddress",bankAddress);
-        params("cardType",cardType);
-        params("logoName",logoName);
+        params("cardNum", cardNum);
+        params("cardholderName", cardholderName);
+        params("bankPhone", cardholderPhone);
+        params("bankName", bankName);
+        params("bankAddress", bankAddress);
+        params("cardType", cardType);
+        params("logoName", logoName);
 
         User user = AppConfig.getUser(context);
 
-        params("userId",user.getId());
-        params("verifyCode",user.getVerifyCode());
+        params("userId", user.getId());
+        params("verifyCode", user.getVerifyCode());
 
     }
 
@@ -67,11 +76,11 @@ public class BindBankCardReq extends Action{
     @Override
     public CommonResult parse(String json) throws Exception {
 
-        final IO.BindBankcardResult result = Test.getBindcardResult();//getFromGson(json,new TypeToken<IO.BindBankcardResult>(){});
+        IO.BindBankcardResult result = getFromGson(json,new TypeToken<IO.BindBankcardResult>(){});//Test.getBindcardResult();//
 
-        if(result!=null){
+        if (result != null) {
 
-            if(result.resultCode == 200){
+            if (result.resultCode == 200) {
 
                 onSafeCompleted(result);
 
@@ -79,9 +88,9 @@ public class BindBankCardReq extends Action{
 
             return result;
 
-        }else{
-            throw new Exception("解析错误");
         }
+
+        return  null;
     }
 
     @Override

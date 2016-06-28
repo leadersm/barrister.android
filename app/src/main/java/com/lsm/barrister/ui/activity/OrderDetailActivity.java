@@ -1,8 +1,10 @@
 package com.lsm.barrister.ui.activity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.androidquery.AQuery;
@@ -14,12 +16,17 @@ import com.lsm.barrister.data.io.app.GetOrderDetailReq;
 import com.lsm.barrister.data.io.app.MakeCallReq;
 import com.lsm.barrister.ui.UIHelper;
 import com.lsm.barrister.ui.adapter.CallHistoryAdapter;
+import com.lsm.barrister.utils.DLog;
+import com.lsm.barrister.utils.TextHandler;
+
+import java.util.Locale;
 
 /**
  * 订单详情页
  */
 public class OrderDetailActivity extends BaseActivity {
 
+    private static final String TAG = OrderDetailActivity.class.getSimpleName();
     AQuery aq;
 
     GetOrderDetailReq mGetOrderDetailReq;
@@ -82,22 +89,22 @@ public class OrderDetailActivity extends BaseActivity {
         }
 
         String status = null;
-        int statusColor = 0x000000;
+        int statusColor = Color.parseColor("#cccccc");
         if(mDetail.getStatus().equals(OrderDetail.STATUS_WAITING)){
             status = "待办";
-            statusColor = 0xffef87;
+            statusColor = Color.parseColor("#ffef87");//ffef87;
         }else if(mDetail.getStatus().equals(OrderDetail.STATUS_DOING)){
             status = "进行中";
-            statusColor = 0x45cd87;
+            statusColor = Color.parseColor("#45cd87");//45cd87;
         }else if(mDetail.getStatus().equals(OrderDetail.STATUS_DONE)){
             status = "已完成";
-            statusColor = 0x59E1FA;
+            statusColor = Color.parseColor("#59E1FA");//59E1FA;
         }else if(mDetail.getStatus().equals(OrderDetail.STATUS_CANCELED)){
             status = "已取消";
-            statusColor = 0x848284;
+            statusColor = Color.parseColor("#848284");//848284;
         }else if(mDetail.getStatus().equals(OrderDetail.STATUS_REFUND)){
             status = "退款中";
-            statusColor = 0xa9f82e;
+            statusColor = Color.parseColor("#a9f82e");//a9f82e;
         }
 
         //status
@@ -109,13 +116,13 @@ public class OrderDetailActivity extends BaseActivity {
         //时间
         aq.id(R.id.tv_order_time).text(mDetail.getPayTime());
         //金额
-        aq.id(R.id.tv_order_payment).text(String.valueOf(mDetail.getPaymentAmount()));
+        aq.id(R.id.tv_order_payment).text(String.format(Locale.CHINA,"%.1f",mDetail.getPaymentAmount()));
         //备注
         aq.id(R.id.tv_order_remark).text(mDetail.getRemarks());
         //用户昵称
         aq.id(R.id.tv_order_nickname).text(mDetail.getCustomerNickname());
         //手机号码
-        aq.id(R.id.tv_order_phone_number).text(mDetail.getCustomerPhone());
+        aq.id(R.id.tv_order_phone_number).text(TextHandler.getHidePhone(mDetail.getCustomerPhone()));
         //通话记录
         if(mDetail.getCallHistories()!=null && !mDetail.getCallHistories().isEmpty()){
             CallHistoryAdapter mHistoryAdapter = new CallHistoryAdapter(this,mDetail.getCallHistories());
@@ -131,6 +138,11 @@ public class OrderDetailActivity extends BaseActivity {
      */
     private void doMakeCall() {
 //        ECHelper.getInstance().makeVoiceCall("8011846500000003");//网络语音电话
+
+        if(TextUtils.isEmpty(mOrderId)){
+            DLog.e(TAG,"orderId is null");
+            return;
+        }
 
         mMakeCallReq = new MakeCallReq(this,mOrderId);
         mMakeCallReq.execute(new Action.Callback<Action.CommonResult>() {

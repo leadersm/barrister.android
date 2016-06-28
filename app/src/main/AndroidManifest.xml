@@ -126,11 +126,11 @@
         <activity android:name=".ui.activity.AppointmentSettingsActivity" />
         <activity android:name=".ui.activity.WebViewActivity" />
         <activity android:name=".ui.activity.MyBankCardActivity" />
-        <activity android:name=".ui.activity.VoIPCallActivity" />
         <activity android:name=".ui.activity.UploadFilesActivity"/>
         <activity android:name=".ui.activity.SetBankCardActivity"/>
         <activity android:name=".ui.activity.GetMoneyActivity"/>
         <activity android:name=".ui.activity.CaseListActivity"/>
+        <activity android:name=".ui.activity.ModifyBizActivity"/>
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
@@ -148,16 +148,6 @@
         <meta-data
             android:name="JPUSH_APPKEY"
             android:value="0c0127f6d6aee11d76de743b" />
-
-        <!-- 1001(360) -->
-        <!-- 1002(应用宝) -->
-        <!-- 1003(华为) -->
-        <!-- 1004(百度) -->
-        <!-- 1005(应用汇) -->
-        <!-- 1006(小米) -->
-        <!-- 1007(豌豆荚) -->
-        <!-- 1008(木蚂蚁) -->
-        <!-- 1009(GooglePlay) -->
 
         <meta-data
             android:name="UMENG_CHANNEL"

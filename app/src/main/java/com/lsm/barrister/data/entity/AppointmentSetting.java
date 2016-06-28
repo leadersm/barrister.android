@@ -11,6 +11,10 @@ import java.util.List;
  */
 public class AppointmentSetting implements Serializable{
 
+    public static final String STATUS_OFF = "0";//不接受预约
+    public static final String STATUS_ON = "1";//接受预约
+    public static final String STATUS_SOLD = "2";//已出售
+
     String date;
     String settings;
     List<HourItem> hours;
@@ -43,6 +47,7 @@ public class AppointmentSetting implements Serializable{
 
         String hour;
         boolean isEnable;
+        boolean isChangeAble;
 
         public String getHour() {
             return hour;
@@ -58,6 +63,14 @@ public class AppointmentSetting implements Serializable{
 
         public void setEnable(boolean enable) {
             isEnable = enable;
+        }
+
+        public boolean isChangeAble() {
+            return isChangeAble;
+        }
+
+        public void setChangeAble(boolean changeAble) {
+            isChangeAble = changeAble;
         }
     }
 }

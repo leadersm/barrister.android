@@ -11,6 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
@@ -132,6 +133,12 @@ public class ModifyAvaterActivity extends BaseActivity {
             maxLength = -1;
             getSupportActionBar().setTitle(R.string.user_company);
 
+        }else if(key.equals(User.KEY_EMPLOYMENT_YEAR)){
+            maxLength = -1;
+            getSupportActionBar().setTitle("从业时间");
+
+            aq.id(R.id.et_modify_user).getEditText().setHint("格式：2010-01-01");
+            aq.id(R.id.et_modify_user).getEditText().setRawInputType(InputType.TYPE_DATETIME_VARIATION_DATE);
         }
 
         aq.id(R.id.btn_modify_user_save).clicked(new View.OnClickListener() {
@@ -151,6 +158,9 @@ public class ModifyAvaterActivity extends BaseActivity {
     private LocationClientOption.LocationMode tempMode = LocationClientOption.LocationMode.Hight_Accuracy;
     private String tempcoor = "bd09ll";
     private int span = 500;
+
+    String province, city, mLocation;
+
     public class MyLocationListener implements BDLocationListener {
 
         @Override
@@ -161,6 +171,12 @@ public class ModifyAvaterActivity extends BaseActivity {
                 aq.id(R.id.et_modify_user).text(location.getProvince()+","+location.getCity());
 
                 DLog.i("Location", "location.getProvince:"+location.getProvince());
+
+                province = location.getProvince();
+
+                city = location.getCity();
+
+                mLocation = location.getLongitude() + "," + location.getLatitude();
 
             }
 
@@ -226,8 +242,18 @@ public class ModifyAvaterActivity extends BaseActivity {
         HashMap<String, String> params = new HashMap<String, String>();
         params.put(key, content);
 
+        if(key.equals(User.KEY_AREA)){
+
+            if(!TextUtils.isEmpty(mLocation))
+                params.put("location",mLocation);
+            if(!TextUtils.isEmpty(city))
+                params.put("city",city);
+            if(!TextUtils.isEmpty(province))
+                params.put("state",province);
+        }
+
         mUpdateUserReq = new UpdateUserInfoReq(this, params);
-        mUpdateUserReq.execute(new Action.Callback<Boolean>() {
+        mUpdateUserReq.execute(new Action.Callback<User>() {
 
             @Override
             public void progress() {
@@ -260,7 +286,7 @@ public class ModifyAvaterActivity extends BaseActivity {
             }
 
             @Override
-            public void onCompleted(Boolean t) {
+            public void onCompleted(User t) {
                 mUpdateUserReq = null;
 
                 progressDialog.dismiss();
@@ -292,10 +318,12 @@ public class ModifyAvaterActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(mUpdateUserReq!=null && mUpdateUserReq.isLoading())
-        {
+        if(mUpdateUserReq!=null && mUpdateUserReq.isLoading()){
             mUpdateUserReq.cancel();
             mUpdateUserReq = null;
         }
+
+        if(mLocationClient!=null)
+            mLocationClient.stop();
     }
 }

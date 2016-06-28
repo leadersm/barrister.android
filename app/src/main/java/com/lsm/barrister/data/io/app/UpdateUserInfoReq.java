@@ -2,9 +2,9 @@ package com.lsm.barrister.data.io.app;
 
 import android.content.Context;
 
+import com.google.gson.reflect.TypeToken;
 import com.lsm.barrister.data.io.Action;
 import com.lsm.barrister.data.io.IO;
-import com.lsm.barrister.data.io.Test;
 
 import java.util.HashMap;
 
@@ -43,7 +43,7 @@ public class UpdateUserInfoReq extends Action{
     @Override
     public CommonResult parse(String json) throws Exception {
 
-        IO.GetUpdateUserResult result = Test.GetUpdateUserResult();//getFromGson(json, new TypeToken<IO.GetUpdateUserResult>() {});
+        IO.GetUpdateUserResult result = getFromGson(json, new TypeToken<IO.GetUpdateUserResult>() {});//Test.GetUpdateUserResult();//
 
         if(result!=null){
 
@@ -55,9 +55,9 @@ public class UpdateUserInfoReq extends Action{
 
             return result;
 
-        }else{
-            throw new Exception("解析错误");
         }
+
+        return null;
     }
 
     @Override

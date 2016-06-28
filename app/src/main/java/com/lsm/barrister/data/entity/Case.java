@@ -271,4 +271,6 @@ public class Case {
     public void setClearingInfo(String clearingInfo) {
         this.clearingInfo = clearingInfo;
     }
+
+
 }

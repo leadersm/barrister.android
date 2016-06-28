@@ -6,42 +6,37 @@ import com.google.gson.reflect.TypeToken;
 import com.lsm.barrister.data.io.Action;
 import com.lsm.barrister.data.io.IO;
 
+
 /**
  * Created by lvshimin on 16/5/8.
- * 订单详情接口
- * <p/>
- * OrderDetail
- *   提交方式：post
- *   参数:userId,orderId,verifyCode
- *   返回值：resultCode，resultMsg , orderDetail；
- *   备注：无
+ * bizAreaAndBizTypeList
+   提交方式：post
+   参数：userId,verifyCode
+   返回值：resultCode，resultMsg,List<BusinessArea> bizAreas 领域列表;List<BusinessType> bizTypes 业务类型;
+   备注：律师端修改专长页面调用加载显示
  */
-public class GetOrderDetailReq extends Action{
+public class GetBizTypeAreaListReq extends Action {
 
-    String orderId;
-
-    public GetOrderDetailReq(Context context, String orderId) {
+    public GetBizTypeAreaListReq(Context context) {
         super(context);
-        this.orderId = orderId;
-
-        params("orderId",orderId);
 
         addUserParams();
     }
 
     @Override
     public String getName() {
-        return GetOrderDetailReq.class.getSimpleName();
+        return GetBizTypeAreaListReq.class.getSimpleName();
     }
 
     @Override
     public String url() {
-        return IO.URL_GET_ORDER_DETAIL;
+        return IO.URL_BIZ_TYPE_AREA_LIST;
     }
 
     @Override
     public CommonResult parse(String json) throws Exception {
-        IO.GetOrderDetailResult result = getFromGson(json, new TypeToken<IO.GetOrderDetailResult>() {});//Test.getOrderDetailResult();//
+
+        IO.GetBizTypeAreaListResult result = getFromGson(json, new TypeToken<IO.GetBizTypeAreaListResult>() {});//Test.getGetBizTypeAreaListResult();//
 
         if(result!=null){
 
@@ -54,12 +49,11 @@ public class GetOrderDetailReq extends Action{
             return result;
 
         }
-
         return null;
     }
 
     @Override
     public int method() {
-        return POST;
+        return GET;
     }
 }

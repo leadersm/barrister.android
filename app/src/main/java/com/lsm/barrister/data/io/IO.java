@@ -3,7 +3,10 @@ package com.lsm.barrister.data.io;
 import com.lsm.barrister.data.entity.Account;
 import com.lsm.barrister.data.entity.Ad;
 import com.lsm.barrister.data.entity.AppointmentSetting;
+import com.lsm.barrister.data.entity.BusinessArea;
+import com.lsm.barrister.data.entity.BusinessType;
 import com.lsm.barrister.data.entity.Case;
+import com.lsm.barrister.data.entity.Channel;
 import com.lsm.barrister.data.entity.IncomeDetailItem;
 import com.lsm.barrister.data.entity.LearningItem;
 import com.lsm.barrister.data.entity.Message;
@@ -19,9 +22,8 @@ import java.util.List;
  */
 public class IO {
 
-    public static final String SERVER = "http://119.254.167.200:8080/lawerservice/";//GTC.测试
-    //	public static final String SERVER = "http://10.0.0.25:8080";//高荣威
-
+    public static final String SERVER = "http://119.254.167.200:8080/lawerservice/";
+//    public static final String SERVER = "http://192.168.1.25:8080/lawerservice/";//高荣威
 
     public static final String URL_LOGOUT = SERVER + "logout.do";
 
@@ -87,7 +89,7 @@ public class IO {
     public static final String URL_HOME_LUNBO_ADS = SERVER + "lunboAds.do";
 
     public static class GetLunboAdsResult extends Action.CommonResult {
-        public List<Ad> ads;
+        public List<Ad> list;
     }
 
 
@@ -119,10 +121,16 @@ public class IO {
         public int total;
     }
 
+    public static final String URL_GET_CHANNEL_LIST = SERVER + "getStudyChannelList.do";
+    public static class GetChannelListResult extends Action.CommonResult{
+        public List<Channel> items;
+    }
+
+
     public static final String URL_GET_ORDER_LIST = SERVER + "myOrderList.do";
 
     public static class GetMyOrdersResult extends Action.CommonResult {
-        public List<OrderItem> orderItems;
+        public List<OrderItem> orders;
         public int total;
     }
 
@@ -203,7 +211,6 @@ public class IO {
         public int total;
     }
 
-
     //案源列表
     public static final String URL_GET_CASE_LIST = SERVER + "caseList.do";
 
@@ -213,6 +220,13 @@ public class IO {
     public static class GetCaseListResult extends Action.CommonResult {
         public List<Case> cases;
         public int total;
+    }
+
+    public static final String URL_BIZ_TYPE_AREA_LIST = SERVER + "bizAreaAndBizTypeList.do";
+
+    public static class GetBizTypeAreaListResult extends Action.CommonResult{
+        public List<BusinessArea> bizAreas ;//领域列表;
+        public List<BusinessType> bizTypes ;//业务类型;
     }
 
 }

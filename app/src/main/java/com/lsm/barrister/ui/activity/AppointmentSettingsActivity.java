@@ -23,6 +23,7 @@ import com.lsm.barrister.data.io.IO;
 import com.lsm.barrister.data.io.app.GetMyAppointmentSettingsReq;
 import com.lsm.barrister.data.io.app.SetAppointmentSettingsReq;
 import com.lsm.barrister.ui.UIHelper;
+import com.lsm.barrister.utils.DLog;
 import com.lsm.barrister.utils.DateFormatUtils;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
@@ -43,6 +44,7 @@ import java.util.List;
 public class AppointmentSettingsActivity extends BaseActivity {
 
 
+    private static final String TAG = AppointmentSettingsActivity.class.getSimpleName();
     SetAppointmentSettingsReq mSetReq;
     GetMyAppointmentSettingsReq mGetReq;
     ViewPager viewPager;
@@ -104,52 +106,61 @@ public class AppointmentSettingsActivity extends BaseActivity {
 
             @Override
             public void onCompleted(IO.GetAppointmentSettingsResult result) {
-                if(result!=null && result.appointmentSettings!=null){
 
-                    List<AppointmentSetting> mySettings = result.appointmentSettings;
+                List<AppointmentSetting> mySettings = result.appointmentSettings;
 
-                    data.clear();
+                if(mySettings == null || mySettings.isEmpty()){
 
-                    if(mySettings!=null)
-                        data.addAll(mySettings);
+                    mySettings = new ArrayList<AppointmentSetting>();
 
-                    if(mySettings.size()<7){
-                        String lastDay = data.get(data.size()-1).getDate();
-                        Date lastDate = DateFormatUtils.parse(lastDay,"yyyy-MM-dd");
-
-                        for(int i=0;i<7-mySettings.size();i++){
-                            String settings = "1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1";
-                            Date date = new Date(lastDate.getTime()+(i+1)*24*3600*1000);
-                            String dateStr = DateFormatUtils.format(date,"yyyy-MM-dd");
-                            System.out.println("add date:"+dateStr);
-                            AppointmentSetting tempSettings = new AppointmentSetting();
-                            tempSettings.setDate(dateStr);
-                            tempSettings.setSettings(settings);
-                            data.add(tempSettings);
-                        }
-                    }
-
-                    for (int i = 0; i < data.size(); i++) {
-
-                        AppointmentSetting item = data.get(i);
-                        String[] flags = item.getSettings().split(",");
-
-                        List<AppointmentSetting.HourItem> hours = new ArrayList<>();
-
-                        for (int j = 0; j < flags.length ; j++) {
-                            AppointmentSetting.HourItem hour = new AppointmentSetting.HourItem();
-                            hour.setEnable(flags[j].equals("1"));
-                            hour.setHour(hourStrs[12+j]);
-                            hours.add(hour);
-                        }
-
-                        item.setHours(hours);
-
-                    }
-
-                    mAdapter.notifyDataSetChanged();
-                    viewPagerTab.setViewPager(viewPager);
+                    AppointmentSetting today = new AppointmentSetting();
+                    today.setDate(DateFormatUtils.format(new Date(),"yyyy-MM-dd"));
+                    today.setSettings("1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1");
+                    mySettings.add(today);
                 }
+
+                data.clear();
+
+                if(mySettings!=null)
+                    data.addAll(mySettings);
+
+                if(mySettings.size()<7){
+                    String lastDay = data.get(data.size()-1).getDate();
+                    Date lastDate = DateFormatUtils.parse(lastDay,"yyyy-MM-dd");
+
+                    for(int i=0;i<7-mySettings.size();i++){
+                        String settings = "1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1";
+                        Date date = new Date(lastDate.getTime()+(i+1)*24*3600*1000);
+                        String dateStr = DateFormatUtils.format(date,"yyyy-MM-dd");
+                        DLog.d(TAG,"add date:"+dateStr);
+                        AppointmentSetting tempSettings = new AppointmentSetting();
+                        tempSettings.setDate(dateStr);
+                        tempSettings.setSettings(settings);
+                        data.add(tempSettings);
+                    }
+                }
+
+                for (int i = 0; i < data.size(); i++) {
+
+                    AppointmentSetting item = data.get(i);
+                    String[] flags = item.getSettings().split(",");
+
+                    List<AppointmentSetting.HourItem> hours = new ArrayList<>();
+
+                    for (int j = 0; j < flags.length ; j++) {
+                        AppointmentSetting.HourItem hour = new AppointmentSetting.HourItem();
+                        hour.setEnable(!flags[j].equals("0"));//是否可预约  非0
+                        hour.setChangeAble(!flags[j].equals("2"));//是否可改变预约状态 非2
+                        hour.setHour(hourStrs[12+j]);
+                        hours.add(hour);
+                    }
+
+                    item.setHours(hours);
+
+                }
+
+                mAdapter.notifyDataSetChanged();
+                viewPagerTab.setViewPager(viewPager);
             }
         });
 
@@ -350,7 +361,7 @@ public class AppointmentSettingsActivity extends BaseActivity {
 
                 final AppointmentSetting.HourItem hour = (AppointmentSetting.HourItem) getItem(position);
 
-                holder.id(R.id.cb_item_half_hour).checked(hour.isEnable()).text(hour.getHour()).clicked(new View.OnClickListener() {
+                holder.id(R.id.cb_item_half_hour).checked(hour.isEnable()).enabled(hour.isChangeAble()).text(hour.getHour()).clicked(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         hour.setEnable(holder.id(R.id.cb_item_half_hour).isChecked());

@@ -2,9 +2,9 @@ package com.lsm.barrister.data.io.app;
 
 import android.content.Context;
 
+import com.google.gson.reflect.TypeToken;
 import com.lsm.barrister.data.io.Action;
 import com.lsm.barrister.data.io.IO;
-import com.lsm.barrister.data.io.Test;
 
 /**
  * Created by lvshimin on 16/5/8.
@@ -19,15 +19,18 @@ import com.lsm.barrister.data.io.Test;
 public class GetStudyListReq extends Action{
     int page ;
     public static int pageSize = 20;
+    String id;
 
-    public GetStudyListReq(Context context, int page) {
+    public GetStudyListReq(Context context,String id, int page) {
         super(context);
+        this.id = id;
         this.page = page;
 
+        params("channelId",id);
         params("page",String.valueOf(page));
         params("pageSize",String.valueOf(pageSize));
 
-        addUserParams();
+//        addUserParams();
     }
 
     @Override
@@ -43,7 +46,7 @@ public class GetStudyListReq extends Action{
     @Override
     public CommonResult parse(String json) throws Exception {
 
-        IO.GetStudyListResult result = Test.getStudyListResult();//getFromGson(json, new TypeToken<IO.GetStudyListResult>() {});
+        IO.GetStudyListResult result = getFromGson(json, new TypeToken<IO.GetStudyListResult>() {});//Test.getStudyListResult();//
 
         if(result!=null){
 
@@ -55,13 +58,13 @@ public class GetStudyListReq extends Action{
 
             return result;
 
-        }else{
-            throw new Exception("解析错误");
         }
+
+        return null;
     }
 
     @Override
     public int method() {
-        return POST;
+        return GET;
     }
 }

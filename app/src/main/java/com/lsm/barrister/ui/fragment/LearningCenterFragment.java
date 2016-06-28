@@ -1,6 +1,7 @@
 package com.lsm.barrister.ui.fragment;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,6 +21,7 @@ import com.lsm.barrister.data.entity.Channel;
 import com.lsm.barrister.data.entity.LearningItem;
 import com.lsm.barrister.data.io.Action;
 import com.lsm.barrister.data.io.IO;
+import com.lsm.barrister.data.io.app.GetStudyChannelListReq;
 import com.lsm.barrister.data.io.app.GetStudyListReq;
 import com.lsm.barrister.ui.UIHelper;
 import com.lsm.barrister.ui.adapter.EmptyController;
@@ -85,16 +88,61 @@ public class LearningCenterFragment extends Fragment  {
 
     SmartTabLayout viewPagerTab;
 
+    View view;
     private void init(View view) {
-        mAdapter = new MyPagerAdapter(getChildFragmentManager());
-        viewPager = (ViewPager) view.findViewById(R.id.viewpager);
-        viewPager.setAdapter(mAdapter);
-
-        viewPagerTab = (SmartTabLayout) view.findViewById(R.id.viewpagertab);
-        viewPagerTab.setViewPager(viewPager);
-
+        this.view = view;
+        loadChannel();
     }
 
+    private void loadChannel() {
+
+        new GetStudyChannelListReq(getContext()).execute(new Action.Callback<IO.GetChannelListResult>() {
+
+            @Override
+            public void progress() {
+
+            }
+
+            @Override
+            public void onError(int errorCode, String msg) {
+                if(isAdded()){
+                    showReloadChannelDialog();
+                }
+            }
+
+            @Override
+            public void onCompleted(IO.GetChannelListResult result) {
+                if(result.items!=null && !result.items.isEmpty()){
+                    data.clear();
+                    data.addAll(result.items);
+
+//                    mAdapter.notifyDataSetChanged();
+//                    viewPagerTab.setViewPager(viewPager);
+
+                    mAdapter = new MyPagerAdapter(getChildFragmentManager());
+                    viewPager = (ViewPager) view.findViewById(R.id.viewpager);
+                    viewPager.setAdapter(mAdapter);
+
+                    viewPagerTab = (SmartTabLayout) view.findViewById(R.id.viewpagertab);
+                    viewPagerTab.setViewPager(viewPager);
+                }
+            }
+        });
+    }
+
+    private void showReloadChannelDialog() {
+        new AlertDialog.Builder(getContext()).setTitle("请重新加载频道").setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                loadChannel();
+            }
+        }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).create().show();
+    }
 
 
     /**
@@ -159,13 +207,15 @@ public class LearningCenterFragment extends Fragment  {
         public void onRefresh() {
             load();
         }
+
         boolean isLoadingMore = false;
+
         private void loadMore(){
 
             if(isLoadingMore)
                 return;
 
-            new GetStudyListReq(getContext(),++page).execute(new Action.Callback<IO.GetStudyListResult>() {
+            new GetStudyListReq(getContext(),mChannel.getId(),++page).execute(new Action.Callback<IO.GetStudyListResult>() {
 
                 @Override
                 public void progress() {
@@ -248,8 +298,9 @@ public class LearningCenterFragment extends Fragment  {
         int page = 1;
         int total;
         GetStudyListReq refreshReq;
+
         private void load() {
-            refreshReq = new GetStudyListReq(getContext(),page = 1);
+            refreshReq = new GetStudyListReq(getContext(),mChannel.getId(),page = 1);
             refreshReq.execute(new Action.Callback<IO.GetStudyListResult>() {
                 @Override
                 public void progress() {

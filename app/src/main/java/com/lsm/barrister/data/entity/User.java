@@ -1,6 +1,7 @@
 package com.lsm.barrister.data.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 对应律师
@@ -20,14 +21,16 @@ public class User implements Serializable {
     public static final String KEY_EMAIL = "mail";
     public static final String KEY_GOOD_AT = "goodAt";
     public static final String KEY_PHONE = "phone";
-    public static final String KEY_NICKNAME = "nickName";
+    public static final String KEY_NICKNAME = "nickname";
+    public static final String KEY_NAME = "name";
     public static final String KEY_USERICON = "userIcon";
     public static final String KEY_INTRODUCTION = "introduction";
     public static final String KEY_ADDRESS = "address";
     public static final String KEY_AREA = "area";
     public static final String KEY_LOCATION = "location";
     public static final String KEY_PUSHID = "pushId";
-    public static final String KEY_COMPANY = "company";
+    public static final String KEY_COMPANY = "lawOffice";
+    public static final String KEY_EMPLOYMENT_YEAR = "employmentYears";
 
     String id;//用户id
     String nickname;//昵称
@@ -45,11 +48,14 @@ public class User implements Serializable {
     String location;//暂时无用，保留字段；位置信息 经纬度：x，y，逗号分隔
     String pushId;//推送id
     String goodAt;//擅长
-    String company;//律所
+    String lawOffice;//律所
     String verifyStatus;//认证状态 ；成功 STATUS_SUCCESS; 失败 STATUS_FAILED; 审核中 STATUS_VERIFYING;
-    String workingStartYear;//从业开始时间。工作年限等于当前年减去工作开始时间
+    String employmentYears;//从业开始时间。工作年限等于当前年减去工作开始时间
 
     String verifyCode;//验证码 ，动态密码，每次用户相关操作需带此参数。
+
+    List<BusinessArea> bizAreas;
+    List<BusinessType> bizTypes;
 
     public String getId() {
         return id;
@@ -187,12 +193,12 @@ public class User implements Serializable {
         this.goodAt = goodAt;
     }
 
-    public String getCompany() {
-        return company;
+    public String getLawOffice() {
+        return lawOffice;
     }
 
-    public void setCompany(String company) {
-        this.company = company;
+    public void setLawOffice(String lawOffice) {
+        this.lawOffice = lawOffice;
     }
 
     public String getVerifyStatus() {
@@ -203,12 +209,28 @@ public class User implements Serializable {
         this.verifyStatus = verifyStatus;
     }
 
-    public String getWorkingStartYear() {
-        return workingStartYear;
+    public String getEmploymentYears() {
+        return employmentYears;
     }
 
-    public void setWorkingStartYear(String workingStartYear) {
-        this.workingStartYear = workingStartYear;
+    public void setEmploymentYears(String employmentYears) {
+        this.employmentYears = employmentYears;
+    }
+
+    public List<BusinessType> getBizTypes() {
+        return bizTypes;
+    }
+
+    public void setBizTypes(List<BusinessType> bizTypes) {
+        this.bizTypes = bizTypes;
+    }
+
+    public List<BusinessArea> getBizAreas() {
+        return bizAreas;
+    }
+
+    public void setBizAreas(List<BusinessArea> bizAreas) {
+        this.bizAreas = bizAreas;
     }
 
     @Override
@@ -230,9 +252,9 @@ public class User implements Serializable {
                 ", location='" + location + '\'' +
                 ", pushId='" + pushId + '\'' +
                 ", goodAt='" + goodAt + '\'' +
-                ", company='" + company + '\'' +
+                ", lawOffice='" + lawOffice + '\'' +
                 ", verifyStatus='" + verifyStatus + '\'' +
-                ", workingStartYear='" + workingStartYear + '\'' +
+                ", employmentYears='" + employmentYears + '\'' +
                 ", verifyCode='" + verifyCode + '\'' +
                 '}';
     }

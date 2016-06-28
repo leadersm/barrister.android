@@ -2,9 +2,9 @@ package com.lsm.barrister.data.io.app;
 
 import android.content.Context;
 
+import com.google.gson.reflect.TypeToken;
 import com.lsm.barrister.data.io.Action;
 import com.lsm.barrister.data.io.IO;
-import com.lsm.barrister.data.io.Test;
 
 /**
  * Title: GetLatestVersionReq.java Description:获取最新版本信息
@@ -36,7 +36,7 @@ public class GetLatestVersionReq extends Action {
     @Override
     public IO.GetAppVersionResult parse(String json) throws Exception {
 
-        IO.GetAppVersionResult result = Test.getAppVersionResult();//getFromGson(json, new TypeToken<IO.GetAppVersionResult>() {});
+        IO.GetAppVersionResult result = getFromGson(json, new TypeToken<IO.GetAppVersionResult>() {});//Test.getAppVersionResult();//
 
         if(result!=null){
 

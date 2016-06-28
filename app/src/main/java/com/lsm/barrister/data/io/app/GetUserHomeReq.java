@@ -2,9 +2,9 @@ package com.lsm.barrister.data.io.app;
 
 import android.content.Context;
 
+import com.google.gson.reflect.TypeToken;
 import com.lsm.barrister.data.io.Action;
 import com.lsm.barrister.data.io.IO;
-import com.lsm.barrister.data.io.Test;
 
 /**
  * Created by lvshimin on 16/5/8.
@@ -37,7 +37,7 @@ public class GetUserHomeReq extends Action{
     @Override
     public CommonResult parse(String json) throws Exception {
 
-        final IO.HomeResult result = Test.getHomeResult();//getFromGson(json,new TypeToken<IO.HomeResult>(){});
+        final IO.HomeResult result = getFromGson(json,new TypeToken<IO.HomeResult>(){});//Test.getHomeResult();//
 
         if(result!=null){
 
@@ -49,9 +49,9 @@ public class GetUserHomeReq extends Action{
 
             return result;
 
-        }else{
-            throw new Exception("解析错误");
         }
+
+        return null;
 
     }
 

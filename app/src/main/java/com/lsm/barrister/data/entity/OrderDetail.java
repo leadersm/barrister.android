@@ -26,13 +26,18 @@ public class OrderDetail implements Serializable {
     String status;//订单状态
     String caseType;//案件类型（中文），财产纠纷，民事纠纷，……
     String payTime;//下单时间
-    int paymentAmount;//支付金额
+    float paymentAmount;//支付金额
     String remarks;//备注
 
     String customerId;//客户id
     String customerNickname;//客户昵称
     String customerIcon;//客户头像
     String customerPhone;//客户电话
+
+    String lawFeedback;//律师小结
+
+    String startTime ;//start_time	开始时间
+    String endTime ;//end_time		结束时间
 
     List<CallHistory> callHistories;//通话记录
 
@@ -84,11 +89,11 @@ public class OrderDetail implements Serializable {
         this.payTime = payTime;
     }
 
-    public int getPaymentAmount() {
+    public float getPaymentAmount() {
         return paymentAmount;
     }
 
-    public void setPaymentAmount(int paymentAmount) {
+    public void setPaymentAmount(float paymentAmount) {
         this.paymentAmount = paymentAmount;
     }
 
@@ -138,5 +143,29 @@ public class OrderDetail implements Serializable {
 
     public void setCallHistories(List<CallHistory> callHistories) {
         this.callHistories = callHistories;
+    }
+
+    public String getLawFeedback() {
+        return lawFeedback;
+    }
+
+    public void setLawFeedback(String lawFeedback) {
+        this.lawFeedback = lawFeedback;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 }

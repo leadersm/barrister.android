@@ -203,10 +203,10 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onCompleted(IO.GetLunboAdsResult getLunboAdsResult) {
-                if (getLunboAdsResult != null && getLunboAdsResult.ads != null) {
+                if (getLunboAdsResult != null && getLunboAdsResult.list != null) {
 
                     ads.clear();
-                    ads.addAll(getLunboAdsResult.ads);
+                    ads.addAll(getLunboAdsResult.list);
                     mAdsAdapter.notifyDataSetChanged();
 
                 }

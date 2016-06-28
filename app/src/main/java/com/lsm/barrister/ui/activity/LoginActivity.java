@@ -16,15 +16,20 @@ import com.androidquery.AQuery;
 import com.androidquery.util.AQUtility;
 import com.lsm.barrister.R;
 import com.lsm.barrister.app.AppConfig;
+import com.lsm.barrister.app.AppManager;
 import com.lsm.barrister.app.Constants;
+import com.lsm.barrister.app.UserHelper;
 import com.lsm.barrister.data.entity.User;
 import com.lsm.barrister.data.io.Action;
 import com.lsm.barrister.data.io.ErrorCode;
+import com.lsm.barrister.data.io.IO;
 import com.lsm.barrister.data.io.app.GetVerifyCodeReq;
 import com.lsm.barrister.data.io.app.LoginReq;
+import com.lsm.barrister.data.io.app.UpdateUserInfoReq;
 import com.lsm.barrister.ui.UIHelper;
 import com.lsm.barrister.utils.TextHandler;
 
+import java.util.HashMap;
 import java.util.Locale;
 
 /**
@@ -273,6 +278,15 @@ public class LoginActivity extends BaseActivity  {
                 @Override
                 public void onCompleted(User user) {
 
+                    String pushId = AppConfig.getInstance().getPushId(getApplicationContext());
+
+                    if(!TextUtils.isEmpty(pushId) && (TextUtils.isEmpty(user.getPushId()) || !user.getPushId().equals(pushId))){
+
+                        user.setPushId(pushId);
+
+                        uploadPushId(pushId);
+                    }
+
                     progressDialog.dismiss();
 
                     mLoginReq = null;
@@ -282,22 +296,46 @@ public class LoginActivity extends BaseActivity  {
                     //保存user，更新界面信息；
                     AppConfig.setUser(getApplicationContext(), user);
 
-                    //跳转到MainActivity
-                    UIHelper.goMainActivity(LoginActivity.this);
+                    UserHelper.getInstance().onLogin(user);
 
-//                    if(user.getVerifyStatus().equals(User.STATUS_UNAUTHERIZED)){
-//
-//                        UIHelper.goUserDetailActivity(LoginActivity.this);
-//
-//                    }else{
-//
-//                    }
+                    if(!AppManager.isMainActivityRunning()){
+                        //跳转到MainActivity
+                        UIHelper.goMainActivity(LoginActivity.this);
+                    }
+
+                    if(user.getVerifyStatus().equals(User.STATUS_UNAUTHERIZED)){
+
+                        UIHelper.goUserDetailActivity(LoginActivity.this);
+
+                    }
 
                     finish();
 
                 }
             });
         }
+    }
+
+    /**
+     * 更新pushId
+     */
+    private void uploadPushId(String pushId) {
+        HashMap<String,String> params = new HashMap<>();
+        params.put("pushId",pushId);
+
+        new UpdateUserInfoReq(getApplicationContext(),params).execute(new Action.Callback<IO.GetUpdateUserResult>() {
+            @Override
+            public void progress() {
+            }
+
+            @Override
+            public void onError(int errorCode, String msg) {
+            }
+
+            @Override
+            public void onCompleted(IO.GetUpdateUserResult result) {
+            }
+        });
     }
 
     private boolean isPhoneValid(String phone) {

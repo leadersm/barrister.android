@@ -27,6 +27,7 @@ import com.lsm.barrister.ui.activity.GetMoneyActivity;
 import com.lsm.barrister.ui.activity.LoginActivity;
 import com.lsm.barrister.ui.activity.MainActivity;
 import com.lsm.barrister.ui.activity.ModifyAvaterActivity;
+import com.lsm.barrister.ui.activity.ModifyBizActivity;
 import com.lsm.barrister.ui.activity.MyBankCardActivity;
 import com.lsm.barrister.ui.activity.SetBankCardActivity;
 import com.lsm.barrister.ui.activity.SettingsActivity;
@@ -205,6 +206,11 @@ public class UIHelper {
     public static void goCaseListAcitivity(Context ctx) {
         Intent intent = new Intent(ctx, CaseListActivity.class);
         ctx.startActivity(intent);
+    }
+
+    public static void goModifyBizActivity(Activity activity, String keyGoodAt) {
+        Intent intent = new Intent(activity, ModifyBizActivity.class);
+        activity.startActivity(intent);
     }
 
 

@@ -18,6 +18,7 @@ public class Message implements Serializable{
     String content;
     String contentId;//假如 是订单类型，那么这个id就是订单id，客户端点击可以跳转到订单详情；
     String type;//系统通知 TYPE_SYSTEM , 订单通知 TYPE_ORDER,学习中心（待定）TYPE_LEARNING;
+    String date;
 
     public String getId() {
         return id;
@@ -65,5 +66,13 @@ public class Message implements Serializable{
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }

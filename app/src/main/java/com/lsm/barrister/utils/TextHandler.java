@@ -1,11 +1,12 @@
 package com.lsm.barrister.utils;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class TextHandler {
@@ -271,5 +272,13 @@ public class TextHandler {
         tem = matcher.matches();  
         return tem;  
     }
+
+	public static String getHidePhone(String phone){
+
+		if(TextUtils.isEmpty(phone))
+			return "";
+
+		return phone.replaceAll("(\\d{3})\\d{4}(\\d{4})","$1****$2");
+	}
 
 }

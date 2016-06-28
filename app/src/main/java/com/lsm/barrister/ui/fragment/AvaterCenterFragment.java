@@ -1,6 +1,8 @@
 package com.lsm.barrister.ui.fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +14,8 @@ import android.view.ViewGroup;
 import com.androidquery.AQuery;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.lsm.barrister.R;
+import com.lsm.barrister.app.AppConfig;
+import com.lsm.barrister.app.UserHelper;
 import com.lsm.barrister.data.entity.User;
 import com.lsm.barrister.ui.activity.AppointmentSettingsActivity;
 import com.lsm.barrister.ui.activity.AvatarDetailActivity;
@@ -20,7 +24,7 @@ import com.lsm.barrister.ui.activity.MsgsActivity;
 import com.lsm.barrister.ui.activity.MyAccountActivity;
 import com.lsm.barrister.ui.activity.SettingsActivity;
 
-public class AvaterCenterFragment extends Fragment {
+public class AvaterCenterFragment extends Fragment implements UserHelper.UserActionListener{
 
     public AvaterCenterFragment() {
         // Required empty public constructor
@@ -43,6 +47,7 @@ public class AvaterCenterFragment extends Fragment {
         if (getArguments() != null) {
             user = (User) getArguments().getSerializable("user");
         }
+        UserHelper.getInstance().addOnUserActionListener(this);
     }
 
     AQuery aq;
@@ -72,12 +77,7 @@ public class AvaterCenterFragment extends Fragment {
             }
         });
 
-        SimpleDraweeView usrIconView = (SimpleDraweeView) view.findViewById(R.id.image_avatar);
-
-        if(!TextUtils.isEmpty(user.getUserIcon()))
-            usrIconView.setImageURI(Uri.parse(user.getUserIcon()));
-
-        aq.id(R.id.tv_nickname).text(user.getName());
+        setupUserInfo();
 
         aq.id(R.id.btn_my_account).clicked(new View.OnClickListener() {
             @Override
@@ -127,4 +127,72 @@ public class AvaterCenterFragment extends Fragment {
 
     }
 
+    private void setupUserInfo() {
+        SimpleDraweeView usrIconView = (SimpleDraweeView) aq.id(R.id.image_avatar).getView();
+
+        if (!TextUtils.isEmpty(user.getUserIcon()))
+            usrIconView.setImageURI(Uri.parse(user.getUserIcon()));
+
+        aq.id(R.id.tv_nickname).text(user.getName());
+
+
+        String statusString = null;
+        int statusColor = Color.parseColor("#cccccc");
+        if (TextUtils.isEmpty(user.getVerifyStatus()) || user.getVerifyStatus().equals(User.STATUS_UNAUTHERIZED)) {
+            statusString = getString(R.string.verify_status_not_verified);
+            statusColor = Color.parseColor("#cccccc");
+        } else if (user.getVerifyStatus().equals(User.STATUS_SUCCESS)) {
+            statusString = getString(R.string.verify_status_ok);
+            statusColor =  Color.parseColor("#31F77E");;//31F77E;
+        } else if (user.getVerifyStatus().equals(User.STATUS_VERIFYING)) {
+            statusString = getString(R.string.verify_status_ing);
+            statusColor = Color.parseColor("#59E1FA");// 59E1FA;
+        } else if (user.getVerifyStatus().equals(User.STATUS_FAILED)) {
+            statusString = getString(R.string.verify_status_failed);
+            statusColor =  Color.parseColor("#FF0000");//FF0000;
+        }
+
+        aq.id(R.id.tv_authentication_status).text(statusString).textColor(statusColor);
+    }
+
+    @Override
+    public void onSSOLoginCallback(User user) {
+
+    }
+
+    @Override
+    public void onLoginCallback(User user) {
+
+        this.user = user;
+
+        setupUserInfo();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        UserHelper.getInstance().removeListener(this);
+    }
+
+    @Override
+    public void onLogoutCallback() {
+
+        if(isAdded())
+            getActivity().finish();
+
+    }
+
+    @Override
+    public void onUpdateUser() {
+
+        user = AppConfig.getUser(getContext());
+
+        setupUserInfo();
+
+    }
 }

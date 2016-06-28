@@ -144,10 +144,11 @@ public abstract class Action {
         mCall.execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e) {
+
                 loading = false;
 
                 DLog.e(TAG, "url:" + url);
-                DLog.e(TAG, e.getMessage());
+                DLog.e(TAG, "onError:"+e.getMessage());
                 DLog.v(TAG, "====" + getName() + "=========本次连接耗时" + getDuration(startTime) + "毫秒============");
 
                 callback.onError(ErrorCode.ERROR_NETWORK, e.getMessage());
@@ -159,7 +160,7 @@ public abstract class Action {
 
                 loading = false;
                 DLog.d(TAG, "url:" + url());
-                DLog.i(TAG, s);
+                DLog.i(TAG, "onResponse:"+s);
                 DLog.v(TAG, "====" + getName() + "=========本次连接耗时" + getDuration(startTime) + "毫秒============");
 
                 new ParseTask<T>(s, callback).execute();
@@ -205,14 +206,8 @@ public abstract class Action {
             headers.put("X-UID", user.getId());
         }
 
-//        String cookie = AppConfig.getInstance().getCookie();
-//
-//        if (!TextUtils.isEmpty(cookie)) {
-//
-//            headers.put("Cookie", cookie);
-//
-//            headers.put("sessionId", cookie);
-//        }
+        //pushId
+        headers.put("X-PUSHID", Constants.PUSH_ID);
 
         return headers;
     }
@@ -359,7 +354,7 @@ public abstract class Action {
 
         User user = AppConfig.getUser(context);
         if(user==null){
-            System.err.println("未登录，无法提交请求。。。");
+            DLog.d(getName(),"未登录，无法提交请求。。。");
             return;
         }
 

@@ -2,9 +2,9 @@ package com.lsm.barrister.data.io.app;
 
 import android.content.Context;
 
+import com.google.gson.reflect.TypeToken;
 import com.lsm.barrister.data.io.Action;
 import com.lsm.barrister.data.io.IO;
-import com.lsm.barrister.data.io.Test;
 
 /**
  * Created by lvshimin on 16/5/8.
@@ -42,7 +42,7 @@ public class GetIncomeDetailListReq extends Action{
     @Override
     public CommonResult parse(String json) throws Exception {
 
-        IO.GetIncomeDetailListResult result = Test.getIncomeDetailListResult();//getFromGson(json, new TypeToken<IO.GetIncomeDetailListResult>() {});
+        IO.GetIncomeDetailListResult result = getFromGson(json, new TypeToken<IO.GetIncomeDetailListResult>() {});//Test.getIncomeDetailListResult();//
 
         if(result!=null){
 

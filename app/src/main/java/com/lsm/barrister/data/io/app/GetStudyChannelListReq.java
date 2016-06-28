@@ -16,42 +16,26 @@ import com.lsm.barrister.data.io.IO;
  *   返回值：resultCode，resultMsg , List<OrderItem> orderItems 订单列表 , total（总数，翻页计算用）；
  *   备注：无
  */
-public class GetMyOrderListReq extends Action{
+public class GetStudyChannelListReq extends Action{
 
-    public static final String TYPE_IM = "IM";
-    public static final String TYPE_APPOINTMENT = "APPOINTMENT";
-
-    String type;
-    int page;
-
-    public static int pageSize = 20;
-
-    public GetMyOrderListReq(Context context, int page, String type) {
+    public GetStudyChannelListReq(Context context) {
         super(context);
-        this.page = page;
-        this.type = type;
-
-        params("type",type);
-        params("page",String.valueOf(page));
-        params("pageSize",String.valueOf(pageSize));
-
-        addUserParams();
     }
 
     @Override
     public String getName() {
-        return GetMyOrderListReq.class.getSimpleName();
+        return GetStudyChannelListReq.class.getSimpleName();
     }
 
     @Override
     public String url() {
-        return IO.URL_GET_ORDER_LIST;
+        return IO.URL_GET_CHANNEL_LIST;
     }
 
     @Override
     public CommonResult parse(String json) throws Exception {
 
-        IO.GetMyOrdersResult result = getFromGson(json,new TypeToken<IO.GetMyOrdersResult>(){});//Test.getMyOrdersResult(20);//
+        IO.GetChannelListResult result = getFromGson(json,new TypeToken<IO.GetChannelListResult>(){});//Test.getMyOrdersResult(20);//
 
         if(result!=null){
 
@@ -70,6 +54,6 @@ public class GetMyOrderListReq extends Action{
 
     @Override
     public int method() {
-        return POST;
+        return GET;
     }
 }

@@ -51,11 +51,13 @@ public class MyAccountActivity extends BaseActivity implements SwipeRefreshLayou
             @Override
             public void onClick(View v) {
 
-//                if(result==null)
-//                    return;
+                if(result==null)
+                    return;
+
+                boolean bind = result.account.getBankCardBindStatus().equals(Account.CARD_STATUS_BOUND);
 
                 //TODO 银行卡
-                UIHelper.goBankcardActivity(MyAccountActivity.this,bankcard);//result.account.getBankCard());
+                UIHelper.goBankcardActivity(MyAccountActivity.this,bind?bankcard:null);//result.account.getBankCard());
             }
         });
 

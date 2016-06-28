@@ -4,8 +4,12 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.lsm.barrister.data.entity.User;
+import com.lsm.barrister.data.io.Action;
+import com.lsm.barrister.data.io.IO;
+import com.lsm.barrister.data.io.app.UpdateUserInfoReq;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -82,7 +86,7 @@ public class UserHelper {
         /**
          * 用户更换头像
          */
-        void onUserIconNicknameChanged();
+        void onUpdateUser();
 
     }
 
@@ -166,9 +170,9 @@ public class UserHelper {
         }
     }
 
-    public void notityUserIconOrNicknameChanged() {
+    public void notifyUpdateUser() {
         for (UserActionListener temp : actionListeners) {
-            temp.onUserIconNicknameChanged();
+            temp.onUpdateUser();
         }
     }
 
@@ -199,7 +203,6 @@ public class UserHelper {
 
     /**
      * 上传PushId
-     *
      * @param context
      * @param pushId
      */
@@ -207,6 +210,25 @@ public class UserHelper {
         User user = AppConfig.getUser(context);
         if (user != null) {
 
+            HashMap<String,String> params = new HashMap<>();
+            params.put("pushId",pushId);
+
+            new UpdateUserInfoReq(context,params).execute(new Action.Callback<IO.GetUpdateUserResult>() {
+                @Override
+                public void progress() {
+
+                }
+
+                @Override
+                public void onError(int errorCode, String msg) {
+
+                }
+
+                @Override
+                public void onCompleted(IO.GetUpdateUserResult result) {
+
+                }
+            });
         }
     }
 

@@ -13,7 +13,7 @@
         android:layout_height="80dp"
         app:actualImageScaleType="focusCrop"
         app:fadeDuration="300"
-        app:placeholderImage="@color/colorPrimary"
+        app:placeholderImage="@color/placeholder"
         app:placeholderImageScaleType="fitCenter" />
 
 

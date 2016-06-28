@@ -50,7 +50,7 @@
                 android:layout_height="54dp"
                 app:actualImageScaleType="focusCrop"
                 app:fadeDuration="300"
-                app:placeholderImage="@color/colorPrimary"
+                app:placeholderImage="@color/placeholder"
                 app:placeholderImageScaleType="fitCenter"
                 app:roundAsCircle="true" />
 

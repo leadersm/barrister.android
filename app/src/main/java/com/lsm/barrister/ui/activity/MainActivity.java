@@ -220,7 +220,10 @@ public class MainActivity extends BaseActivity {
 
     }
 
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
 
     /**
      * 程序退出销毁

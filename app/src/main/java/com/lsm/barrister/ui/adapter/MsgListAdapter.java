@@ -1,17 +1,14 @@
 package com.lsm.barrister.ui.adapter;
 
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.androidquery.AQuery;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.lsm.barrister.R;
-import com.lsm.barrister.data.entity.LearningItem;
+import com.lsm.barrister.data.entity.Message;
 import com.lsm.barrister.ui.UIHelper;
 
 import java.util.List;
@@ -19,15 +16,15 @@ import java.util.List;
 /**
  * 学习中心适配器
  */
-public class LearningRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class MsgListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int TYPE_FOOTER = 0;
     private static final int TYPE_ITEM = 1;
 
-    private final List<LearningItem> items;
+    private final List<Message> items;
     private final LoadMoreListener mListener;
 
-    public LearningRecyclerViewAdapter(List<LearningItem> items, LoadMoreListener loadMoreListener) {
+    public MsgListAdapter(List<Message> items, LoadMoreListener loadMoreListener) {
         this.items = items;
         mListener = loadMoreListener;
     }
@@ -39,7 +36,7 @@ public class LearningRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
         if (viewType == TYPE_ITEM) {
 
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_learning_center, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_msg_list, parent, false);
 
             holder = new ItemHolder(view);
 
@@ -97,29 +94,27 @@ public class LearningRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
     public class ItemHolder extends RecyclerView.ViewHolder {
-        public LearningItem mItem;
-
+        public final View mView;
+        public Message mItem;
         AQuery aq;
 
         public ItemHolder(View view) {
             super(view);
+            mView = view;
             aq = new AQuery(view);
-            aq.clicked(new View.OnClickListener() {
+            mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    UIHelper.goWebViewActivity(v.getContext(),mItem.getUrl(),mItem.getTitle());
+
                 }
             });
         }
 
-        public void bind(LearningItem learningItem) {
-            mItem = learningItem;
-            aq.id(R.id.tv_item_title).text(mItem.getTitle());
-            aq.id(R.id.tv_item_date).text(mItem.getDate());
-            SimpleDraweeView thumb = (SimpleDraweeView) aq.id(R.id.image_item_thumb).getView();
-            if(!TextUtils.isEmpty(mItem.getThumb())){
-                thumb.setImageURI(Uri.parse(mItem.getThumb()));
-            }
+        public void bind(Message item) {
+            mItem = item;
+            aq.id(R.id.tv_item_msg_title).text(item.getTitle());
+            aq.id(R.id.tv_item_msg_type).text(item.getType());
+            aq.id(R.id.tv_item_msg_date).text(item.getDate());
         }
     }
 
@@ -148,6 +143,21 @@ public class LearningRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             view.findViewById(R.id.progress_item_loadingmore).setVisibility(View.VISIBLE);
 
             tv.setText("加载中,请稍候...");
+        }
+
+        public void hide(){
+
+            TextView tv = (TextView) view.findViewById(R.id.tv_item_loadingmore);
+            tv.setText("查看更多");
+
+            view.findViewById(R.id.progress_item_loadingmore).setVisibility(View.GONE);
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    UIHelper.goCaseListAcitivity(v.getContext());
+                }
+            });
         }
 
     }

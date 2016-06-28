@@ -22,7 +22,7 @@ public class Constants {
     //mac地址
     public static String mac;
     //文件夹目录
-    public static String baseDir = "cp9";
+    public static String baseDir = "barrister";
     public static String tempDir = baseDir + "/temp";
     public static String imageDir = baseDir + "/images";
     public static String configDir = baseDir + "/config";
@@ -114,6 +114,9 @@ public class Constants {
 
     public static final long DURATION_ANIM_ACTIONBAR = 800;
     public static final long DURATION_ANIM_TABS_BG_COLOR = 300;
+
+    public static final String TAG_LAN = "TAG_LAN";//测试环境
+    public static final String TAG_WAN = "TAG_WAN";//正式环境
 
 
 }

@@ -10,9 +10,12 @@ import com.androidquery.AQuery;
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.androidquery.util.AQUtility;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.lsm.barrister.push.PushUtil;
 import com.lsm.barrister.utils.DLog;
 import com.lsm.barrister.utils.NetworkManager;
 import com.zhy.http.okhttp.OkHttpUtils;
+
+import cn.jpush.android.api.JPushInterface;
 
 
 /**
@@ -49,6 +52,10 @@ public class App extends Application {
 //		strictMode();
 
         AppConfig.getInstance().init(this);
+
+        JPushInterface.setDebugMode(true);
+        JPushInterface.init(this);
+        PushUtil.getInstance().init(this);
 
         //Facebook，Fresco
         Fresco.initialize(this);
