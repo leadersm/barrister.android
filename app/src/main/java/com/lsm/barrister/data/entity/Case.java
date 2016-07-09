@@ -11,7 +11,6 @@ public class Case {
     public static final String STATUS_FOLLOWUP = "case.status.followup";//跟进
     public static final String STATUS_CLEARING = "case.status.clearing";//结算
 
-
     String id;
     String caseTypeId;//案件类型id
     String caseTypeName;//案件类型名称

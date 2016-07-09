@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">大律师（律师端）</string>
+    <string name="app_name">DLS律师端</string>
     <string name="title_activity_base">BaseActivity</string>
     <string name="title_activity_register">RegisterActivity</string>
     <string name="title_activity_login">登录</string>
@@ -223,5 +223,8 @@
     <string name="verify_status_ok">认证成功</string>
     <string name="verify_status_ing">验证中</string>
     <string name="verify_status_failed">认证失败</string>
+    <string name="add_summary">写总结</string>
+    <string name="type_appointment">预约订单</string>
+    <string name="type_im">即时订单</string>
 
 </resources>

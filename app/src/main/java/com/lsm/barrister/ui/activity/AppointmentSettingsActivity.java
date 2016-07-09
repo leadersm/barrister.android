@@ -277,7 +277,7 @@ public class AppointmentSettingsActivity extends BaseActivity {
 
     }
 
-    private static class DateFragment extends Fragment {
+    public static class DateFragment extends Fragment {
 
         public DateFragment() {
         }
@@ -386,5 +386,6 @@ public class AppointmentSettingsActivity extends BaseActivity {
         if(mGetReq !=null && mGetReq.isLoading()){
             mGetReq = null;
         }
+
     }
 }

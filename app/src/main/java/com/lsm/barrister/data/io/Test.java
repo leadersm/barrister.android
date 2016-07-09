@@ -35,8 +35,6 @@ public class Test {
 
         Account account = new Account();
         account.setBankCardBindStatus(Account.CARD_STATUS_BOUND);
-        account.setRemainingBalance("1000");
-        account.setTotalIncome("1500");
         Account.BankCard bankCard = new Account.BankCard();
         bankCard.setBankCardAddress("富力城支行");
         bankCard.setLogoName("icon_bank_zs.png");
@@ -122,7 +120,6 @@ public class Test {
         List<Case> caseList = getCaseListResult(3).cases;
 
         result.todoList = orderItems;
-        result.caseList = caseList;
 
         return  result;
     }

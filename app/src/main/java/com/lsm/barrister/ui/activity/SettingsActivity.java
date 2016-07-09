@@ -9,7 +9,6 @@ import com.androidquery.AQuery;
 import com.lsm.barrister.R;
 import com.lsm.barrister.app.AppConfig;
 import com.lsm.barrister.app.Constants;
-import com.lsm.barrister.app.UserHelper;
 import com.lsm.barrister.app.VersionHelper;
 import com.lsm.barrister.data.entity.User;
 import com.lsm.barrister.data.io.Action;
@@ -75,6 +74,9 @@ public class SettingsActivity extends BaseActivity {
                     return ;
                 }
 
+                //跳转登录页
+                UIHelper.goLoginActivity(SettingsActivity.this);
+
                 new LogoutReq(SettingsActivity.this).execute(new Action.Callback<Boolean>() {
 
                     @Override
@@ -86,12 +88,13 @@ public class SettingsActivity extends BaseActivity {
                     public void onError(int errorCode, String msg) {
                         isLogouting = false;
                         //登出
-                        UserHelper.getInstance().logout(getApplicationContext());
+//                        UserHelper.getInstance().logout(getApplicationContext());
+
+                        // TODO 清除用户数据
+                        AppConfig.removeUser(getApplicationContext());
 
                         finish();
 
-                        //跳转登录页
-                        UIHelper.goLoginActivity(SettingsActivity.this);
                     }
 
                     @Override
@@ -99,12 +102,13 @@ public class SettingsActivity extends BaseActivity {
                         isLogouting = false;
 
                         //登出
-                        UserHelper.getInstance().logout(getApplicationContext());
+//                        UserHelper.getInstance().logout(getApplicationContext());
+
+                        // TODO 清除用户数据
+                        AppConfig.removeUser(getApplicationContext());
 
                         finish();
 
-                        //跳转登录页
-                        UIHelper.goLoginActivity(SettingsActivity.this);
                     }
                 });
 

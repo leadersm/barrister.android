@@ -257,7 +257,7 @@ public class MyOrdersFragment extends Fragment {
                             && mRefreshResult!=null
                             && page + 1 <= mGetOrderListReq.getTotalPage(mRefreshResult.total,GetMyOrderListReq.pageSize);
                 }
-            });
+            },false);
 
 
             mRecyclerView.setAdapter(mAdapter);

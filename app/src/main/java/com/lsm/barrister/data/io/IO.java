@@ -54,7 +54,7 @@ public class IO {
      * 绑定银行卡
      */
     public static class BindBankcardResult extends Action.CommonResult {
-        public Account.BankCard bankCard;
+        public Account account;
     }
 
 
@@ -70,11 +70,15 @@ public class IO {
         public String totalIncome;
         public int orderQty;
         public List<OrderItem> todoList;
-        public List<Case> caseList;
+//        public List<Case> caseList;
     }
 
 
     public static final String URL_FEEDBACK = SERVER + "addFeedback.do";
+    public static final String URL_ADD_SUMMARY = SERVER + "addOrderFeedback.do";
+    public static final String URL_DISAGREE_CANCEL_ORDER = SERVER + "disagreeOrderCancel.do";
+    public static final String URL_AGREE_CANCEL_ORDER = SERVER + "agreeOrderCancel.do";
+    public static final String URL_FINISH_ORDER = SERVER + "finishOrder.do";
 
 
     public static final String URL_GET_APP_VERSION = SERVER + "getLatestVersion.do";

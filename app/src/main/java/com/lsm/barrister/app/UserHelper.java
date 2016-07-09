@@ -1,11 +1,14 @@
 package com.lsm.barrister.app;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.lsm.barrister.data.entity.Account;
 import com.lsm.barrister.data.entity.User;
 import com.lsm.barrister.data.io.Action;
 import com.lsm.barrister.data.io.IO;
+import com.lsm.barrister.data.io.app.GetMyAccountReq;
 import com.lsm.barrister.data.io.app.UpdateUserInfoReq;
 
 import java.util.ArrayList;
@@ -230,6 +233,66 @@ public class UserHelper {
                 }
             });
         }
+    }
+
+    List<OnAccountUpdateListener> onAccountUpdateListeners = new ArrayList<>();
+    public void addOnAccountUpdateListener(OnAccountUpdateListener listener){
+        if(!onAccountUpdateListeners.contains(listener)){
+            onAccountUpdateListeners.add(listener);
+        }
+    }
+
+    public void removeAccountListener(OnAccountUpdateListener listener){
+        if(onAccountUpdateListeners.contains(listener)){
+            onAccountUpdateListeners.remove(listener);
+        }
+    }
+
+    public Account getAccount() {
+        return mAccount;
+    }
+
+    public void setAccount(Account account) {
+        if(account!=null){
+            mAccount = null;
+            mAccount = account;
+        }
+    }
+
+    Account mAccount;
+
+    public void updateAccount(){
+
+        if(mAccount==null)
+            return;
+
+        for(OnAccountUpdateListener listener:onAccountUpdateListeners){
+            listener.onUpdateAccount(mAccount);
+        }
+    }
+
+    public interface OnAccountUpdateListener {
+        public void onUpdateAccount(Account account);
+    }
+
+    public void syncAccount(Activity context){
+        new GetMyAccountReq(context).execute(new Action.Callback<IO.GetAccountResult>() {
+            @Override
+            public void progress() {
+
+            }
+
+            @Override
+            public void onError(int errorCode, String msg) {
+
+            }
+
+            @Override
+            public void onCompleted(IO.GetAccountResult result) {
+                setAccount(result.account);
+                updateAccount();
+            }
+        });
     }
 
 }

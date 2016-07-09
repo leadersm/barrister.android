@@ -1,18 +1,14 @@
 package com.lsm.barrister.ui.activity;
 
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
-import android.util.Log;
+import android.view.KeyEvent;
 
 import com.lsm.barrister.R;
 import com.lsm.barrister.app.AppConfig;
 import com.lsm.barrister.app.Constants;
-import com.lsm.barrister.app.VersionHelper;
 import com.lsm.barrister.data.entity.User;
 import com.lsm.barrister.push.PushUtil;
 import com.lsm.barrister.ui.UIHelper;
@@ -31,18 +27,15 @@ public class WelcomeActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setupPush();
-
         setContentView(R.layout.activity_welcome);
 
-        initAppInfo();
+        setupPush();
 
         handler.sendEmptyMessageDelayed(MSG_WHAT_GO, DELAYED);
     }
 
     private void setupPush() {
-        if (AppConfig.getInstance().getPushId(this) == null) {
+        if (TextUtils.isEmpty(Constants.PUSH_ID)) {
             String pushId = JPushInterface.getRegistrationID(this);
             DLog.d(TAG, "pushId:" + pushId);
         }
@@ -98,34 +91,28 @@ public class WelcomeActivity extends BaseActivity {
         }
     };
 
-    /**
-     * 初始化应用信息，读取配置文件
-     */
-    private void initAppInfo() {
-        try {
 
-            ApplicationInfo appInfo = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
-            //初始化版本信息
-            VersionHelper.instance().initPackageInfo(this);
 
-            //渠道信息
-            Constants.MARKET = appInfo.metaData.getInt(Constants.MARKET_KEY);
-            //debug
-            Constants.DEBUG = appInfo.metaData.getBoolean(Constants.DEBUG_KEY);
+    @Override
+    protected void onPause() {
+        super.onPause();
+        JPushInterface.onPause(this);
+    }
 
-            Log.d(TAG, "MARKET:" + Constants.MARKET + ",DEBUG:" + Constants.DEBUG);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        JPushInterface.onResume(this);
+    }
 
-            DisplayMetrics dm = getResources().getDisplayMetrics();
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        return true;
+    }
 
-            DLog.i(TAG, "screenWidth:" + dm.widthPixels + "-screenHeigh:" + dm.heightPixels);
-
-            Constants.screenSize = dm.widthPixels + "*" + dm.heightPixels;
-            Constants.screenHeight = dm.heightPixels;
-            Constants.screenWidth = dm.widthPixels;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        return true;
     }
 
 }

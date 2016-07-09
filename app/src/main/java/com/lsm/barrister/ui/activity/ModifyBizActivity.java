@@ -53,20 +53,32 @@ public class ModifyBizActivity extends BaseActivity {
 
         mBizAreaAdapter = new ArrayAdapter<BusinessArea>(this, R.layout.item_biz_modity, R.id.tv_modify_biz, bizAreas){
             @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                CheckBox cb = (CheckBox) super.getView(position, convertView, parent);
+            public View getView(final int position, View convertView, ViewGroup parent) {
+                final CheckBox cb = (CheckBox) super.getView(position, convertView, parent);
                 cb.setChecked(getItem(position).isChecked());
                 cb.setText(getItem(position).getName());
+                cb.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        bizAreas.get(position).setChecked(cb.isChecked());
+                    }
+                });
                 return cb;
             }
         };
 
         mBizTypeAdapter = new ArrayAdapter<BusinessType>(this, R.layout.item_biz_modity, R.id.tv_modify_biz, bizTypes){
             @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                CheckBox cb = (CheckBox) super.getView(position, convertView, parent);
+            public View getView(final int position, View convertView, ViewGroup parent) {
+                final CheckBox cb = (CheckBox) super.getView(position, convertView, parent);
                 cb.setChecked(getItem(position).isChecked());
                 cb.setText(getItem(position).getName());
+                cb.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        bizTypes.get(position).setChecked(cb.isChecked());
+                    }
+                });
                 return cb;
             }
         };

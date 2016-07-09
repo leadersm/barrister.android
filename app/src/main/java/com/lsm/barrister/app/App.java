@@ -2,9 +2,13 @@ package com.lsm.barrister.app;
 
 
 import android.app.Application;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.StrictMode;
-import android.provider.Settings.Secure;
+import android.provider.Settings;
+import android.util.DisplayMetrics;
+import android.util.Log;
 
 import com.androidquery.AQuery;
 import com.androidquery.callback.BitmapAjaxCallback;
@@ -12,7 +16,7 @@ import com.androidquery.util.AQUtility;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.lsm.barrister.push.PushUtil;
 import com.lsm.barrister.utils.DLog;
-import com.lsm.barrister.utils.NetworkManager;
+import com.tencent.bugly.crashreport.CrashReport;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 import cn.jpush.android.api.JPushInterface;
@@ -49,9 +53,7 @@ public class App extends Application {
 
         instance = this;
 
-//		strictMode();
-
-        AppConfig.getInstance().init(this);
+        initAppInfo();
 
         JPushInterface.setDebugMode(true);
         JPushInterface.init(this);
@@ -60,49 +62,55 @@ public class App extends Application {
         //Facebook，Fresco
         Fresco.initialize(this);
 
-        NetworkManager.getInstance(this).init();
-        NetworkManager.getInstance(this).registerNetworkReceiver(this);
-
-        //初始化deviceId
-        Constants.deviceId = Secure.getString(getContentResolver(), Secure.ANDROID_ID);//deviceId
-        DLog.i(TAG, "deviceId:" + Constants.deviceId);
-
-        //ECSDK-百度地图
-        try {
-//            SDKInitializer.initialize(instance);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-//        if(!ECDevice.isInitialized()) {
-//            ECDevice.initial(this, new ECDevice.InitListener() {
-//                @Override
-//                public void onInitialized() {
-//                    // SDK已经初始化成功
-//                    DLog.d(TAG,"ECDevice SDK已经初始化成功");
-//                    ECHelper.getInstance().login(App.this);
-//                }
-//
-//                @Override
-//                public void onError(Exception exception) {
-//                    DLog.e(TAG,"ECDevice initial onError");
-//                    exception.printStackTrace();
-//                    ECDevice.unInitial();
-//
-//                    // SDK 初始化失败,可能有如下原因造成
-//                    // 1、可能SDK已经处于初始化状态
-//                    // 2、SDK所声明必要的权限未在清单文件（AndroidManifest.xml）里配置、
-//                    //    或者未配置服务属性android:exported="false";
-//                    // 3、当前手机设备系统版本低于ECSDK所支持的最低版本（当前ECSDK支持
-//                    //    Android Build.VERSION.SDK_INT 以及以上版本）
-//                }
-//            });
-
-
         OkHttpUtils.getInstance().debug("testDebug");
     }
 
 
+    /**
+     * 初始化应用信息，读取配置文件
+     */
+    private void initAppInfo() {
+        try {
+
+            //bugly
+            CrashReport.initCrashReport(getApplicationContext(), "900037690", false);
+            //tencent.bugly
+            CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(this);
+            strategy.setAppChannel(Constants.MARKET);
+            strategy.setAppReportDelay(20000);//20s后上报
+
+            AppConfig.getInstance().init(this);
+
+            ApplicationInfo appInfo = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
+            //初始化版本信息
+            VersionHelper.instance().initPackageInfo(this);
+
+            //初始化deviceId
+            Constants.deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);//deviceId
+            DLog.i(TAG, "deviceId:" + Constants.deviceId);
+
+            //渠道信息
+            Constants.MARKET = appInfo.metaData.getString(Constants.MARKET_KEY);
+            //debug
+            Constants.DEBUG = appInfo.metaData.getBoolean(Constants.DEBUG_KEY);
+
+            //pushId
+            Constants.PUSH_ID = AppConfig.getInstance().getPushId(this);
+
+            Log.d(TAG, "MARKET:" + Constants.MARKET + ",DEBUG:" + Constants.DEBUG);
+
+            DisplayMetrics dm = getResources().getDisplayMetrics();
+
+            DLog.i(TAG, "screenWidth:" + dm.widthPixels + "-screenHeigh:" + dm.heightPixels);
+
+            Constants.screenSize = dm.widthPixels + "*" + dm.heightPixels;
+            Constants.screenHeight = dm.heightPixels;
+            Constants.screenWidth = dm.widthPixels;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private void strictMode() {
         if (AQuery.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && Constants.DEBUG) {

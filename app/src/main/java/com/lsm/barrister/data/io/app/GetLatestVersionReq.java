@@ -20,6 +20,9 @@ public class GetLatestVersionReq extends Action {
 
     public GetLatestVersionReq(Context context) {
         super(context);
+        //        type（barrister2c , barrister）
+        params("type","barrister");
+        params("platform","android");
     }
 
     @Override

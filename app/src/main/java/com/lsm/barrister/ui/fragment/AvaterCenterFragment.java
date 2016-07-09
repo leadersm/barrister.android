@@ -111,7 +111,7 @@ public class AvaterCenterFragment extends Fragment implements UserHelper.UserAct
         aq.id(R.id.btn_contact_us).clicked(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:4009889595"));
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:4009600118"));
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }

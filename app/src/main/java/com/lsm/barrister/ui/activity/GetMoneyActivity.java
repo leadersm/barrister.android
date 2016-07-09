@@ -8,6 +8,7 @@ import android.view.View;
 import com.androidquery.AQuery;
 import com.lsm.barrister.R;
 import com.lsm.barrister.app.Constants;
+import com.lsm.barrister.app.UserHelper;
 import com.lsm.barrister.data.io.Action;
 import com.lsm.barrister.data.io.app.GetMoneyReq;
 import com.lsm.barrister.ui.UIHelper;
@@ -64,10 +65,13 @@ public class GetMoneyActivity extends BaseActivity {
 
 
 
+    boolean isLoading = false;
     /**
      * 保存
      */
     protected void doCommit() {
+        if(isLoading)
+            return;
 
         final String money = aq.id(R.id.et_get_money).getEditable().toString();
 
@@ -81,12 +85,15 @@ public class GetMoneyActivity extends BaseActivity {
 
             @Override
             public void progress() {
+                isLoading = true;
                 progressDialog.setMessage(getString(R.string.tip_loading));
                 progressDialog.show();
             }
 
             @Override
             public void onError(int errorCode, String msg) {
+                isLoading = false;
+
                 mGetMoneyReq = null;
 
                 progressDialog.dismiss();
@@ -96,11 +103,16 @@ public class GetMoneyActivity extends BaseActivity {
 
             @Override
             public void onCompleted(Boolean t) {
+                isLoading = false;
+
                 mGetMoneyReq = null;
 
                 progressDialog.dismiss();
 
                 UIHelper.showToast(getApplicationContext(), getString(R.string.tip_get_money_success));
+
+                //同步账户信息
+                UserHelper.getInstance().syncAccount(GetMoneyActivity.this);
 
                 finish();
 

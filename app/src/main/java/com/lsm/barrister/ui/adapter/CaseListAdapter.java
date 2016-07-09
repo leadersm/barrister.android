@@ -1,6 +1,7 @@
 package com.lsm.barrister.ui.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -122,7 +123,37 @@ public class CaseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             mItem = item;
             aq.id(R.id.tv_item_case_title).text(item.getTitle());
             aq.id(R.id.tv_item_case_serial_num).text("案源号:"+item.getId());
-            aq.id(R.id.tv_item_case_date).text(item.getAddTime());
+            if(TextUtils.isEmpty(item.getAddTime())){
+                aq.id(R.id.tv_item_case_date).gone();
+            }else{
+                aq.id(R.id.tv_item_case_date).text(item.getAddTime()).visible();
+            }
+
+//            public static final String STATUS_CONSULTING = "case.status.consulting";//咨询
+//            public static final String STATUS_INTERVIEW = "case.status.interview";//面谈
+//            public static final String STATUS_SIGNATORY = "case.status.signatory";//签约
+//            public static final String STATUS_FOLLOWUP = "case.status.followup";//跟进
+//            public static final String STATUS_CLEARING = "case.status.clearing";//结算
+
+            String status = "咨询";
+            if(item.getStatus()!=null){
+                if(item.getStatus().equals(Case.STATUS_CONSULTING)){
+                    status = "咨询";
+                }else if(item.getStatus().equals(Case.STATUS_INTERVIEW)){
+                    status = "面谈";
+                }else if(item.getStatus().equals(Case.STATUS_SIGNATORY)){
+                    status = "签约";
+                }else if(item.getStatus().equals(Case.STATUS_FOLLOWUP)){
+                    status = "跟进";
+                }else if(item.getStatus().equals(Case.STATUS_CLEARING)){
+                    status = "结算";
+                }
+            }
+
+            aq.id(R.id.tv_item_case_status).text("状态："+status+" , 联系方式："+ item.getContactPhone());
+
+            aq.id(R.id.tv_item_case_type).text(item.getArea());
+
         }
     }
 

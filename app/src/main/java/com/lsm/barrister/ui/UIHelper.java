@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.lsm.barrister.app.Constants;
 import com.lsm.barrister.data.entity.Account;
+import com.lsm.barrister.ui.activity.AddOrderSummaryActivity;
 import com.lsm.barrister.ui.activity.AvatarDetailActivity;
 import com.lsm.barrister.ui.activity.CaseListActivity;
 import com.lsm.barrister.ui.activity.DocActivity;
@@ -202,6 +203,13 @@ public class UIHelper {
         Intent intent = new Intent(ctx, AvatarDetailActivity.class);
         ctx.startActivity(intent);
     }
+
+    public static void goAddOrderSummaryActivity(Activity ctx, String id) {
+        Intent intent = new Intent(ctx, AddOrderSummaryActivity.class);
+        intent.putExtra("id",id);
+        ctx.startActivityForResult(intent,Constants.REQUEST_CODE_ADD_SUMMARY);
+    }
+
 
     public static void goCaseListAcitivity(Context ctx) {
         Intent intent = new Intent(ctx, CaseListActivity.class);

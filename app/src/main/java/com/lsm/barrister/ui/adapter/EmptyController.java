@@ -51,8 +51,8 @@ public class EmptyController {
 //        contentView.setVisibility(View.GONE);
 //        emptyView.setVisibility(View.VISIBLE);
 //
-//        ImageView img = aq.id(R.id.image_empty).image(0).getImageView();
-//        Animation loadAnimation = AnimationUtils.loadAnimation(aq.getContext(), R.anim.loading);
+//        ImageView img = holder.id(R.id.image_empty).image(0).getImageView();
+//        Animation loadAnimation = AnimationUtils.loadAnimation(holder.getContext(), R.anim.loading);
 //        img.setAnimation(loadAnimation);
 //        img.setBackgroundResource(R.drawable.loading);
 //
@@ -63,8 +63,8 @@ public class EmptyController {
 //
 //        loadAnimation.start();
 //
-//        aq.id(R.id.tv_empty_tip).text("Loading...");
-//        aq.id(R.id.btn_empty_refresh).gone();
+//        holder.id(R.id.tv_empty_tip).text("Loading...");
+//        holder.id(R.id.btn_empty_refresh).gone();
     }
 
     public void showError(int errorCode, String errorMsg) {
@@ -99,7 +99,7 @@ public class EmptyController {
         emptyView.setVisibility(View.VISIBLE);
 
         aq.id(R.id.image_empty).image(R.drawable.ic_launcher).getImageView().setBackgroundResource(0);
-        aq.id(R.id.tv_empty_tip).text("暂无数据，试试其他频道...");
+        aq.id(R.id.tv_empty_tip).text("暂无数据");
         aq.id(R.id.btn_empty_refresh).clicked(new View.OnClickListener() {
 
             @Override

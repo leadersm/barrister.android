@@ -4,8 +4,10 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="10dp"
+    android:background="@drawable/layout_selector"
     android:gravity="center_vertical"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:layout_marginBottom="@dimen/divider_size">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:layout_width="45dp"
@@ -36,7 +38,7 @@
                 android:textAppearance="?attr/textAppearanceListItem" />
 
             <TextView
-                android:id="@+id/item_case_type"
+                android:id="@+id/tv_item_case_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="类型"

@@ -123,8 +123,101 @@
                     android:layout_marginTop="10dp"
                     android:textSize="13sp" />
 
+                <TextView
+                    android:id="@+id/tv_order_summary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="10dp"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/tv_order_comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="10dp"
+                    android:textSize="13sp" />
+
             </LinearLayout>
 
+
+            <LinearLayout
+                android:id="@+id/layout_order_cancel_handle"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:background="@color/white"
+                android:visibility="gone"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="right">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="客户方发起取消订单请求，请及时处理"
+                    android:textColor="@android:color/holo_red_light"
+                    android:id="@+id/tv_tip_order_cancel" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp">
+
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/common_btn_selector"
+                        android:textColor="@color/white"
+                        android:text="不同意"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:id="@+id/btn_order_disagree_cancel" />
+
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/common_btn_selector"
+                        android:text="同意"
+                        android:layout_weight="1"
+                        android:textColor="@color/white"
+                        android:id="@+id/btn_order_agree_cancel"/>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/layout_order_finish"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:background="@color/white"
+                android:layout_marginTop="10dp"
+                android:visibility="gone"
+                android:layout_gravity="right">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="提示：如果提前结束可能会接到客户的投诉。"
+                    android:textColor="@android:color/holo_blue_bright" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/common_btn_selector"
+                    android:textColor="@color/white"
+                    android:layout_marginTop="10dp"
+                    android:text="完成订单"
+                    android:id="@+id/btn_order_finish" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

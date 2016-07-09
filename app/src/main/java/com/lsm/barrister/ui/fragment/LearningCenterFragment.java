@@ -182,7 +182,7 @@ public class LearningCenterFragment extends Fragment  {
 
 
 
-   static class LearningChannelFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+   public static class LearningChannelFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
         List<LearningItem> items = new ArrayList<>();
         SwipeRefreshLayout mSwipeRefreshLayout;
@@ -235,7 +235,6 @@ public class LearningCenterFragment extends Fragment  {
                     isLoadingMore = false;
 
                     if(result!=null && result.items!=null){
-                        items.clear();
                         items.addAll(result.items);
                         mAdapter.notifyDataSetChanged();
                     }

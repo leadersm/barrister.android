@@ -129,7 +129,6 @@ public class CaseListActivity extends BaseActivity implements SwipeRefreshLayout
                 isLoadingMore = false;
 
                 if(result!=null && result.cases!=null){
-                    items.clear();
                     items.addAll(result.cases);
                     mAdapter.notifyDataSetChanged();
                 }

@@ -27,6 +27,15 @@ public class GetCaseListReq extends Action {
         addUserParams();
     }
 
+    public GetCaseListReq(Context context, int page,int pageSize) {
+        super(context);
+
+        params("page", String.valueOf(page));
+        params("pageSize", String.valueOf(pageSize));
+
+        addUserParams();
+    }
+
     @Override
     public String getName() {
         return GetCaseListReq.class.getSimpleName();
@@ -34,7 +43,7 @@ public class GetCaseListReq extends Action {
 
     @Override
     public String url() {
-        return IO.URL_GET_STUDY_LIST;
+        return IO.URL_GET_CASE_LIST;
     }
 
     @Override

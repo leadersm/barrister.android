@@ -37,7 +37,7 @@ public class LogoutReq extends Action{
 
     @Override
     public Action.CommonResult parse(String json) throws Exception {
-        final Action.CommonResult result = getFromGson(json,new TypeToken<Action.CommonResult>(){});
+        Action.CommonResult result = getFromGson(json,new TypeToken<Action.CommonResult>(){});
 
         if(result!=null){
 

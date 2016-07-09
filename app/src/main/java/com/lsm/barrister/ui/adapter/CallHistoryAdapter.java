@@ -2,45 +2,41 @@ package com.lsm.barrister.ui.adapter;
 
 import android.content.Context;
 import android.media.MediaPlayer;
-import android.net.Uri;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.SeekBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.androidquery.AQuery;
 import com.lsm.barrister.R;
+import com.lsm.barrister.app.AudioHelper;
 import com.lsm.barrister.data.entity.CallHistory;
-import com.lsm.barrister.utils.DateFormatUtils;
 
-import java.util.Date;
 import java.util.List;
-
-import nl.changer.audiowife.AudioWife;
+import java.util.Locale;
 
 /**
  * Created by lvshimin on 16/5/22.
  */
-public class CallHistoryAdapter extends BaseAdapter{
+public class CallHistoryAdapter extends BaseAdapter {
 
     List<CallHistory> data;
     Context context;
-    public CallHistoryAdapter(Context context,List<CallHistory> data) {
+
+    public CallHistoryAdapter(Context context, List<CallHistory> data) {
         this.data = data;
         this.context = context;
     }
 
     @Override
     public int getCount() {
-        return data == null?0:data.size();
+        return data == null ? 0 : data.size();
     }
 
     @Override
     public CallHistory getItem(int position) {
-        return data==null?null:data.get(position);
+        return data == null ? null : data.get(position);
     }
 
     @Override
@@ -51,51 +47,116 @@ public class CallHistoryAdapter extends BaseAdapter{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        AQuery holder = null;
+        ViewHolder holder = null;
 
-        if(convertView == null){
-            convertView = LayoutInflater.from(context).inflate(R.layout.item_call_history,parent,false);
-            holder = new AQuery(convertView);
+        if (convertView == null) {
+            convertView = LayoutInflater.from(context).inflate(R.layout.item_call_history, parent, false);
+            holder = new ViewHolder();
+            holder.holder = new AQuery(convertView);
             convertView.setTag(holder);
-        }else {
-            holder = (AQuery) convertView.getTag();
+        } else {
+            holder = (ViewHolder) convertView.getTag();
         }
 
-        bind(getItem(position),holder);
+        holder.bind(getItem(position));
 
         return convertView;
     }
 
-    private void bind(CallHistory item, AQuery holder) {
 
-        holder.id(R.id.tv_callhistory_date).text(item.getStartTime());
-        holder.id(R.id.tv_callhistory_duration).text(DateFormatUtils.format(new Date(item.getDuration()),"HH:mm:ss"));
-        holder.id(R.id.btn_callhistory_play).clicked(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    class ViewHolder implements AudioHelper.Callback {
+
+        AQuery holder;
+
+        @Override
+        public void onPrepared(MediaPlayer mp) {
+            if(AudioHelper.getInstance().isPlaying(item.getRecordUrl())){
+                holder.id(R.id.seekbar).getSeekBar().setMax(mp.getDuration());
+                holder.id(R.id.btn_callhistory_pause).visible();
+                holder.id(R.id.btn_callhistory_play).gone();
+            }
+        }
+
+        @Override
+        public void onUpdateProgress(int progress) {
+
+            if(AudioHelper.getInstance().isPlaying(item.getRecordUrl())){
+                holder.id(R.id.seekbar).getSeekBar().setProgress(progress);
+                holder.id(R.id.tv_callhistory_runtime).text(String.valueOf(progress / 1000));
+            }
+        }
+
+        @Override
+        public void onStop() {
+            if(AudioHelper.getInstance().isPlaying(item.getRecordUrl())){
+                holder.id(R.id.btn_callhistory_play).visible();
+                holder.id(R.id.btn_callhistory_pause).gone();
+
+                holder.id(R.id.seekbar).getSeekBar().setProgress(0);
+                holder.id(R.id.tv_callhistory_runtime).text(String.valueOf(0));
 
             }
-        });
 
-        View play = holder.id(R.id.btn_callhistory_play).getView();
-        View pause = holder.id(R.id.btn_callhistory_pause).getView();
-        SeekBar seekBar = holder.id(R.id.progress_callhistory).getSeekBar();
-        TextView runtime = holder.id(R.id.tv_callhistory_runtime).getTextView();
+        }
 
-        AudioWife.getInstance()
-                .init(context, Uri.parse(item.getRecordUrl()))
-                .setPlayView(play)
-                .setPauseView(pause)
-                .setSeekBar(seekBar)
-                .setRuntimeView(runtime)
-//                .setTotalTimeView(mTotalTime)
-                .addOnCompletionListener( new MediaPlayer.OnCompletionListener() {
+        @Override
+        public void onCompletion(MediaPlayer mp) {
 
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                Toast.makeText(context, "播放完成", Toast.LENGTH_SHORT).show();
+            if(AudioHelper.getInstance().isPlaying(item.getRecordUrl())){
+
+                holder.id(R.id.btn_callhistory_play).visible();
+                holder.id(R.id.btn_callhistory_pause).gone();
+
+                holder.id(R.id.seekbar).getSeekBar().setProgress(0);
+                holder.id(R.id.tv_callhistory_runtime).text(String.valueOf(0));
             }
-        });
+
+        }
+
+        CallHistory item;
+
+        private void bind(final CallHistory item) {
+            this.item = item;
+
+            holder.id(R.id.tv_callhistory_date).text(item.getStartTime());
+            holder.id(R.id.tv_callhistory_duration).text(String.format(Locale.CHINA, "通话时长%d秒", item.getDuration()));
+
+            if(!TextUtils.isEmpty(item.getRecordUrl()) && AudioHelper.getInstance().isPlaying(item.getRecordUrl())){
+                holder.id(R.id.btn_callhistory_play).gone();
+                holder.id(R.id.btn_callhistory_pause).visible();
+            }else {
+                holder.id(R.id.btn_callhistory_play).visible();
+                holder.id(R.id.btn_callhistory_pause).gone();
+            }
+
+            holder.id(R.id.btn_callhistory_play).clicked(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AudioHelper.getInstance().stop();
+
+                    AudioHelper.getInstance().start(v.getContext(), item.getRecordUrl());
+                }
+
+            });
+
+            holder.id(R.id.btn_callhistory_pause).clicked(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    AudioHelper.getInstance().stop();
+                }
+            });
+
+            if (!TextUtils.isEmpty(item.getRecordUrl())) {
+
+                holder.id(R.id.layout_play_record).visible();
+
+                AudioHelper.getInstance().addCallback(this);
+
+            } else {
+                holder.id(R.id.layout_play_record).gone();
+            }
+        }
     }
 
 

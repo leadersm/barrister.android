@@ -302,7 +302,7 @@ public class AppConfig {
      * @return
      */
     public String getPushId(Context ctx) {
-        return sp.getString(PUSH_REG_ID, null);
+        return sp.getString(PUSH_REG_ID, "");
     }
 
     /**

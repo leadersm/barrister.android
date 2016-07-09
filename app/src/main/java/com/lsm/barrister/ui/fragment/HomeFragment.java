@@ -19,13 +19,18 @@ import android.view.ViewGroup;
 import com.androidquery.AQuery;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.lsm.barrister.R;
+import com.lsm.barrister.app.AppConfig;
+import com.lsm.barrister.app.UserHelper;
+import com.lsm.barrister.data.entity.Account;
 import com.lsm.barrister.data.entity.Ad;
 import com.lsm.barrister.data.entity.Case;
 import com.lsm.barrister.data.entity.OrderItem;
 import com.lsm.barrister.data.entity.User;
 import com.lsm.barrister.data.io.Action;
 import com.lsm.barrister.data.io.IO;
+import com.lsm.barrister.data.io.app.GetCaseListReq;
 import com.lsm.barrister.data.io.app.GetLunboAdsReq;
+import com.lsm.barrister.data.io.app.GetMyAccountReq;
 import com.lsm.barrister.data.io.app.GetUserHomeReq;
 import com.lsm.barrister.ui.UIHelper;
 import com.lsm.barrister.ui.activity.WebViewActivity;
@@ -36,9 +41,9 @@ import com.lsm.barrister.ui.widget.CirclePageIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
-public class HomeFragment extends Fragment {
-
+public class HomeFragment extends Fragment implements UserHelper.UserActionListener,UserHelper.OnAccountUpdateListener{
 
     public HomeFragment() {
         // Required empty public constructor
@@ -135,7 +140,7 @@ public class HomeFragment extends Fragment {
             public boolean hasMore() {
                 return false;
             }
-        });
+        },true);
 
 
         mTodoListView.setAdapter(mTodoListAdapter);
@@ -213,6 +218,29 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        new GetCaseListReq(getContext(),1,3).execute(new Action.Callback<IO.GetCaseListResult>() {
+
+            @Override
+            public void progress() {
+
+            }
+
+            @Override
+            public void onError(int errorCode, String msg) {
+
+            }
+
+            @Override
+            public void onCompleted(IO.GetCaseListResult result) {
+
+                if (result.cases != null) {
+                    cases.clear();
+                    cases.addAll(result.cases);
+                    mCaseListAdapter.notifyDataSetChanged();
+                }
+
+            }
+        });
 
     }
 
@@ -226,7 +254,6 @@ public class HomeFragment extends Fragment {
 
 
         List<OrderItem> todoList = homeResult.todoList;
-        List<Case> caseList = homeResult.caseList;
 
         String totalIncome = homeResult.totalIncome;
 
@@ -253,26 +280,8 @@ public class HomeFragment extends Fragment {
             mTodoListAdapter.notifyDataSetChanged();
         }
 
-        if (caseList != null) {
-            cases.clear();
-            cases.addAll(caseList);
-            mCaseListAdapter.notifyDataSetChanged();
-        }
-
 
     }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    List<Ad> ads = new ArrayList<>();
 
     public class AdsPagerAdapter extends FragmentPagerAdapter {
 
@@ -343,5 +352,83 @@ public class HomeFragment extends Fragment {
             });
             return draweeView;
         }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        UserHelper.getInstance().addOnUserActionListener(this);
+        UserHelper.getInstance().addOnAccountUpdateListener(this);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        UserHelper.getInstance().removeListener(this);
+        UserHelper.getInstance().removeAccountListener(this);
+    }
+
+    List<Ad> ads = new ArrayList<>();
+
+    @Override
+    public void onSSOLoginCallback(User user) {
+    }
+
+    @Override
+    public void onLoginCallback(User user) {
+        //请求账户信息，余额，累计消费
+        loadMyAccount();
+    }
+
+    @Override
+    public void onLogoutCallback() {
+        //余额，累计消费 显示 0.0
+        onUpdateAccount(null);
+    }
+
+    @Override
+    public void onUpdateUser() {
+
+    }
+
+
+    @Override
+    public void onUpdateAccount(Account account) {
+        float remainingBalance = 0f;
+        float totalConsume = 0f;
+
+        if(account != null){
+            remainingBalance = account.getRemainingBalance();
+            totalConsume = account.getTotalIncome();
+        }
+
+        aq.id(R.id.tv_home_yue).text(String.format(Locale.CHINA,"%.1f元", remainingBalance));
+        aq.id(R.id.tv_home_income).text(String.format(Locale.CHINA,"%.1f元", totalConsume));
+    }
+
+    private void loadMyAccount(){
+
+        User user = AppConfig.getUser(getContext());
+
+        if(user==null)
+            return;
+
+        new GetMyAccountReq(getActivity()).execute(new Action.Callback<IO.GetAccountResult>() {
+            @Override
+            public void progress() {
+
+            }
+
+            @Override
+            public void onError(int errorCode, String msg) {
+            }
+
+            @Override
+            public void onCompleted(IO.GetAccountResult result) {
+                UserHelper.getInstance().setAccount(result.account);
+                UserHelper.getInstance().updateAccount();
+            }
+        });
+
     }
 }

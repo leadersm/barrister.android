@@ -24,6 +24,8 @@ public class GetMoneyReq extends Action{
         super(context);
         this.money = money;
 
+        params("money",money);
+
         addUserParams();
     }
 

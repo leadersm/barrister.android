@@ -75,6 +75,10 @@ public class Constants {
     public static final int REQUEST_CODE_GALLERY = 8017;
     public static final int REQUEST_CODE_CROP = 8018;
     public static final int REQUEST_CODE_NEWCOMMENT = 8019;
+    public static final int REQUEST_CODE_BIND_CARD = 8020;
+    public static final int REQUEST_CODE_ADD_SUMMARY = 8021;
+
+
     //用户协议文档
     public static final String DOC_AGREEMENT = "file:///android_asset/agreement.htm";
     //关于文档
@@ -105,7 +109,7 @@ public class Constants {
     public static final String MARKET_KEY = "UMENG_CHANNEL";
     public static final String DEBUG_KEY = "DEBUG";
 
-    public static int MARKET = 1000;//
+    public static String MARKET = "default";//
 
     public static final int OFFLINE_NEWS_SIZE = 20;
 

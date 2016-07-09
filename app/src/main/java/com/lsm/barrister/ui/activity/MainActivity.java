@@ -245,4 +245,12 @@ public class MainActivity extends BaseActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+
+        if(AppManager.getAppManager().exit(this))
+            super.onBackPressed();
+
+    }
+
 }

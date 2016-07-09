@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.androidquery.AQuery;
 import com.lsm.barrister.R;
+import com.lsm.barrister.app.UserHelper;
 import com.lsm.barrister.data.entity.Account;
 import com.lsm.barrister.data.entity.IncomeDetailItem;
 import com.lsm.barrister.data.io.Action;
@@ -19,9 +20,11 @@ import com.lsm.barrister.data.io.app.GetStudyListReq;
 import com.lsm.barrister.ui.UIHelper;
 import com.lsm.barrister.ui.adapter.IncomeListAdapter;
 import com.lsm.barrister.ui.adapter.LoadMoreListener;
+import com.lsm.barrister.utils.DLog;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 
 /**
@@ -31,10 +34,11 @@ import java.util.List;
  * 3.提现记录
  * 4.入账记录
  */
-public class MyAccountActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener{
+public class MyAccountActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener,UserHelper.OnAccountUpdateListener{
+
+    private static final String TAG = MyAccountActivity.class.getSimpleName();
 
     GetMyAccountReq mGetAccountReq;
-    IO.GetAccountResult result;
 
     GetIncomeDetailListReq mGetIncomeListReq;
     SwipeRefreshLayout mSwipeRefreshLayout;
@@ -51,10 +55,14 @@ public class MyAccountActivity extends BaseActivity implements SwipeRefreshLayou
             @Override
             public void onClick(View v) {
 
-                if(result==null)
-                    return;
+                Account account = UserHelper.getInstance().getAccount();
 
-                boolean bind = result.account.getBankCardBindStatus().equals(Account.CARD_STATUS_BOUND);
+                if(account==null){
+                    DLog.e(TAG,"获取账户信息失败。。");
+                    return;
+                }
+
+                boolean bind = account.getBankCardBindStatus().equals(Account.CARD_STATUS_BOUND);
 
                 //TODO 银行卡
                 UIHelper.goBankcardActivity(MyAccountActivity.this,bind?bankcard:null);//result.account.getBankCard());
@@ -68,8 +76,6 @@ public class MyAccountActivity extends BaseActivity implements SwipeRefreshLayou
                 UIHelper.goGetMoneyActivity(MyAccountActivity.this);
             }
         });
-
-        loadAccount();
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
         mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_green_light, android.R.color.holo_orange_light,
@@ -92,8 +98,14 @@ public class MyAccountActivity extends BaseActivity implements SwipeRefreshLayou
                 return mGetIncomeListReq != null && page + 1 <= mGetIncomeListReq.getTotalPage(total, GetStudyListReq.pageSize);
             }
         });
+
         mRecyclerView.setAdapter(mAdapter);
+
+        loadAccount();
+
         loadIncomeList();
+
+        UserHelper.getInstance().addOnAccountUpdateListener(this);
 
     }
 
@@ -112,8 +124,8 @@ public class MyAccountActivity extends BaseActivity implements SwipeRefreshLayou
 
             @Override
             public void onCompleted(IO.GetAccountResult result) {
-                MyAccountActivity.this.result = result;
-                bind();
+                UserHelper.getInstance().setAccount(result.account);
+                UserHelper.getInstance().updateAccount();
             }
         });
     }
@@ -162,13 +174,6 @@ public class MyAccountActivity extends BaseActivity implements SwipeRefreshLayou
     List<IncomeDetailItem> items = new ArrayList<>();
 
     Account.BankCard bankcard;
-    private void bind() {
-        aq.id(R.id.tv_myaccount_balance).text(result.account.getRemainingBalance());
-        aq.id(R.id.tv_myaccount_total).text(result.account.getTotalIncome());
-
-        bankcard = result.account.getBankCard();
-
-    }
 
     private void setupToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -215,4 +220,21 @@ public class MyAccountActivity extends BaseActivity implements SwipeRefreshLayou
     public void onRefresh() {
         loadIncomeList();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        UserHelper.getInstance().removeAccountListener(this);
+    }
+
+    @Override
+    public void onUpdateAccount(Account account) {
+
+        aq.id(R.id.tv_myaccount_balance).text(String.format(Locale.CHINA,"%.1f元",account.getRemainingBalance()));
+        aq.id(R.id.tv_myaccount_total).text(String.format(Locale.CHINA,"%.1f元",account.getTotalIncome()));
+
+        bankcard = account.getBankCard();
+
+    }
+
 }
