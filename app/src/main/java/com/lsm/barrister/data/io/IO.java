@@ -66,8 +66,8 @@ public class IO {
      */
     public static class HomeResult extends Action.CommonResult {
         public String status;
-        public String remainingBalance;
-        public String totalIncome;
+        public float remainingBalance;
+        public float totalIncome;
         public int orderQty;
         public List<OrderItem> todoList;
 //        public List<Case> caseList;
@@ -79,6 +79,7 @@ public class IO {
     public static final String URL_DISAGREE_CANCEL_ORDER = SERVER + "disagreeOrderCancel.do";
     public static final String URL_AGREE_CANCEL_ORDER = SERVER + "agreeOrderCancel.do";
     public static final String URL_FINISH_ORDER = SERVER + "finishOrder.do";
+    public static final String URL_CHANGE_IM_STATUS = SERVER + "changeIMStatus.do";
 
 
     public static final String URL_GET_APP_VERSION = SERVER + "getLatestVersion.do";

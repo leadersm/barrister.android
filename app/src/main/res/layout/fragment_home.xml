@@ -72,10 +72,12 @@
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/btn_change_im_status"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/bg_common"
+                    android:background="@drawable/layout_selector"
+                    android:clickable="true"
                     android:gravity="center">
 
                     <ImageView
@@ -93,7 +95,10 @@
                         android:gravity="center"
                         android:text="当前状态：接受预约" />
                 </LinearLayout>
-
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/divider_size"
+                    android:background="@color/divider" />
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_marginLeft="10dp"

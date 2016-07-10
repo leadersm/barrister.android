@@ -18,7 +18,7 @@ import com.lsm.barrister.data.db.PushMessageDao;
 /**
  * {@inheritDoc}
  * 
- * @see de.greenrobot.dao.AbstractDaoSession
+ * @see AbstractDaoSession
  */
 public class DaoSession extends AbstractDaoSession {
 

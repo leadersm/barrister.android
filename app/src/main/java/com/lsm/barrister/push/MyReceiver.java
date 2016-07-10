@@ -21,11 +21,13 @@ import com.lsm.barrister.R;
 import com.lsm.barrister.app.AppConfig;
 import com.lsm.barrister.app.AppManager;
 import com.lsm.barrister.app.Constants;
-import com.lsm.barrister.app.MsgHelper;
 import com.lsm.barrister.app.UserHelper;
 import com.lsm.barrister.app.VersionHelper;
 import com.lsm.barrister.data.db.PushMessage;
 import com.lsm.barrister.data.db.UserDbService;
+import com.lsm.barrister.ui.activity.MainActivity;
+import com.lsm.barrister.ui.activity.MyAccountActivity;
+import com.lsm.barrister.ui.activity.OrderDetailActivity;
 import com.lsm.barrister.ui.activity.WebViewActivity;
 import com.lsm.barrister.utils.DLog;
 
@@ -113,20 +115,104 @@ public class MyReceiver extends BroadcastReceiver {
         if (!PushUtil.isEmpty(extras)) {
             try {
                 Gson gson = new Gson();
-
                 //解析
-                PushMessage msg = gson.fromJson(extras, new TypeToken<PushMessage>() {
-                }.getType());
+                PushMessage msg = gson.fromJson(extras, new TypeToken<PushMessage>() {}.getType());
 
-                if (msg.getType().equals(PushMessage.TYPE_NEWS)) {
+                //通知
+                String content = msg.getContent();
+                String type = msg.getType();
+                String contentId = msg.getContentId();
+
+                if (msg.getType().equals(PushMessage.TYPE_ORDER_MONEY)) {
+                    //订单服务费到账
+                    String title = "订单服务费到账通知";
+                    //消息入库
+                    UserDbService.getInstance(context).getPushMessageAction().save(msg);
+
+                    showNewsNotification(context,title,content,type,contentId);
+
+                }else if (msg.getType().equals(PushMessage.TYPE_ORDER_REWARD)) {
+
+                    //打赏
+                    String title = "打赏通知";
+                    //消息入库
+                    UserDbService.getInstance(context).getPushMessageAction().save(msg);
+
+                    showNewsNotification(context,title,content,type,contentId);
+
+                }else if (msg.getType().equals(PushMessage.TYPE_ORDER_STATUS)) {
+
+                    //订单状态
+                    String title = "订单通知";
+                    //消息入库
+                    UserDbService.getInstance(context).getPushMessageAction().save(msg);
+
+                    showNewsNotification(context,title,content,type,contentId);
+
+                }else if (msg.getType().equals(PushMessage.TYPE_RECEIVE_STAR)) {
+
+                    //收到评价
+                    String title = "订单评价通知";
+                    //消息入库
+                    UserDbService.getInstance(context).getPushMessageAction().save(msg);
+
+                    showNewsNotification(context,title,content,type,contentId);
+
+                }else if (msg.getType().equals(PushMessage.TYPE_RECHARGE)) {
+
+                    //充值
+                    String title = "充值通知";
+                    //消息入库
+                    UserDbService.getInstance(context).getPushMessageAction().save(msg);
+
+                    showNewsNotification(context,title,content,type,contentId);
+
+                }else if (msg.getType().equals(PushMessage.TYPE_VERIFY)) {
+
+                    //律师段认证通知
+                    String title = "认证通知";
+                    //消息入库
+                    UserDbService.getInstance(context).getPushMessageAction().save(msg);
+
+                    showNewsNotification(context,title,content,type,contentId);
+
+                }else if (msg.getType().equals(PushMessage.TYPE_LEARNING)) {
+
+                    //学习中心
+                    String title = "学习中心";
+                    //消息入库
+                    UserDbService.getInstance(context).getPushMessageAction().save(msg);
+
+//                    showNewsNotification(context,title,content,type,contentId);
+
+                }else if (msg.getType().equals(PushMessage.TYPE_GET_MONEY)) {
+
+                    //提现
+                    String title = "提现通知";
+                    //消息入库
+                    UserDbService.getInstance(context).getPushMessageAction().save(msg);
+
+                    showNewsNotification(context,title,content,type,contentId);
+
+                }else if (msg.getType().equals(PushMessage.TYPE_ORDER_BACK_MONEY)) {
+
+                    //订单取消退款
+                    String title = "退款通知";
+                    //消息入库
+                    UserDbService.getInstance(context).getPushMessageAction().save(msg);
+
+                    showNewsNotification(context,title,content,type,contentId);
+
+                }
+                //========================COMMON=================================
+                else if (msg.getType().equals(PushMessage.TYPE_SYSTEM_MSG)) {
 
                     //处理
-                    handleNewsType(context, msg);
+                    String title = "系统通知";
+                    //消息入库
+                    UserDbService.getInstance(context).getPushMessageAction().save(msg);
 
-                } else if (msg.getType().equals(PushMessage.TYPE_SYSTEM_MSG)) {
-
-                    //处理
-                    handleNewsType(context, msg);
+                    showNewsNotification(context,title,content,type,contentId);
 
                 }else if (msg.getType().equals(PushMessage.TYPE_FORCE_UPDATE)) {
                     //强制更新
@@ -136,12 +222,7 @@ public class MyReceiver extends BroadcastReceiver {
                         VersionHelper.instance().check(AppManager.getAppManager().currentActivity(), true);
                     }
 
-                } else if (msg.getType().equals(PushMessage.TYPE_ORDER_MSG)) {
-
-                    //小编回复消息
-                    handleReplyMsg(context, msg);
-
-                } else if (msg.getType().equals(PushMessage.TYPE_CLEAR_APP_DATA)) {
+                }  else if (msg.getType().equals(PushMessage.TYPE_CLEAR_APP_DATA)) {
 
                     //清除数据
                     handleClearDataCMD(context, msg);
@@ -162,7 +243,6 @@ public class MyReceiver extends BroadcastReceiver {
 
     /**
      * 处理上传pushId命令
-     *
      * @param msg
      */
     private void handleUploadPushIdCMD(Context context, PushMessage msg) {
@@ -197,143 +277,46 @@ public class MyReceiver extends BroadcastReceiver {
     }
 
     /**
-     * 跟帖消息
-     *
-     * @param context
-     * @param msg
-     */
-    private void handleReplyMsg(Context context, PushMessage msg) {
-        // TODO Auto-generated method stub
-        DLog.d(TAG, "有新消息");
-        //播放声音
-//        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-//        Ringtone r = RingtoneManager.getRingtone(context, notification);
-//        r.play();
-
-        //未读 +1
-        AppConfig.getInstance().increaseUnreadCount();
-
-        //消息小红点提示
-        MsgHelper.MsgListener msgListener = MsgHelper.getInstance().getMsgListener();
-        if (msgListener != null) {
-            msgListener.onReceiveMessage();
-        }
-
-        //通知
-        String id = msg.getId();
-        String title = msg.getTitle();
-        String digest = msg.getDigest();
-        String type = msg.getType();
-        String contentId = msg.getContentId();
-        String icon = msg.getIcon();
-
-        //消息入库
-        UserDbService.getInstance(context).getPushMessageAction().save(msg);
-
-        showNewsNotification(context, title, digest, icon, type, contentId);
-
-
-    }
-
-
-
-    /**
-     * 处理其他类型的消息
-     *
-     * @param msg
-     */
-    private void handleOtherType(Context context, PushMessage msg) {
-
-    }
-
-    /**
-     * 处理新闻类型消息
-     * 1.根据id 发送查询请求
-     * 2.显示Notification
-     *
-     * @param msg
-     */
-    private void handleNewsType(final Context context, final PushMessage msg) {
-
-        String id = msg.getId();
-        String title = msg.getTitle();
-        String digest = msg.getDigest();
-        String type = msg.getType();
-        String contentId = msg.getContentId();
-        String icon = msg.getIcon();
-
-        //消息入库
-        UserDbService.getInstance(context).getPushMessageAction().save(msg);
-
-        showNewsNotification(context, title, digest, icon, type, contentId);
-
-//        new GetNewsItemReq(context, id)
-//                .setRetry(3)//重试3次
-//                .execute(new Request.Callback<NewsItem>() {
-//
-//                    @Override
-//                    public void progress() {
-//                    }
-//
-//                    @Override
-//                    public void onError(int errorCode, String msg) {
-//                    }
-//
-//                    @Override
-//                    public void onCompleted(NewsItem item) {
-//
-//                        if (item != null) {
-//
-//
-//
-//                        }
-//
-//                    }
-//                });
-
-    }
-
-
-    /**
      * 显示消息
      *
      * @param context
      */
-    public void showNewsNotification(Context context, String title, String digest, String icon, String type, String contentId) {
+    public void showNewsNotification(Context context, String title, String digest, String type, String contentId) {
 
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         Intent targetIntent = null;
 
-        if (type.equals(PushMessage.TYPE_ORDER_MSG)) {
+        if (type.equals(PushMessage.TYPE_ORDER_STATUS)) {
 
-            //推送消息是专题新闻
+            //订单状态
+            targetIntent = new Intent(context, OrderDetailActivity.class);
+            targetIntent.putExtra("id", contentId);
 
-        } else if (type.equals(PushMessage.TYPE_AD)) {
+        } else if (type.equals(PushMessage.TYPE_LEARNING)) {
 
             //推送消息是广告
             targetIntent = new Intent(context, WebViewActivity.class);
-            targetIntent.putExtra(WebViewActivity.KEY_TITLE, title);
+            targetIntent.putExtra(WebViewActivity.KEY_TITLE, "");
             targetIntent.putExtra(WebViewActivity.KEY_URL, digest);
 
-        } else if (type.equals(PushMessage.TYPE_NEWS)) {
+        }else if (type.equals(PushMessage.TYPE_ORDER_REWARD)||
+                type.equals(PushMessage.TYPE_RECHARGE)||
+                type.equals(PushMessage.TYPE_GET_MONEY)||
+                type.equals(PushMessage.TYPE_ORDER_BACK_MONEY)) {
 
-            //推送消息是普通新闻
+            targetIntent = new Intent(context, MyAccountActivity.class);
 
-        } else if (type.equals(PushMessage.TYPE_SYSTEM_MSG)) {
-
-
-        } else if (type.contains(PushMessage.TYPE_ORDER_MSG)) {
-
-            //推送消息是普通新闻
-
+        }else if(type.equals(PushMessage.TYPE_SYSTEM_MSG)){
+            targetIntent = new Intent(context, MainActivity.class);
         }
-
 
         PendingIntent contentIntent = null;
 
         if (targetIntent != null) {
+
             targetIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
             if (AppManager.isMainActivityRunning()) {
                 //程序运行中，弹出消息防止闪屏
                 contentIntent = PendingIntent.getActivity(context, ++Constants.NOTIFICATION_REQUEST_CODE, targetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -342,22 +325,33 @@ public class MyReceiver extends BroadcastReceiver {
 
                 //程序未运行，弹出消息后，退出消息详情返回主页面
                 TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-                // Adds the back stack
-//                stackBuilder.addParentStack(NewsDetailActivity.class);
+
+                if (type.equals(PushMessage.TYPE_ORDER_STATUS)) {
+
+                    // Adds the back stack
+                    stackBuilder.addParentStack(OrderDetailActivity.class);
+
+                } else if (type.equals(PushMessage.TYPE_LEARNING)) {
+                    // Adds the back stack
+                    stackBuilder.addParentStack(WebViewActivity.class);
+
+                }else if (type.equals(PushMessage.TYPE_ORDER_REWARD)||
+                        type.equals(PushMessage.TYPE_RECHARGE)||
+                        type.equals(PushMessage.TYPE_GET_MONEY)||
+                        type.equals(PushMessage.TYPE_ORDER_BACK_MONEY)) {
+
+                    stackBuilder.addParentStack( MyAccountActivity.class);
+
+                }else if(type.equals(PushMessage.TYPE_SYSTEM_MSG)){
+                    stackBuilder.addParentStack( MainActivity.class);
+                }
 
                 stackBuilder.addNextIntent(targetIntent);
 
                 contentIntent = stackBuilder.getPendingIntent(++Constants.NOTIFICATION_REQUEST_CODE, PendingIntent.FLAG_UPDATE_CURRENT);
 
-                //程序未启动，加载用户频道
-//			List<Channel> userChannels = ChannelHelper.getInstance().getUserChannels();
-//			if(userChannels==null || userChannels.isEmpty()){
-//				ChannelHelper.getInstance().init(context);
-//			}
-
             }
         }
-
 
         title = title.replaceAll("&quot;", "\"");
 

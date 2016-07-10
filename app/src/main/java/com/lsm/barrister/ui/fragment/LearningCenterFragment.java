@@ -227,7 +227,9 @@ public class LearningCenterFragment extends Fragment  {
                     isLoadingMore = false;
 
                     --page;
-                    UIHelper.showToast(getContext(),msg);
+                    if(isAdded()){
+                        UIHelper.showToast(getContext(),msg);
+                    }
                 }
 
                 @Override
@@ -311,7 +313,9 @@ public class LearningCenterFragment extends Fragment  {
                 public void onError(int errorCode, String msg) {
                     mSwipeRefreshLayout.setRefreshing(false);
                     mEmptyController.showError(errorCode,msg);
-                    UIHelper.showToast(getContext(),msg);
+
+                    if(isAdded())
+                        UIHelper.showToast(getContext(),msg);
                 }
 
                 @Override

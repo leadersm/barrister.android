@@ -226,5 +226,6 @@
     <string name="add_summary">写总结</string>
     <string name="type_appointment">预约订单</string>
     <string name="type_im">即时订单</string>
+    <string name="tip_bind_card">请先到我的账户中绑定银行卡</string>
 
 </resources>

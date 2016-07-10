@@ -94,7 +94,7 @@ public class MsgsActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                 isLoadingMore = false;
 
                 if(result!=null && result.msgs!=null){
-                    data.clear();
+
                     data.addAll(result.msgs);
                     mAdapter.notifyDataSetChanged();
                 }

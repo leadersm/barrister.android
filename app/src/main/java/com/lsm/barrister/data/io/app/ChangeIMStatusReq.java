@@ -7,22 +7,22 @@ import com.lsm.barrister.data.io.IO;
 
 /**
  * Created by lvshimin on 16/5/8.
- * 完成订单
- *   finishOrder
- *   提交方式：post
- *   参数:userId,verifyCode,orderId
- *   返回值：resultCode，resultMsg
- *   备注：将订单状态变成“已完成”
+ * .改变接单状态
+ changeIMStatus
+ 提交方式：post
+ 参数：userId,verifyCode,status (can_not 或 can)
+ 返回值：resultCode，resultMsg；
+ 备注：
  */
 public class ChangeIMStatusReq extends Action {
 
-    String orderId;
+    String status;
 
-    public ChangeIMStatusReq(Context context, String orderId) {
+    public ChangeIMStatusReq(Context context, String status) {
         super(context);
-        this.orderId = orderId;
+        this.status = status;
 
-        params("orderId", orderId);
+        params("status", status);
 
         addUserParams();
 
@@ -35,7 +35,7 @@ public class ChangeIMStatusReq extends Action {
 
     @Override
     public String url() {
-        return IO.URL_FINISH_ORDER;
+        return IO.URL_CHANGE_IM_STATUS;
     }
 
     @Override

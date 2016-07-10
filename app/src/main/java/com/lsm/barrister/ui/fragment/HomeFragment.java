@@ -1,7 +1,9 @@
 package com.lsm.barrister.ui.fragment;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,9 +11,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +32,7 @@ import com.lsm.barrister.data.entity.OrderItem;
 import com.lsm.barrister.data.entity.User;
 import com.lsm.barrister.data.io.Action;
 import com.lsm.barrister.data.io.IO;
+import com.lsm.barrister.data.io.app.ChangeIMStatusReq;
 import com.lsm.barrister.data.io.app.GetCaseListReq;
 import com.lsm.barrister.data.io.app.GetLunboAdsReq;
 import com.lsm.barrister.data.io.app.GetMyAccountReq;
@@ -167,11 +172,17 @@ public class HomeFragment extends Fragment implements UserHelper.UserActionListe
     List<Case> cases = new ArrayList<>();
 
     public void refresh() {
-        if (mGetHomeReq == null) {
-            mGetHomeReq = new GetUserHomeReq(getContext());
-        }
 
-        mGetHomeReq.execute(new Action.Callback<IO.HomeResult>() {
+        loadHome();
+
+        loadAds();
+
+        loadCaseList();
+
+    }
+
+    private void loadCaseList() {
+        new GetCaseListReq(getContext(),1,3).execute(new Action.Callback<IO.GetCaseListResult>() {
 
             @Override
             public void progress() {
@@ -180,16 +191,23 @@ public class HomeFragment extends Fragment implements UserHelper.UserActionListe
 
             @Override
             public void onError(int errorCode, String msg) {
-                UIHelper.showToast(getContext(), msg);
+
             }
 
             @Override
-            public void onCompleted(IO.HomeResult homeResult) {
+            public void onCompleted(IO.GetCaseListResult result) {
 
-                bindHomeData(homeResult);
+                if (result.cases != null) {
+                    cases.clear();
+                    cases.addAll(result.cases);
+                    mCaseListAdapter.notifyDataSetChanged();
+                }
+
             }
         });
+    }
 
+    private void loadAds() {
         if (mGetAdsReq == null) {
             mGetAdsReq = new GetLunboAdsReq(getActivity());
         }
@@ -217,8 +235,14 @@ public class HomeFragment extends Fragment implements UserHelper.UserActionListe
                 }
             }
         });
+    }
 
-        new GetCaseListReq(getContext(),1,3).execute(new Action.Callback<IO.GetCaseListResult>() {
+    private void loadHome() {
+        if (mGetHomeReq == null) {
+            mGetHomeReq = new GetUserHomeReq(getContext());
+        }
+
+        mGetHomeReq.execute(new Action.Callback<IO.HomeResult>() {
 
             @Override
             public void progress() {
@@ -227,48 +251,49 @@ public class HomeFragment extends Fragment implements UserHelper.UserActionListe
 
             @Override
             public void onError(int errorCode, String msg) {
-
+                UIHelper.showToast(getContext(), msg);
             }
 
             @Override
-            public void onCompleted(IO.GetCaseListResult result) {
+            public void onCompleted(IO.HomeResult homeResult) {
 
-                if (result.cases != null) {
-                    cases.clear();
-                    cases.addAll(result.cases);
-                    mCaseListAdapter.notifyDataSetChanged();
-                }
-
+                bindHomeData(homeResult);
             }
         });
-
     }
 
-
+    IO.HomeResult homeResult;
     private void bindHomeData(IO.HomeResult homeResult) {
+        this.homeResult = homeResult;
 
         int orderQty = homeResult.orderQty;
 
-        String remainingBalance = homeResult.remainingBalance;
+        float remainingBalance = homeResult.remainingBalance;
         String status = homeResult.status;
 
 
         List<OrderItem> todoList = homeResult.todoList;
 
-        String totalIncome = homeResult.totalIncome;
+        float totalIncome = homeResult.totalIncome;
 
-        aq.id(R.id.tv_home_yue).text(remainingBalance + "元");
+        aq.id(R.id.tv_home_yue).text(String.format(Locale.CHINA,"%.2f元",remainingBalance));
 
-        aq.id(R.id.tv_home_income).text(totalIncome + "元");
-
+        aq.id(R.id.tv_home_income).text(String.format(Locale.CHINA,"%.2f元",totalIncome));
 
         if (status.equals(User.ORDER_STATUS_CAN)) {
-
             aq.id(R.id.tv_home_accept_status).text("可以接单");
+            aq.id(R.id.image_home_staus).image(R.drawable.circle_status_green);
         } else {
-
             aq.id(R.id.tv_home_accept_status).text("不可接单");
+            aq.id(R.id.image_home_staus).image(R.drawable.circle_status_red);
         }
+
+        aq.id(R.id.btn_change_im_status).clicked(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                doChangeIMStauts();
+            }
+        });
 
 
         aq.id(R.id.tv_home_order_qty).text("累计订单" + orderQty);
@@ -280,6 +305,57 @@ public class HomeFragment extends Fragment implements UserHelper.UserActionListe
             mTodoListAdapter.notifyDataSetChanged();
         }
 
+
+    }
+
+    String toChangeStatus ;
+    private void doChangeIMStauts() {
+        if(homeResult==null)
+            return;
+
+        final String cStatus = homeResult.status;
+
+        String title ;
+        if(cStatus.equals(User.ORDER_STATUS_CAN)){
+            toChangeStatus = User.ORDER_STATUS_NOT;
+            title = "当前状态为可接单状态，您确定要变更为不可接单状态吗？";
+        }else{
+            toChangeStatus = User.ORDER_STATUS_CAN;
+            title = "当前状态为不可接单状态，您确定要变更为可接单状态吗？";
+        }
+
+        new AlertDialog.Builder(getActivity()).setTitle(R.string.tip)
+                .setMessage(title).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+
+                new ChangeIMStatusReq(getContext(),toChangeStatus).execute(new Action.Callback<Boolean>() {
+
+                    @Override
+                    public void progress() {
+                    }
+
+                    @Override
+                    public void onError(int errorCode, String msg) {
+                        UIHelper.showToast(getContext(),"改变接单状态失败");
+                    }
+
+                    @Override
+                    public void onCompleted(Boolean aBoolean) {
+                        UIHelper.showToast(getContext(),"设置成功");
+
+                        loadHome();
+                    }
+                });
+
+            }
+        }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        }).create().show();
 
     }
 

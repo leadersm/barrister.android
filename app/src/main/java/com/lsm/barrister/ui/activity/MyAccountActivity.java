@@ -230,8 +230,8 @@ public class MyAccountActivity extends BaseActivity implements SwipeRefreshLayou
     @Override
     public void onUpdateAccount(Account account) {
 
-        aq.id(R.id.tv_myaccount_balance).text(String.format(Locale.CHINA,"%.1f元",account.getRemainingBalance()));
-        aq.id(R.id.tv_myaccount_total).text(String.format(Locale.CHINA,"%.1f元",account.getTotalIncome()));
+        aq.id(R.id.tv_myaccount_balance).text(String.format(Locale.CHINA,"%.2f元",account.getRemainingBalance()));
+        aq.id(R.id.tv_myaccount_total).text(String.format(Locale.CHINA,"%.2f元",account.getTotalIncome()));
 
         bankcard = account.getBankCard();
 

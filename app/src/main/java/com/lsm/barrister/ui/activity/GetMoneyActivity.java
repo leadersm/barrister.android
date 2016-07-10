@@ -9,9 +9,11 @@ import com.androidquery.AQuery;
 import com.lsm.barrister.R;
 import com.lsm.barrister.app.Constants;
 import com.lsm.barrister.app.UserHelper;
+import com.lsm.barrister.data.entity.Account;
 import com.lsm.barrister.data.io.Action;
 import com.lsm.barrister.data.io.app.GetMoneyReq;
 import com.lsm.barrister.ui.UIHelper;
+import com.lsm.barrister.utils.DLog;
 
 
 /**
@@ -72,6 +74,12 @@ public class GetMoneyActivity extends BaseActivity {
     protected void doCommit() {
         if(isLoading)
             return;
+
+        String status = UserHelper.getInstance().getAccount().getBankCardBindStatus();
+        if(status.equals(Account.CARD_STATUS_NOT_BOUND)){
+            UIHelper.showToast(getApplicationContext(),getString(R.string.tip_bind_card));
+            return;
+        }
 
         final String money = aq.id(R.id.et_get_money).getEditable().toString();
 

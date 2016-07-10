@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.lsm.barrister">
-
-    <uses-permission android:name="com.lsm.user.permission.JPUSH_MESSAGE" />
+    <permission
+        android:name="com.lsm.barrister.permission.JPUSH_MESSAGE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="com.lsm.barrister.permission.JPUSH_MESSAGE" />
     // SDK 权限申明, 第三方 APP 接入时，请将 com.yuntongxun.ecdemo 替换为自己的包名
     // 和下面的 uses-permission 一起加入到你的 AndroidManifest 文件中。
     <permission
@@ -91,42 +93,143 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.activity.WelcomeActivity">
+        <activity android:name=".ui.activity.WelcomeActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activity.MainActivity" />
+        <activity android:name=".ui.activity.MainActivity" android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activity.LoginActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_login" />
-        <activity android:name=".ui.activity.GuideActivity" />
-        <activity android:name=".ui.activity.FeedbackActivity" />
-        <activity android:name=".ui.activity.DocActivity" />
-        <activity android:name=".ui.activity.SettingsActivity" />
+        <activity android:name=".ui.activity.GuideActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.FeedbackActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.DocActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.SettingsActivity" android:screenOrientation="portrait"/>
         <activity android:name=".ui.activity.AvatarDetailActivity" android:parentActivityName=".ui.activity.MainActivity"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activity.MainActivity"/>
         </activity>
-        <activity android:name=".ui.activity.ModifyAvaterActivity" />
-        <activity android:name=".ui.activity.MyFavoriteActivity" />
-        <activity android:name=".ui.activity.MyOrdersActivity" />
-        <activity android:name=".ui.activity.MyAccountActivity" />
+        <activity android:name=".ui.activity.ModifyAvaterActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.MyFavoriteActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.MyOrdersActivity" android:screenOrientation="portrait"/>
+
+        <activity android:name=".ui.activity.MyAccountActivity"
+            android:parentActivityName="com.lsm.barrister.ui.activity.MainActivity"
+            android:screenOrientation="portrait" >
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.lsm.barrister.ui.activity.MainActivity" />
+
+        </activity>
+
         <activity android:name=".ui.activity.MsgsActivity" />
-        <activity android:name=".ui.activity.OrderDetailActivity" />
-        <activity android:name=".ui.activity.AppointmentSettingsActivity" />
-        <activity android:name=".ui.activity.WebViewActivity" />
-        <activity android:name=".ui.activity.MyBankCardActivity" />
-        <activity android:name=".ui.activity.UploadFilesActivity"/>
-        <activity android:name=".ui.activity.SetBankCardActivity"/>
-        <activity android:name=".ui.activity.GetMoneyActivity"/>
-        <activity android:name=".ui.activity.CaseListActivity"/>
-        <activity android:name=".ui.activity.ModifyBizActivity"/>
-        <activity android:name=".ui.activity.AddOrderSummaryActivity"/>
+
+        <activity android:name=".ui.activity.OrderDetailActivity"
+            android:parentActivityName="com.lsm.barrister.ui.activity.MainActivity"
+            android:screenOrientation="portrait" >
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.lsm.barrister.ui.activity.MainActivity" />
+
+        </activity>
+
+        <activity android:name=".ui.activity.AppointmentSettingsActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.WebViewActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.MyBankCardActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.UploadFilesActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.SetBankCardActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.GetMoneyActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.CaseListActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.ModifyBizActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.AddOrderSummaryActivity" android:screenOrientation="portrait"/>
+
+
+        <!-- Required SDK核心功能-->
+        <activity
+            android:name="cn.jpush.android.ui.PushActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:configChanges="orientation|keyboardHidden" >
+            <intent-filter>
+                <action android:name="cn.jpush.android.ui.PushActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="com.lsm.barrister" />
+            </intent-filter>
+        </activity>
+        <!-- Required  SDK核心功能-->
+        <service
+            android:name="cn.jpush.android.service.DownloadService"
+            android:enabled="true"
+            android:exported="false" >
+        </service>
+
+
+        <!-- Required SDK 核心功能-->
+        <service
+            android:name="cn.jpush.android.service.PushService"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.REGISTER" />
+                <action android:name="cn.jpush.android.intent.REPORT" />
+                <action android:name="cn.jpush.android.intent.PushService" />
+                <action android:name="cn.jpush.android.intent.PUSH_TIME" />
+
+            </intent-filter>
+        </service>
+
+        <!-- Required SDK核心功能-->
+        <receiver
+            android:name="cn.jpush.android.service.PushReceiver"
+            android:enabled="true" >
+            <intent-filter android:priority="1000">
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />   <!--Required  显示通知栏 -->
+                <category android:name="com.lsm.barrister" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+            <!-- Optional -->
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+                <data android:scheme="package" />
+            </intent-filter>
+
+        </receiver>
+
+        <!-- Required SDK核心功能-->
+        <receiver android:name="cn.jpush.android.service.AlarmReceiver" />
+
+        <!-- User defined.  For test only  用户自定义的广播接收器-->
+        <receiver
+            android:name=".push.MyReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.REGISTRATION" /> <!--Required  用户注册SDK的intent-->
+                <action android:name="cn.jpush.android.intent.UNREGISTRATION" />
+                <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" /> <!--Required  用户接收SDK消息的intent-->
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" /> <!--Required  用户接收SDK通知栏信息的intent-->
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" /> <!--Required  用户打开自定义通知栏的intent-->
+                <category android:name="com.lsm.barrister" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Required  . Enable it you can get statistics data with channel -->
+        <meta-data
+            android:name="JPUSH_CHANNEL"
+            android:value="developer-default" />
+        <meta-data
+            android:name="JPUSH_APPKEY"
+            android:value="0c0127f6d6aee11d76de743b" />
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
@@ -137,13 +240,7 @@
             android:enabled="true"
             android:process=":remote" />
 
-        <!-- Required  . Enable it you can get statistics data with channel -->
-        <meta-data
-            android:name="JPUSH_CHANNEL"
-            android:value="developer-default" />
-        <meta-data
-            android:name="JPUSH_APPKEY"
-            android:value="0c0127f6d6aee11d76de743b" />
+
 
         <meta-data
             android:name="UMENG_CHANNEL"

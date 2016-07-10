@@ -5,27 +5,32 @@ package com.lsm.barrister.data.db;
  * Entity mapped to table PUSH_MESSAGE.
  */
 public class PushMessage {
-
-    public static final String TYPE_SYSTEM_MSG = "msg.type.system";//系统消息
-    public static final String TYPE_NEWS = "msg.type.news";//新闻
+	
+	
+	//=================COMMON==================================================
     public static final String TYPE_FORCE_UPDATE = "msg.type.update.app.force";//更新APP
-    public static final String TYPE_ORDER_MSG = "msg.type.order";//订单消息
     public static final String TYPE_CLEAR_APP_DATA = "msg.type.app.clear";//清除APP数据
     public static final String TYPE_UPLOAD_PUSHID = "msg.type.app.upload.pushId";//上传pushId
-    public static final String TYPE_AD = "msg.type.ad";//广告
-
+    //===========================================================================
+    public static final String TYPE_ORDER_STATUS = "type.order.status.changed";//订单状态改变
+    public static final String TYPE_RECEIVE_STAR = "type.receive.star";//收到评价
+    public static final String TYPE_ORDER_REWARD = "type.receive.order.reward";//收到打赏
+    public static final String TYPE_ORDER_MONEY = "type.receive.order.money";//订单服务费到账
+    public static final String TYPE_ORDER_BACK_MONEY = "type.receive.back.money";//订单退款到账
+    public static final String TYPE_RECHARGE = "type.recharge";//充值
+    public static final String TYPE_GET_MONEY = "type.getmoney";//提现请求已处理，注意查收
+    public static final String TYPE_SYSTEM_MSG = "type.system.msg";//系统消息
+    public static final String TYPE_VERIFY = "type.verify.msg";//律师认证通知
+    public static final String TYPE_LEARNING = "type.learning.item";//学习中心
 
     /** Not-null value. */
     private String id;
     /** Not-null value. */
     private String type;
-    private String icon;
-    private String title;
-    private String digest;
+    private String content;
     private String contentId;
     private String date;
     private Boolean read;
-    private Boolean deleteFlag;
 
     public PushMessage() {
     }
@@ -34,16 +39,13 @@ public class PushMessage {
         this.id = id;
     }
 
-    public PushMessage(String id, String type, String icon, String title, String digest, String contentId, String date, Boolean read, Boolean deleteFlag) {
+    public PushMessage(String id, String type, String content, String contentId, String date, Boolean read) {
         this.id = id;
         this.type = type;
-        this.icon = icon;
-        this.title = title;
-        this.digest = digest;
+        this.content = content;
         this.contentId = contentId;
         this.date = date;
         this.read = read;
-        this.deleteFlag = deleteFlag;
     }
 
     /** Not-null value. */
@@ -66,28 +68,12 @@ public class PushMessage {
         this.type = type;
     }
 
-    public String getIcon() {
-        return icon;
+    public String getContent() {
+        return content;
     }
 
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDigest() {
-        return digest;
-    }
-
-    public void setDigest(String digest) {
-        this.digest = digest;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getContentId() {
@@ -112,14 +98,6 @@ public class PushMessage {
 
     public void setRead(Boolean read) {
         this.read = read;
-    }
-
-    public Boolean getDeleteFlag() {
-        return deleteFlag;
-    }
-
-    public void setDeleteFlag(Boolean deleteFlag) {
-        this.deleteFlag = deleteFlag;
     }
 
 }

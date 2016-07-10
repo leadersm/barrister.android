@@ -289,6 +289,7 @@ public class VersionHelper {
             return;
         }
 
+        UIHelper.showToast(context,"已进入后台下载。");
 
         File dir = Environment.getExternalStoragePublicDirectory(Constants.downloadDir);
         if (!dir.exists()) {

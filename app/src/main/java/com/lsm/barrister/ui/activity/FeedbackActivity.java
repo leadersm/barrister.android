@@ -19,8 +19,6 @@ public class FeedbackActivity extends BaseActivity {
 
     AQuery aq;
 
-    FeedbackReq mFeedbackReq;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +34,11 @@ public class FeedbackActivity extends BaseActivity {
         });
     }
 
+    boolean isLoading = false;
     private void doCommit() {
+        if(isLoading){
+            return;
+        }
 
         String content = aq.id(R.id.et_feedback_content).getEditable().toString();
         if(TextUtils.isEmpty(content)){
@@ -46,23 +48,23 @@ public class FeedbackActivity extends BaseActivity {
 
         String contact = aq.id(R.id.et_feedback_contact).getEditable().toString();
 
-        mFeedbackReq = new FeedbackReq(this,content,contact);
-
-        mFeedbackReq.execute(new Action.Callback<Boolean>() {
+        new FeedbackReq(this,content,contact).execute(new Action.Callback<Boolean>() {
 
             @Override
             public void progress() {
-
+                isLoading = true;
             }
 
             @Override
             public void onError(int errorCode, String msg) {
-
+                isLoading = false;
             }
 
             @Override
             public void onCompleted(Boolean aBoolean) {
-
+                isLoading = false;
+                UIHelper.showToast(getApplicationContext(),"感谢您的反馈");
+                finish();
             }
         });
 

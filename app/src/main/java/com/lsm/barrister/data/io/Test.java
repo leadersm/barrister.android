@@ -112,8 +112,8 @@ public class Test {
         result.resultMsg = "success";
 
         result.status = User.ORDER_STATUS_CAN;
-        result.remainingBalance = "1005.9";
-        result.totalIncome = "1500";
+        result.remainingBalance = 1005.9f;
+        result.totalIncome = 1500f;
         result.orderQty = 200;
 
         List<OrderItem> orderItems = getMyOrdersResult(3).orders;
