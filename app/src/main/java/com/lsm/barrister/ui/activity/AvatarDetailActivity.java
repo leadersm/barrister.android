@@ -19,6 +19,7 @@ import com.lsm.barrister.app.Constants;
 import com.lsm.barrister.app.UserHelper;
 import com.lsm.barrister.data.entity.User;
 import com.lsm.barrister.data.io.Action;
+import com.lsm.barrister.data.io.app.LoginReq;
 import com.lsm.barrister.data.io.app.UploadUserIconReq;
 import com.lsm.barrister.ui.UIHelper;
 import com.lsm.barrister.utils.DLog;
@@ -57,6 +58,38 @@ public class AvatarDetailActivity extends BaseActivity implements UserHelper.Use
         init();
 
         UserHelper.getInstance().addOnUserActionListener(this);
+
+        updateVerifyStatus();
+    }
+
+    private void updateVerifyStatus() {
+        if(!user.getVerifyStatus().equals(User.STATUS_SUCCESS)){
+            new LoginReq(this,user.getPhone(),user.getVerifyCode()).execute(new Action.Callback<User>() {
+
+                @Override
+                public void progress() {
+
+                }
+
+                @Override
+                public void onError(int errorCode, String msg) {
+
+                }
+
+                @Override
+                public void onCompleted(User user) {
+
+                    if(user!=null){
+
+                        AppConfig.setUser(getApplicationContext(),user);
+
+                        AvatarDetailActivity.this.user = user;
+
+                        UserHelper.getInstance().notifyUpdateUser();
+                    }
+                }
+            });
+        }
     }
 
     private void init() {
@@ -158,12 +191,8 @@ public class AvatarDetailActivity extends BaseActivity implements UserHelper.Use
             @Override
             public void onClick(View v) {
 
-                if (user.getVerifyStatus().equals(User.STATUS_UNAUTHERIZED)) {
+                if (user.getVerifyStatus().equals(User.STATUS_UNAUTHERIZED) || user.getVerifyStatus().equals(User.STATUS_FAILED)) {
                     UIHelper.goUploadFilesActitiy(AvatarDetailActivity.this);
-                } else if (user.getVerifyStatus().equals(User.STATUS_SUCCESS)) {
-                } else if (user.getVerifyStatus().equals(User.STATUS_VERIFYING)) {
-                } else if (user.getVerifyStatus().equals(User.STATUS_FAILED)) {
-                    UIHelper.goUploadFilesActitiy(getApplicationContext());
                 }
             }
         });
@@ -253,7 +282,7 @@ public class AvatarDetailActivity extends BaseActivity implements UserHelper.Use
                 } else if (user.getVerifyStatus().equals(User.STATUS_SUCCESS)) {
                 } else if (user.getVerifyStatus().equals(User.STATUS_VERIFYING)) {
                 } else if (user.getVerifyStatus().equals(User.STATUS_FAILED)) {
-                    UIHelper.goUploadFilesActitiy(getApplicationContext());
+                    UIHelper.goUploadFilesActitiy(AvatarDetailActivity.this);
                 }
             }
         });

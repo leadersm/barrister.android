@@ -148,6 +148,8 @@ public class OrderListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             SimpleDraweeView userIcon = (SimpleDraweeView) aq.id(R.id.image_item_thumb).getView();
             if(!TextUtils.isEmpty(mItem.getUserIcon())){
                 userIcon.setImageURI(Uri.parse(mItem.getUserIcon()));
+            }else{
+                userIcon.setImageURI(null);
             }
 
         }

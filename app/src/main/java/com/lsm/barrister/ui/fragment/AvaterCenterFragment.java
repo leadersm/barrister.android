@@ -17,12 +17,20 @@ import com.lsm.barrister.R;
 import com.lsm.barrister.app.AppConfig;
 import com.lsm.barrister.app.UserHelper;
 import com.lsm.barrister.data.entity.User;
+import com.lsm.barrister.data.io.Action;
+import com.lsm.barrister.data.io.app.IsExpertReq;
+import com.lsm.barrister.data.io.app.LoginReq;
+import com.lsm.barrister.ui.UIHelper;
 import com.lsm.barrister.ui.activity.AppointmentSettingsActivity;
 import com.lsm.barrister.ui.activity.AvatarDetailActivity;
 import com.lsm.barrister.ui.activity.LoginActivity;
 import com.lsm.barrister.ui.activity.MsgsActivity;
 import com.lsm.barrister.ui.activity.MyAccountActivity;
+import com.lsm.barrister.ui.activity.MyCaseListActivity;
 import com.lsm.barrister.ui.activity.SettingsActivity;
+import com.lsm.barrister.utils.DLog;
+
+import static android.support.v7.widget.StaggeredGridLayoutManager.TAG;
 
 public class AvaterCenterFragment extends Fragment implements UserHelper.UserActionListener{
 
@@ -108,6 +116,20 @@ public class AvaterCenterFragment extends Fragment implements UserHelper.UserAct
             }
         });
 
+        aq.id(R.id.btn_my_cases).clicked(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (user == null) {
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(getActivity(), MyCaseListActivity.class);
+                    startActivity(intent);
+                }
+
+            }
+        });
+
         aq.id(R.id.btn_contact_us).clicked(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,6 +147,43 @@ public class AvaterCenterFragment extends Fragment implements UserHelper.UserAct
             }
         });
 
+        aq.id(R.id.btn_authentication).clicked(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doUpdateStatus();
+            }
+        });
+
+    }
+
+    private void doUpdateStatus() {
+
+        if(user==null)
+            return;
+
+        new LoginReq(getActivity(),user.getPhone(),user.getVerifyCode()).execute(new Action.Callback<User>() {
+
+            @Override
+            public void progress() {
+
+            }
+
+            @Override
+            public void onError(int errorCode, String msg) {
+
+            }
+
+            @Override
+            public void onCompleted(User user) {
+                if(user!=null){
+                    AppConfig.setUser(getContext(),user);
+
+                    AvaterCenterFragment.this.user = user;
+
+                    setupUserInfo();
+                }
+            }
+        });
     }
 
     private void setupUserInfo() {
@@ -194,5 +253,57 @@ public class AvaterCenterFragment extends Fragment implements UserHelper.UserAct
 
         setupUserInfo();
 
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser){
+            doGetIsExpert();
+
+        }
+    }
+
+    /**
+     * 检查是否为专家
+     */
+    private void doGetIsExpert() {
+
+        new IsExpertReq(getContext()).execute(new Action.Callback<Boolean>() {
+            @Override
+            public void progress() {
+
+            }
+
+            @Override
+            public void onError(int errorCode, String msg) {
+
+            }
+
+            @Override
+            public void onCompleted(Boolean isExpert) {
+
+                DLog.d(TAG,"isExpert:"+isExpert);
+
+                if(isExpert){
+
+                    aq.id(R.id.layout_price_settings).visible();
+                    aq.id(R.id.btn_modify_price).clicked(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            UIHelper.goModifyPriceActivity(getActivity());
+                        }
+                    });
+
+                }else{
+                    aq.id(R.id.layout_price_settings).gone();
+                }
+            }
+        });
     }
 }

@@ -1,12 +1,16 @@
 package com.lsm.barrister.ui.activity;
 
-import android.content.Intent;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.androidquery.AQuery;
@@ -19,16 +23,18 @@ import com.lsm.barrister.data.entity.Account;
 import com.lsm.barrister.data.io.Action;
 import com.lsm.barrister.data.io.IO;
 import com.lsm.barrister.data.io.app.BindBankCardReq;
-import com.lsm.barrister.data.io.app.GetBankNameReq;
+import com.lsm.barrister.module.pick.RxImageConverters;
+import com.lsm.barrister.module.pick.RxImagePicker;
+import com.lsm.barrister.module.pick.Sources;
 import com.lsm.barrister.ui.UIHelper;
-import com.lsm.barrister.utils.DLog;
 import com.lsm.barrister.utils.FileUtils;
 
 import java.io.File;
 import java.util.List;
 
-import io.card.payment.CardIOActivity;
-import io.card.payment.CreditCard;
+import rx.Observable;
+import rx.functions.Action1;
+import rx.functions.Func1;
 
 
 /**
@@ -69,16 +75,181 @@ public class SetBankCardActivity extends BaseActivity {
     }
 
     private void doScanCard() {
-        Intent scanIntent = new Intent(this, CardIOActivity.class);
+//        Intent scanIntent = new Intent(this, CardIOActivity.class);
+//
+//        // customize these values to suit your needs.
+//        scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_EXPIRY, true); // default: false
+//        scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_CVV, false); // default: false
+//        scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_POSTAL_CODE, false); // default: false
+//        scanIntent.putExtra(CardIOActivity.EXTRA_RETURN_CARD_IMAGE, true); // default: false
+//
+//        // MY_SCAN_REQUEST_CODE is arbitrary and is only used within this activity.
+//        startActivityForResult(scanIntent, MY_SCAN_REQUEST_CODE);
 
-        // customize these values to suit your needs.
-        scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_EXPIRY, true); // default: false
-        scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_CVV, false); // default: false
-        scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_POSTAL_CODE, false); // default: false
-        scanIntent.putExtra(CardIOActivity.EXTRA_RETURN_CARD_IMAGE, true); // default: false
+        showChoosePicDialog();
 
-        // MY_SCAN_REQUEST_CODE is arbitrary and is only used within this activity.
-        startActivityForResult(scanIntent, MY_SCAN_REQUEST_CODE);
+    }
+
+    /**
+     * 显示选择照片对对话框
+     * 从相册选择，拍照
+     */
+    private void showChoosePicDialog() {
+        // TODO Auto-generated method stub
+        final String[] items = new String[]{getString(R.string.pick_img_from_album), getString(R.string.take_photo)};
+
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.title_choose_pic)
+                .setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.dismiss();
+
+                        doSelectChooseMode(which);
+                    }
+
+                }).create().show();
+    }
+
+    File mPickingFile = null;
+
+    /**
+     * 从相册选择or拍照
+     *
+     * @param which
+     */
+    protected void doSelectChooseMode(int which) {
+
+        mPickingFile = new File(AppConfig.getDir(Constants.imageDir), "CN_DLS_BANK_CARD.jpg");
+
+        if (which == 0) {//从相册选择
+
+            RxImagePicker.with(this).requestImage(Sources.GALLERY)
+                    .flatMap(new Func1<Uri, Observable<File>>() {
+                        @Override
+                        public Observable<File> call(Uri uri) {
+                            return RxImageConverters.uriToFile(getApplicationContext(), uri,createTempFile());
+                        }
+                    }).subscribe(new Action1<File>() {
+
+                @Override
+                public void call(File file) {
+                    handleResult(file);
+                }
+            });
+
+        } else {//拍照
+
+            RxImagePicker.with(this).requestImage(Sources.CAMERA)
+                    .flatMap(new Func1<Uri, Observable<File>>() {
+                        @Override
+                        public Observable<File> call(Uri uri) {
+                            return RxImageConverters.uriToFile(getApplicationContext(), uri,createTempFile());
+                        }
+                    }).subscribe(new Action1<File>() {
+
+                @Override
+                public void call(File file) {
+                    handleResult(file);
+                }
+            });
+
+        }
+    }
+
+    private File createTempFile() {
+        return new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), System.currentTimeMillis() + "_image.jpeg");
+    }
+
+    private void showFile(File file) {
+
+        SimpleDraweeView card = (SimpleDraweeView) findViewById(R.id.image_setbank);
+        card.setImageURI(Uri.fromFile(file));
+
+        this.file = file;
+
+    }
+
+    /**
+     * 选完照片显示出来
+     */
+    private void handleResult(File file) {
+        new BmTask(file).execute();
+    }
+
+    class BmTask extends AsyncTask<Void,Void,Bitmap> {
+
+        File file;
+        Bitmap bitmap;
+
+        public BmTask(File file) {
+            this.file = file;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog.setMessage("正在处理图片...");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
+
+        @Override
+        protected Bitmap doInBackground(Void... params) {
+
+            bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+
+            int height = bitmap.getHeight();
+            int width = bitmap.getWidth();
+
+            float targetRatio = 0 ;
+
+            Log.d(TAG,"height:"+height+",width:"+width);
+
+            if(height>1920 || width >1080){
+
+//            targetHeight = height = 1920;
+//            targetWidth = (int) (height/ratio);
+
+                if(height>1920){
+                    targetRatio = (float) 1920/height;
+                }else if(width>1080){
+                    targetRatio =  (float) 1080/width;
+                }
+
+                return FileUtils.ratio(bitmap,targetRatio);
+//                return FileUtils.ratio(bitmap,targetRatio*width,targetRatio*height);
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bm) {
+            super.onPostExecute(bm);
+
+            if(bm!=null){
+                FileUtils.saveImageFile(bm, AppConfig.getDir(Constants.imageDir), file.getName(), new FileUtils.FileCallback() {
+                    @Override
+                    public void onFileCallback(File file) {
+
+                        bitmap = null;
+                        progressDialog.dismiss();
+
+                        showFile(file);
+                    }
+                });
+            }else{
+                progressDialog.dismiss();
+                showFile(file);
+                bitmap = null;
+
+            }
+
+
+        }
     }
 
     File file;
@@ -120,11 +291,13 @@ public class SetBankCardActivity extends BaseActivity {
                 progressDialog.setMessage(getString(R.string.tip_loading));
                 progressDialog.setCancelable(false);
                 progressDialog.show();
+                aq.id(R.id.btn_commit).enabled(false);
             }
 
             @Override
             public void onError(int errorCode, String msg) {
                 progressDialog.dismiss();
+                aq.id(R.id.btn_commit).enabled(true);
                 UIHelper.showToast(getApplicationContext(),"上传失败："+msg);
             }
 
@@ -133,6 +306,8 @@ public class SetBankCardActivity extends BaseActivity {
                 progressDialog.dismiss();
 
                 if(result!=null){
+
+                    UIHelper.showToast(getApplicationContext(),"上传成功");
 
                     UserHelper.getInstance().setAccount(result.account);
                     UserHelper.getInstance().updateAccount();
@@ -149,96 +324,5 @@ public class SetBankCardActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(R.string.mybankcard);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == MY_SCAN_REQUEST_CODE) {
-            String resultDisplayStr;
-
-            String bankcardNum;
-            String expire;//
-
-            if (data != null && data.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)) {
-
-                byte[] byteArray = data.getByteArrayExtra(CardIOActivity.EXTRA_CAPTURED_CARD_IMAGE);
-                if(byteArray!=null){
-                    Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-                    FileUtils.saveImageFile(bmp, AppConfig.getDir(Constants.imageDir), "mycard.png", new FileUtils.FileCallback() {
-                        @Override
-                        public void onFileCallback(File file) {
-                            DLog.d(TAG,"save card:"+file.getAbsolutePath());
-                            SetBankCardActivity.this.file = file;
-                            SimpleDraweeView card = (SimpleDraweeView) findViewById(R.id.image_setbank);
-                            if(file.exists()){
-                                card.setImageURI(Uri.fromFile(file));
-                            }
-                        }
-                    });
-                }
-
-                CreditCard scanResult = data.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
-
-                bankcardNum = scanResult.getFormattedCardNumber();
-
-                // Never log a raw card number. Avoid displaying it, but if necessary use getFormattedCardNumber()
-                resultDisplayStr = "Card Number: " + scanResult.getRedactedCardNumber() + "\n" +"scanResult.getFormattedCardNumber()："+scanResult.getFormattedCardNumber();
-                // Do something with the raw number, e.g.:
-                // myService.setCardNumber( scanResult.cardNumber );
-
-                if (scanResult.isExpiryValid()) {
-                    resultDisplayStr += "Expiration Date: " + scanResult.expiryMonth + "/" + scanResult.expiryYear + "\n";
-                }
-
-                if (scanResult.cvv != null) {
-                    // Never log or display a CVV
-                    resultDisplayStr += "CVV has " + scanResult.cvv.length() + " digits.\n";
-                }
-
-                if (scanResult.postalCode != null) {
-                    resultDisplayStr += "Postal Code: " + scanResult.postalCode + "\n";
-                }
-
-                aq.id(R.id.et_bankcard_num).text(bankcardNum);
-
-                new GetBankNameReq(SetBankCardActivity.this,bankcardNum.replaceAll(" ","")).execute(new Action.Callback<IO.GetBankInfoResult>() {
-                    @Override
-                    public void progress() {
-
-                    }
-
-                    @Override
-                    public void onError(int errorCode, String msg) {
-
-                    }
-
-                    @Override
-                    public void onCompleted(IO.GetBankInfoResult result) {
-
-                        if(result!=null && result.data!=null){
-
-                            aq.id(R.id.et_bankcard_bankname).text(result.data.bankname);
-                            aq.id(R.id.et_bankcard_type).text(result.data.cardtype);
-
-                        }
-
-
-                    }
-                });
-
-//                String name = BankCardBin.getNameOfBank(bankcardNum.replaceAll(" ",""), 0);//获取银行卡的信息
-
-
-            }else {
-                resultDisplayStr = "Scan was canceled.";
-            }
-            // do something with resultDisplayStr, maybe display it in a textView
-            // resultTextView.setText(resultDisplayStr);
-
-            System.out.println("===>"+resultDisplayStr);
-        }
-        // else handle other activity results
     }
 }

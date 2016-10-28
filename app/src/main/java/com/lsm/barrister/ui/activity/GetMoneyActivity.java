@@ -13,7 +13,6 @@ import com.lsm.barrister.data.entity.Account;
 import com.lsm.barrister.data.io.Action;
 import com.lsm.barrister.data.io.app.GetMoneyReq;
 import com.lsm.barrister.ui.UIHelper;
-import com.lsm.barrister.utils.DLog;
 
 
 /**
@@ -75,7 +74,13 @@ public class GetMoneyActivity extends BaseActivity {
         if(isLoading)
             return;
 
-        String status = UserHelper.getInstance().getAccount().getBankCardBindStatus();
+        Account account = UserHelper.getInstance().getAccount();
+        if(account==null){
+            UIHelper.showToast(getApplicationContext(),"获取账户信息失败.");
+            return;
+        }
+
+        String status = account.getBankCardBindStatus();
         if(status.equals(Account.CARD_STATUS_NOT_BOUND)){
             UIHelper.showToast(getApplicationContext(),getString(R.string.tip_bind_card));
             return;

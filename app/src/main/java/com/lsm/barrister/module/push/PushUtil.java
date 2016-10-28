@@ -1,4 +1,4 @@
-package com.lsm.barrister.push;
+package com.lsm.barrister.module.push;
 
 import android.app.Notification;
 import android.content.Context;

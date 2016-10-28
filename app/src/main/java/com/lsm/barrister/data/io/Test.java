@@ -200,7 +200,7 @@ public class Test {
             msg.setId(""+i);
             msg.setContent("系统即将重启。。。。");
             msg.setTitle("系统消息");
-            msg.setType(Message.TYPE_SYSTEM);
+//            msg.setType(Message.TYPE_SYSTEM);
             msgs.add(msg);
         }
 

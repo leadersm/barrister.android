@@ -10,6 +10,7 @@ public class IncomeDetailItem implements Serializable{
     public static final String TYPE_ORDER = "income.type.order";//订单
     public static final String TYPE_GET_MONEY = "income.type.getmoney";//提现
     public static final String TYPE_REWARD = "income.type.reward";//打赏
+    public static final String TYPE_BUY_CASE = "income.type.buycase";//购买案源
 
     String id;
     String serialNum;//流水号

@@ -10,7 +10,7 @@ import com.lsm.barrister.R;
 import com.lsm.barrister.app.AppConfig;
 import com.lsm.barrister.app.Constants;
 import com.lsm.barrister.data.entity.User;
-import com.lsm.barrister.push.PushUtil;
+import com.lsm.barrister.module.push.PushUtil;
 import com.lsm.barrister.ui.UIHelper;
 import com.lsm.barrister.utils.DLog;
 
@@ -24,10 +24,14 @@ public class WelcomeActivity extends BaseActivity {
 
     private static final String TAG = "WelcomeActivity";
 
+    public static boolean isRunning = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+
+        isRunning = true;
 
         setupPush();
 
@@ -115,4 +119,9 @@ public class WelcomeActivity extends BaseActivity {
         return true;
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        isRunning = false;
+    }
 }

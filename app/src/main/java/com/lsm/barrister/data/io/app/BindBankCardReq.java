@@ -78,19 +78,10 @@ public class BindBankCardReq extends Action {
 
         final IO.BindBankcardResult result = getFromGson(json,new TypeToken<IO.BindBankcardResult>(){});//Test.getBindcardResult();//
 
-        if(result!=null){
-
-            if(result.resultCode == 200){
-
-                onSafeCompleted(result);
-
-            }
-
-            return result;
-
+        if(result!=null && result.resultCode == 200){
+            onSafeCompleted(result);
         }
-
-        return null;
+        return result;
     }
 
     @Override

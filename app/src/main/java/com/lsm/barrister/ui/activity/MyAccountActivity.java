@@ -5,6 +5,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import com.androidquery.AQuery;
@@ -20,7 +21,6 @@ import com.lsm.barrister.data.io.app.GetStudyListReq;
 import com.lsm.barrister.ui.UIHelper;
 import com.lsm.barrister.ui.adapter.IncomeListAdapter;
 import com.lsm.barrister.ui.adapter.LoadMoreListener;
-import com.lsm.barrister.utils.DLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +58,8 @@ public class MyAccountActivity extends BaseActivity implements SwipeRefreshLayou
                 Account account = UserHelper.getInstance().getAccount();
 
                 if(account==null){
-                    DLog.e(TAG,"获取账户信息失败。。");
+                    UIHelper.showToast(getApplicationContext(),"获取账户信息失败.");
+                    Log.d(TAG,"load account failed");
                     return;
                 }
 
@@ -208,7 +209,6 @@ public class MyAccountActivity extends BaseActivity implements SwipeRefreshLayou
                 isLoadingMore = false;
 
                 if(result!=null && result.incomeDetails!=null){
-                    items.clear();
                     items.addAll(result.incomeDetails);
                     mAdapter.notifyDataSetChanged();
                 }

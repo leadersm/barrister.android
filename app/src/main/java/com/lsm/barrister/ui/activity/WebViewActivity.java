@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,13 +31,16 @@ public class WebViewActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_webview);
+        setupToolbar();
 
         String url = getIntent().getStringExtra(KEY_URL);
         String title = getIntent().getStringExtra(KEY_TITLE);
 
-        System.out.println("url:" + url);
+        if(!TextUtils.isEmpty(title)){
+            getSupportActionBar().setTitle(title);
+        }
 
-        setupToolbar();
+//        System.out.println("url:" + url);
 
         initWebView(url);
     }

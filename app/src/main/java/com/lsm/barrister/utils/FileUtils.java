@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -27,6 +28,7 @@ import com.lsm.barrister.app.Constants;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -712,9 +714,11 @@ public class FileUtils {
                     e.printStackTrace();
                 } finally {
                     try {
-                        fos.flush();
-                        fos.close();
-                        fos = null;
+                        if(fos!=null){
+                            fos.flush();
+                            fos.close();
+                            fos = null;
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -743,6 +747,20 @@ public class FileUtils {
         return newbmp;
     }
 
+    public static Bitmap smallBitmap(Bitmap bitmap, float ratio) {
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+
+        Matrix matrix = new Matrix();
+        matrix.postScale(ratio, ratio);
+
+        int tw = (int) (width * ratio);
+        int th = (int) (height * ratio);
+
+        Bitmap newbmp = Bitmap.createBitmap(bitmap, 0, 0, tw, th, matrix, true);
+        return newbmp;
+    }
+
     public static void saveImageFile(final Bitmap bitmap, final File dir, final String name, final FileCallback cb) {
         new AsyncTask<File, Void, File>() {
 
@@ -753,7 +771,7 @@ public class FileUtils {
 
                     File file = new File(dir, name);
                     fos = new FileOutputStream(file);
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 90, fos);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos);
 
                     return file;
                 } catch (Exception e) {
@@ -1143,6 +1161,133 @@ public class FileUtils {
         intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
         intent.setType("application/octet-stream");
         context.startActivity(Intent.createChooser(intent, "分享到"));
+    }
+
+    public static Bitmap ratio(Bitmap image, float ratio) {
+
+        image = smallBitmap(image,ratio);
+
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.JPEG, 100, os);
+
+        int options = 50;
+        while( os.toByteArray().length / 1024 > 1024) {//判断如果图片大于1M,进行压缩避免在生成图片（BitmapFactory.decodeStream）时溢出
+            os.reset();//重置baos即清空baos
+            image.compress(Bitmap.CompressFormat.JPEG, options, os);//这里压缩50%，把压缩后的数据存放到baos中
+            options -= 10;
+        }
+
+        ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
+        BitmapFactory.Options newOpts = new BitmapFactory.Options();
+        //开始读入图片，此时把options.inJustDecodeBounds 设回true了
+        newOpts.inJustDecodeBounds = true;
+        newOpts.inPreferredConfig = Bitmap.Config.RGB_565;
+        Bitmap bitmap = BitmapFactory.decodeStream(is, null, newOpts);
+        newOpts.inJustDecodeBounds = false;
+        newOpts.inSampleSize = calculateInSampleSize(newOpts,720,1080);//设置缩放比例
+
+        //重新读入图片，注意此时已经把options.inJustDecodeBounds 设回false了
+        is = new ByteArrayInputStream(os.toByteArray());
+        bitmap = BitmapFactory.decodeStream(is, null, newOpts);
+        //压缩好比例大小后再进行质量压缩
+//      return compress(bitmap, maxSize); // 这里再进行质量压缩的意义不大，反而耗资源，删除
+        try {
+            os.flush();
+            os.close();
+            is.close();
+            os = null;
+            is = null;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+//        bitmap = compressImage(bitmap);
+
+        return bitmap;
+    }
+
+    public static Bitmap ratio(Bitmap image, float pixelW, float pixelH) {
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.JPEG, 100, os);
+
+        int options = 50;
+        while( os.toByteArray().length / 1024 > 1024) {//判断如果图片大于1M,进行压缩避免在生成图片（BitmapFactory.decodeStream）时溢出
+            os.reset();//重置baos即清空baos
+            image.compress(Bitmap.CompressFormat.JPEG, options, os);//这里压缩50%，把压缩后的数据存放到baos中
+            options -= 10;
+        }
+
+        ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
+        BitmapFactory.Options newOpts = new BitmapFactory.Options();
+        //开始读入图片，此时把options.inJustDecodeBounds 设回true了
+        newOpts.inJustDecodeBounds = true;
+        newOpts.inPreferredConfig = Bitmap.Config.RGB_565;
+        Bitmap bitmap = BitmapFactory.decodeStream(is, null, newOpts);
+        newOpts.inJustDecodeBounds = false;
+        newOpts.inSampleSize = calculateInSampleSize(newOpts,720,1080);//设置缩放比例
+
+        //重新读入图片，注意此时已经把options.inJustDecodeBounds 设回false了
+        is = new ByteArrayInputStream(os.toByteArray());
+        bitmap = BitmapFactory.decodeStream(is, null, newOpts);
+        //压缩好比例大小后再进行质量压缩
+//      return compress(bitmap, maxSize); // 这里再进行质量压缩的意义不大，反而耗资源，删除
+        try {
+            os.flush();
+            os.close();
+            is.close();
+            os = null;
+            is = null;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+//        bitmap = compressImage(bitmap);
+
+        return bitmap;
+    }
+
+    private static Bitmap compressImage(Bitmap image) {
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);//质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
+        int options = 100;
+        while ( baos.toByteArray().length / 1024>500) {  //循环判断如果压缩后图片是否大于100kb,大于继续压缩
+            baos.reset();//重置baos即清空baos
+            image.compress(Bitmap.CompressFormat.JPEG, options, baos);//这里压缩options%，把压缩后的数据存放到baos中
+            options -= 10;//每次都减少10
+        }
+        ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());//把压缩后的数据baos存放到ByteArrayInputStream中
+        Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, null);//把ByteArrayInputStream数据生成图片
+        return bitmap;
+    }
+
+    // 根据路径获得图片并压缩，返回bitmap用于显示
+    public static Bitmap getSmallBitmap(String filePath,int tw,int th) {
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(filePath, options);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, tw, th);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+
+        return BitmapFactory.decodeFile(filePath, options);
+    }
+
+    //计算图片的缩放值
+    public static int calculateInSampleSize(BitmapFactory.Options options,int reqWidth, int reqHeight) {
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+            final int heightRatio = Math.round((float) height/ (float) reqHeight);
+            final int widthRatio = Math.round((float) width / (float) reqWidth);
+            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+        }
+        return inSampleSize;
     }
 
 }

@@ -5,36 +5,52 @@
     android:orientation="vertical"
     android:layout_marginBottom="@dimen/divider_size"
     android:background="@drawable/layout_selector"
-    android:padding="10dp">
+    android:clickable="true"
+    android:paddingTop="15dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp">
 
-    <FrameLayout
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:src="@drawable/ic_me_message"
+            android:layout_marginRight="5dp"
+            android:id="@+id/imageView3" />
 
         <TextView
             android:id="@+id/tv_item_msg_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
             android:text="Title"
+            android:layout_weight="1"
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/tv_item_msg_type"
+            android:id="@+id/tv_item_msg_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|right"
-            android:text="财务纠纷"
-            android:textSize="14sp" />
-
-    </FrameLayout>
+            android:layout_gravity="right"
+            android:textSize="12sp"
+            android:text="yyyy-MM-dd 00:00:00" />
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/tv_item_msg_date"
+        android:id="@+id/tv_item_msg_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:text="yyyy-MM-dd 00:00:00" />
+        android:layout_marginTop="10dp"
+        android:textSize="14sp" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_size"
+        android:layout_marginTop="15dp"
+        android:layout_weight="1"
+        android:background="@color/divider" />
 </LinearLayout>

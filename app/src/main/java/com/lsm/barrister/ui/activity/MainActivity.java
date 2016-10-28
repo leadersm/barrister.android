@@ -11,10 +11,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.androidquery.AQuery;
+import com.androidquery.util.AQUtility;
 import com.lsm.barrister.R;
 import com.lsm.barrister.app.AppConfig;
 import com.lsm.barrister.app.AppManager;
 import com.lsm.barrister.app.UserHelper;
+import com.lsm.barrister.app.VersionHelper;
 import com.lsm.barrister.data.entity.User;
 import com.lsm.barrister.ui.fragment.AvaterCenterFragment;
 import com.lsm.barrister.ui.fragment.HomeFragment;
@@ -57,9 +59,15 @@ public class MainActivity extends BaseActivity {
 
         aq = new AQuery(this);
 
+        AQUtility.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                VersionHelper.instance().check(MainActivity.this,false);
+            }
+        },2000);
 
-//        ECHelper.getInstance().createSubUser(this,"test123456");
     }
+
 
     private void setupViewPager() {
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -134,7 +142,9 @@ public class MainActivity extends BaseActivity {
                 switch (index) {
                     case 0:
                         HomeFragment homeFragment = (HomeFragment) fragmentHashMap.get(0);
-                        homeFragment.refresh();
+                        if(homeFragment!=null){
+                            homeFragment.refresh();
+                        }
                         break;
                     case 1:
 
@@ -212,6 +222,10 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        if(user!=null){
+            UserHelper.getInstance().syncAccount(this);
+        }
 
         AppManager.setMainActivityRunning(true);
 

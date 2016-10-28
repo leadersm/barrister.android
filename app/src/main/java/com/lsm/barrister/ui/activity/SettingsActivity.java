@@ -1,7 +1,9 @@
 package com.lsm.barrister.ui.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
@@ -49,7 +51,7 @@ public class SettingsActivity extends BaseActivity {
         aq.id(R.id.btn_settings_help).clicked(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UIHelper.goDocActivity(SettingsActivity.this,"帮助", Constants.DOC_ABOUT);
+                UIHelper.goDocActivity(SettingsActivity.this,"帮助", Constants.DOC_HELP);
             }
         });
         aq.id(R.id.btn_settings_update).clicked(new View.OnClickListener() {
@@ -73,6 +75,23 @@ public class SettingsActivity extends BaseActivity {
                 if(isLogouting){
                     return ;
                 }
+
+                showLogoutDialog();
+
+            }
+        });
+
+        String versionName = VersionHelper.instance().getVersionName();
+        aq.id(R.id.tv_settings_version).text("v"+versionName);
+    }
+
+    private void showLogoutDialog() {
+        new AlertDialog.Builder(this).setTitle(R.string.tip)
+                .setMessage(R.string.title_logout).setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                dialog.dismiss();
 
                 //跳转登录页
                 UIHelper.goLoginActivity(SettingsActivity.this);
@@ -99,6 +118,7 @@ public class SettingsActivity extends BaseActivity {
 
                     @Override
                     public void onCompleted(Boolean aBoolean) {
+
                         isLogouting = false;
 
                         //登出
@@ -111,10 +131,13 @@ public class SettingsActivity extends BaseActivity {
 
                     }
                 });
-
             }
-        });
-
+        }).setPositiveButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).create().show();
     }
 
     private void setupToolbar() {

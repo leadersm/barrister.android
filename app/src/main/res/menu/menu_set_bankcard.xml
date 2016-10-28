@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.lsm.user.ui.activity.Main2Activity">
+
+    <item
+        android:id="@+id/action_modify_card"
+        android:orderInCategory="100"
+        android:title="@string/modify_card"
+        android:icon="@android:drawable/ic_menu_upload"
+        app:showAsAction="always" />
+
+</menu>

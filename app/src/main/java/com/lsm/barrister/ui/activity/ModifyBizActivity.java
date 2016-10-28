@@ -27,11 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * 消息列表页
- * 1.收到预约
- * 2.评价
- * 3.到账
- * 4.提现记录
+ * 修改专长
  */
 public class ModifyBizActivity extends BaseActivity {
 
@@ -213,8 +209,8 @@ public class ModifyBizActivity extends BaseActivity {
                     ModifyBizActivity.this.bizTypes.addAll(bizTypes);
                 }
 
-                List<BusinessArea> userBizAreas = user.getBizAreas();
-                List<BusinessType> userBizTypes = user.getBizTypes();
+                List<BusinessArea> userBizAreas = user.getBizAreaList();
+                List<BusinessType> userBizTypes = user.getBizTypeList();
 
                 if (userBizAreas != null)
                     flag_area:for (BusinessArea ubiz : userBizAreas) {

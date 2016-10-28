@@ -1,12 +1,15 @@
 package com.lsm.barrister.ui.activity;
 
 import android.content.DialogInterface;
-import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore;
+import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import com.androidquery.AQuery;
@@ -18,15 +21,22 @@ import com.lsm.barrister.app.UserHelper;
 import com.lsm.barrister.data.entity.User;
 import com.lsm.barrister.data.io.Action;
 import com.lsm.barrister.data.io.app.UploadFilesReq;
+import com.lsm.barrister.module.pick.RxImageConverters;
+import com.lsm.barrister.module.pick.RxImagePicker;
+import com.lsm.barrister.module.pick.Sources;
 import com.lsm.barrister.ui.UIHelper;
 import com.lsm.barrister.utils.DLog;
 import com.lsm.barrister.utils.FileUtils;
 
 import java.io.File;
 
+import rx.Observable;
+import rx.functions.Action1;
+import rx.functions.Func1;
+
 /**
  * 上传职业资格证书页
- * (gnvqs，法律职业资格证书)、（certificate、执业证书）（year、年检页）（card、身份证）
+ * (gnvqs，法律职业资格证书)、（certificate、执业证书）（agreementFile、年检页）（card、身份证）
  */
 public class UploadFilesActivity extends BaseActivity {
 
@@ -35,20 +45,20 @@ public class UploadFilesActivity extends BaseActivity {
 
     private int picking = 0x100;
 
-    private static final int PICK_GNVQS = 0x100;
-    private static final int PICK_CERTIFICATE = 0x101;
-    private static final int PICK_YEAR = 0x102;
-    private static final int PICK_CARD = 0x103;
-    private static final int PICK_CARD_BACK = 0x104;
+    private static final int PICK_GNVQS = 0x1000;
+    private static final int PICK_CERTIFICATE = 0x1001;
+    private static final int PICK_YEAR = 0x1002;
+    private static final int PICK_CARD = 0x1003;
+//    private static final int PICK_CARD_BACK = 0x1004;
 
     UploadFilesReq mUploadFilesReq;
 
-    //(gnvqs，法律职业资格证书)、（certificate、执业证书）（year、年检页）（card、身份证）
+    //(gnvqs，法律职业资格证书)、（certificate、执业证书）（agreementFile、年检页）（card、身份证）
     File gnvqs;//
     File certificate;
     File year;
     File card;
-    File cardback;
+//    File cardback;
 
     AQuery aq;
 
@@ -82,7 +92,7 @@ public class UploadFilesActivity extends BaseActivity {
         aq.id(R.id.btn_file_3).clicked(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO year、年检页
+                //TODO agreementFile、年检页
                 picking = PICK_YEAR;
 
                 showChoosePicDialog();
@@ -97,15 +107,17 @@ public class UploadFilesActivity extends BaseActivity {
                 showChoosePicDialog();
             }
         });
+
         aq.id(R.id.btn_file_5).clicked(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //TODO card、身份证反面
-                picking = PICK_CARD_BACK;
+//                picking = PICK_CARD_BACK;
 
                 showChoosePicDialog();
             }
-        });
+        }).gone();
+
         aq.id(R.id.btn_upload_commit).clicked(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,22 +138,22 @@ public class UploadFilesActivity extends BaseActivity {
      */
     private void doCommit() {
         if (gnvqs == null || !gnvqs.exists()) {
-            //(gnvqs，)、（certificate、）（year、）（card、身份证）
+            //(gnvqs，)、（certificate、）（agreementFile、）（card、身份证）
             UIHelper.showToast(getApplicationContext(), "法律职业资格证书没有填写");
             return;
         }
         if (certificate == null || !certificate.exists()) {
-            //(gnvqs，)、（certificate、执业证书）（year、年检页）（card、身份证）
+            //(gnvqs，)、（certificate、执业证书）（agreementFile、年检页）（card、身份证）
             UIHelper.showToast(getApplicationContext(), "执业证书没有填写");
             return;
         }
         if (year == null || !year.exists()) {
-            //(gnvqs，)、（certificate、执业证书）（year、年检页）（card、身份证）
+            //(gnvqs，)、（certificate、执业证书）（agreementFile、年检页）（card、身份证）
             UIHelper.showToast(getApplicationContext(), "法律职业资格证书年检页没有填写");
             return;
         }
         if (card == null || !card.exists()) {
-            //(gnvqs，)、（certificate、执业证书）（year、年检页）（card、身份证）
+            //(gnvqs，)、（certificate、执业证书）（agreementFile、年检页）（card、身份证）
             UIHelper.showToast(getApplicationContext(), "身份证没有填写");
             return;
         }
@@ -219,162 +231,109 @@ public class UploadFilesActivity extends BaseActivity {
         switch (picking) {
             case PICK_GNVQS:
                 mPickingFile = new File(AppConfig.getDir(Constants.imageDir), "flzgzs.jpg");
-                gnvqs = mPickingFile;
+//                gnvqs = new File(mPickingFile.getAbsolutePath());
                 break;
             case PICK_CERTIFICATE:
                 mPickingFile = new File(AppConfig.getDir(Constants.imageDir), "zyzs.jpg");
-                certificate = mPickingFile;
+//                certificate = new File(mPickingFile.getAbsolutePath());
                 break;
             case PICK_YEAR:
                 mPickingFile = new File(AppConfig.getDir(Constants.imageDir), "zyzsnjy.jpg");
-                year = mPickingFile;
+//                agreementFile = new File(mPickingFile.getAbsolutePath());
                 break;
             case PICK_CARD:
                 mPickingFile = new File(AppConfig.getDir(Constants.imageDir), "idcard.jpg");
-                card = mPickingFile;
+//                card = new File(mPickingFile.getAbsolutePath());
                 break;
-            case PICK_CARD_BACK:
-                mPickingFile = new File(AppConfig.getDir(Constants.imageDir), "idcardbk.jpg");
-                cardback = mPickingFile;
-                break;
+//            case PICK_CARD_BACK:
+//                mPickingFile = new File(AppConfig.getDir(Constants.imageDir), "idcardbk.jpg");
+//                cardback = mPickingFile;
+//                break;
 
         }
 
         if (which == 0) {//从相册选择
 
-            pickFromGallery();
+            RxImagePicker.with(this).requestImage(Sources.GALLERY)
+                    .flatMap(new Func1<Uri, Observable<File>>() {
+                        @Override
+                        public Observable<File> call(Uri uri) {
+                            return RxImageConverters.uriToFile(getApplicationContext(), uri,createTempFile());
+                        }
+                    }).subscribe(new Action1<File>() {
+
+                @Override
+                public void call(File file) {
+                    handleResult(file);
+                }
+            });
+
         } else {//拍照
 
-            pickFromCamera(mPickingFile);
+            RxImagePicker.with(this).requestImage(Sources.CAMERA)
+                    .flatMap(new Func1<Uri, Observable<File>>() {
+                        @Override
+                        public Observable<File> call(Uri uri) {
+                            return RxImageConverters.uriToFile(getApplicationContext(), uri,createTempFile());
+                        }
+                    }).subscribe(new Action1<File>() {
 
-        }
-    }
-
-    /*
-     * 从相册获取
-     */
-    private void pickFromGallery() {
-        // 激活系统图库，选择一张图片
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        // 开启一个带有返回值的Activity，请求码为REQUEST_CODE_GALLERY
-        startActivityForResult(intent, Constants.REQUEST_CODE_GALLERY);
-    }
-
-    /*
-     * 从相机获取
-     */
-    private void pickFromCamera(File tempFile) {
-        // 激活相机
-        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-        // 判断存储卡是否可以用，可用进行存储
-        if (AppConfig.isSDCardEnabled()) {
-
-            // 从文件中创建uri
-            Uri uri = Uri.fromFile(tempFile);
-
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-
-        } else {
-            UIHelper.showToast(getApplicationContext(), R.string.tip_sdcard_error);
-            return;
-        }
-
-        // 开启一个带有返回值的Activity，请求码为REQUEST_CODE_CAPTURE
-        startActivityForResult(intent, Constants.REQUEST_CODE_CAPTURE);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        DLog.d(TAG, "onActivityResult:" + resultCode + ",requestCode:" + requestCode);
-
-        if (resultCode == RESULT_OK) {
-            if (requestCode == Constants.REQUEST_CODE_GALLERY) {
-                // 从相册返回的数据
-                if (data != null) {
-
-                    // 得到图片的全路径
-                    Uri uri = data.getData();
-                    showFile(uri);
-
-
-                } else {
-                    DLog.e(TAG, "没有返回图片");
+                @Override
+                public void call(File file) {
+                    handleResult(file);
                 }
+            });
 
-            } else if (requestCode == Constants.REQUEST_CODE_CAPTURE) {
-
-                // 从相机返回的数据
-                if (AppConfig.isSDCardEnabled()) {
-                    showFile(Uri.fromFile(mPickingFile));
-                } else {
-                    UIHelper.showToast(getApplicationContext(), R.string.tip_sdcard_error);
-                }
-
-            }
-        } else {
-            DLog.e(TAG, "onActivityResult failed...");
         }
+    }
 
+    private File createTempFile() {
+        return new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), System.currentTimeMillis() + "_image.jpeg");
     }
 
     /**
      * 选完照片显示出来
-     *
-     * @param uri
      */
-    private void showFile(Uri uri) {
+    private void handleResult(File file) {
+        new BmTask(file).execute();
+    }
 
-        String name = mPickingFile.getName();
+    /**
+     * 选完照片显示出来
+     */
+    private void showFile(File file) {
 
         SimpleDraweeView image = null;
+
+        if(file==null && !file.exists()){
+            DLog.e(TAG,"文件没有找到");
+            return;
+        }
+
+        Uri uri = Uri.fromFile(file);
 
         switch (picking) {
             case PICK_GNVQS:
                 image = (SimpleDraweeView) findViewById(R.id.image_uploadfile_1);
                 image.setImageURI(uri);
-                if (gnvqs == null) {
-                    gnvqs = new File(uri.toString());
-                }
+                gnvqs = file;
                 break;
             case PICK_CERTIFICATE:
                 image = (SimpleDraweeView) findViewById(R.id.image_uploadfile_2);
                 image.setImageURI(uri);
-                if (certificate == null) {
-                    certificate = new File(uri.toString());
-                }
+                certificate = file;
                 break;
             case PICK_YEAR:
                 image = (SimpleDraweeView) findViewById(R.id.image_uploadfile_3);
                 image.setImageURI(uri);
-                if (year == null) {
-                    year = new File(uri.toString());
-                }
+                year = file;
                 break;
             case PICK_CARD:
                 image = (SimpleDraweeView) findViewById(R.id.image_uploadfile_4);
                 image.setImageURI(uri);
-                if (card == null) {
-                    card = new File(uri.toString());
-                }
-                break;
-            case PICK_CARD_BACK:
-                image = (SimpleDraweeView) findViewById(R.id.image_uploadfile_5);
-                image.setImageURI(uri);
-                if (cardback == null) {
-                    cardback = new File(uri.toString());
-                }
+                card = file;
                 break;
         }
-
-        FileUtils.saveImageFile(image, name, new FileUtils.FileCallback() {
-            @Override
-            public void onFileCallback(File file) {
-                DLog.d(TAG, "onSaveFileCallback:" + file.getAbsolutePath());
-            }
-        });
 
     }
 
@@ -388,4 +347,77 @@ public class UploadFilesActivity extends BaseActivity {
             mUploadFilesReq = null;
         }
     }
+
+    class BmTask extends AsyncTask<Void,Void,Bitmap> {
+
+        File file;
+        Bitmap bitmap;
+
+        public BmTask(File file) {
+            this.file = file;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog.setMessage("正在处理图片...");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
+
+        @Override
+        protected Bitmap doInBackground(Void... params) {
+
+            bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+
+            int height = bitmap.getHeight();
+            int width = bitmap.getWidth();
+
+            float targetRatio = 0 ;
+
+            Log.d(TAG,"height:"+height+",width:"+width);
+
+            if(height>1920 || width >1080){
+
+//            targetHeight = height = 1920;
+//            targetWidth = (int) (height/ratio);
+
+                if(height>1920){
+                    targetRatio = (float) 1920/height;
+                }else if(width>1080){
+                    targetRatio =  (float) 1080/width;
+                }
+
+                return FileUtils.ratio(bitmap,targetRatio);
+//                return FileUtils.ratio(bitmap,targetRatio*width,targetRatio*height);
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bm) {
+            super.onPostExecute(bm);
+
+            if(bm!=null){
+                FileUtils.saveImageFile(bm, AppConfig.getDir(Constants.imageDir), file.getName(), new FileUtils.FileCallback() {
+                    @Override
+                    public void onFileCallback(File file) {
+
+                        bitmap = null;
+                        progressDialog.dismiss();
+                        showFile(file);
+                    }
+                });
+            }else{
+                progressDialog.dismiss();
+                showFile(file);
+                bitmap = null;
+
+            }
+
+
+        }
+    }
+
 }

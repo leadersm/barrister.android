@@ -104,40 +104,82 @@ public class AppointmentSettingsActivity extends BaseActivity {
                 UIHelper.showToast(getApplicationContext(),msg);
             }
 
+            String defaultSettings = "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0";
+
+            /**
+             * 向前补全日期
+             * @param in
+             */
+            private void addForeDate(Date in){
+
+                Date todayDate = DateFormatUtils.parse(DateFormatUtils.format(new Date(System.currentTimeMillis()),"yyyy-MM-dd"),"yyyy-MM-dd");
+
+                if (in.after(todayDate)){
+
+                    Date fore = new Date(in.getTime() - 24 * 3600 * 1000);
+
+                    //默认不可接单
+                    String dateStr = DateFormatUtils.format(fore, "yyyy-MM-dd");
+
+                    DLog.d(TAG, "向前自动补全日期:" + dateStr);
+
+                    AppointmentSetting tempSettings = new AppointmentSetting();
+                    tempSettings.setDate(dateStr);
+                    tempSettings.setSettings(defaultSettings);
+                    data.add(0,tempSettings);
+
+                    addForeDate(fore);
+                }
+            }
+
+            /**
+             * 向后补全日期
+             * @param size
+             * @param lastDate
+             */
+            private void addAfterSettings(int size, Date lastDate) {
+                for (int i = 0; i < 7 - size; i++) {
+                    //默认不可接单
+                    Date date = new Date(lastDate.getTime() + (i + 1) * 24 * 3600 * 1000);
+                    String dateStr = DateFormatUtils.format(date, "yyyy-MM-dd");
+                    DLog.d(TAG, "自动补全日期:" + dateStr);
+                    AppointmentSetting tempSettings = new AppointmentSetting();
+                    tempSettings.setDate(dateStr);
+                    tempSettings.setSettings(defaultSettings);
+                    data.add(tempSettings);
+                }
+            }
+
             @Override
             public void onCompleted(IO.GetAppointmentSettingsResult result) {
 
+                String today = DateFormatUtils.format(new Date(), "yyyy-MM-dd");
+
                 List<AppointmentSetting> mySettings = result.appointmentSettings;
 
-                if(mySettings == null || mySettings.isEmpty()){
-
-                    mySettings = new ArrayList<AppointmentSetting>();
-
-                    AppointmentSetting today = new AppointmentSetting();
-                    today.setDate(DateFormatUtils.format(new Date(),"yyyy-MM-dd"));
-                    today.setSettings("1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1");
-                    mySettings.add(today);
+                if(mySettings == null){
+                    mySettings = new ArrayList<>();
                 }
 
                 data.clear();
+                data.addAll(mySettings);
 
-                if(mySettings!=null)
-                    data.addAll(mySettings);
+                int size = data.size();
 
-                if(mySettings.size()<7){
-                    String lastDay = data.get(data.size()-1).getDate();
-                    Date lastDate = DateFormatUtils.parse(lastDay,"yyyy-MM-dd");
+                if (size <= 7) {
 
-                    for(int i=0;i<7-mySettings.size();i++){
-                        String settings = "1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1";
-                        Date date = new Date(lastDate.getTime()+(i+1)*24*3600*1000);
-                        String dateStr = DateFormatUtils.format(date,"yyyy-MM-dd");
-                        DLog.d(TAG,"add date:"+dateStr);
-                        AppointmentSetting tempSettings = new AppointmentSetting();
-                        tempSettings.setDate(dateStr);
-                        tempSettings.setSettings(settings);
-                        data.add(tempSettings);
-                    }
+                    String firstDay = data.isEmpty() ? today : data.get(0).getDate();
+                    Date firstDate = DateFormatUtils.parse(firstDay, "yyyy-MM-dd");
+//                  Date todayDate = DateFormatUtils.parse(today, "yyyy-MM-dd");
+
+                    addForeDate(firstDate);
+
+                    size = data.size();
+
+                    String lastDay = data.isEmpty() ? today : data.get(data.size()-1).getDate();
+                    Date lastDate = DateFormatUtils.parse(lastDay, "yyyy-MM-dd");
+
+                    addAfterSettings(size, lastDate);
                 }
 
                 for (int i = 0; i < data.size(); i++) {
@@ -152,6 +194,8 @@ public class AppointmentSettingsActivity extends BaseActivity {
                         hour.setEnable(!flags[j].equals("0"));//是否可预约  非0
                         hour.setChangeAble(!flags[j].equals("2"));//是否可改变预约状态 非2
                         hour.setHour(hourStrs[12+j]);
+                        hour.setIndex(j);
+                        hour.setDate(item.getDate());
                         hours.add(hour);
                     }
 
@@ -361,7 +405,7 @@ public class AppointmentSettingsActivity extends BaseActivity {
 
                 final AppointmentSetting.HourItem hour = (AppointmentSetting.HourItem) getItem(position);
 
-                holder.id(R.id.cb_item_half_hour).checked(hour.isEnable()).enabled(hour.isChangeAble()).text(hour.getHour()).clicked(new View.OnClickListener() {
+                holder.id(R.id.cb_item_half_hour).checked(hour.isEnable()).enabled(hour.isChangeAble() && !isItemOutOfDate(hour.getDate(),hour.getHour())).text(hour.getHour()).clicked(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         hour.setEnable(holder.id(R.id.cb_item_half_hour).isChecked());
@@ -372,6 +416,27 @@ public class AppointmentSettingsActivity extends BaseActivity {
                 return convertView;
             }
         }
+    }
+
+
+    private static boolean isItemOutOfDate(String date,String hour){
+
+        String sHour = hour.split("~")[1];
+
+        if(sHour.equals("00:00")){
+            return false;
+        }
+
+        String inStr = date + " " + sHour;
+        Date inDate = DateFormatUtils.parse(inStr, "yyyy-MM-dd HH:mm");
+
+        Date nowDate = new Date(System.currentTimeMillis());
+
+        if(inDate.before(nowDate)){
+            return true;
+        }
+
+        return false;
     }
 
     @Override

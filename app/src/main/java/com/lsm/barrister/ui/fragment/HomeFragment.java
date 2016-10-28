@@ -3,7 +3,6 @@ package com.lsm.barrister.ui.fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,7 +14,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +25,6 @@ import com.lsm.barrister.app.AppConfig;
 import com.lsm.barrister.app.UserHelper;
 import com.lsm.barrister.data.entity.Account;
 import com.lsm.barrister.data.entity.Ad;
-import com.lsm.barrister.data.entity.Case;
 import com.lsm.barrister.data.entity.OrderItem;
 import com.lsm.barrister.data.entity.User;
 import com.lsm.barrister.data.io.Action;
@@ -39,7 +36,6 @@ import com.lsm.barrister.data.io.app.GetMyAccountReq;
 import com.lsm.barrister.data.io.app.GetUserHomeReq;
 import com.lsm.barrister.ui.UIHelper;
 import com.lsm.barrister.ui.activity.WebViewActivity;
-import com.lsm.barrister.ui.adapter.CaseListAdapter;
 import com.lsm.barrister.ui.adapter.LoadMoreListener;
 import com.lsm.barrister.ui.adapter.OrderListAdapter;
 import com.lsm.barrister.ui.widget.CirclePageIndicator;
@@ -89,11 +85,11 @@ public class HomeFragment extends Fragment implements UserHelper.UserActionListe
     GetUserHomeReq mGetHomeReq;
     GetLunboAdsReq mGetAdsReq;
 
-    RecyclerView mTodoListView,mCaseListView;
-    LinearLayoutManager mTodoListLayoutManager,mCaseListLayoutManager;
+    RecyclerView mTodoListView;//,mCaseListView;
+    LinearLayoutManager mTodoListLayoutManager;//,mCaseListLayoutManager;
 
     OrderListAdapter mTodoListAdapter;
-    CaseListAdapter mCaseListAdapter;
+//    CaseListAdapter mCaseListAdapter;
 
     View view;
 
@@ -114,25 +110,33 @@ public class HomeFragment extends Fragment implements UserHelper.UserActionListe
             }
         });
 
-        aq.id(R.id.btn_home_more_cases).clicked(new View.OnClickListener() {
+        //案源列表
+        aq.id(R.id.btn_home_cases).clicked(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 UIHelper.goCaseListAcitivity(getActivity());
             }
         });
 
+        //应用大全
+        aq.id(R.id.btn_home_law_apps).clicked(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UIHelper.goLappListAcitivity(getActivity());
+            }
+        });
+
         mTodoListView = (RecyclerView) view.findViewById(R.id.recyclerview_home_todos);
-        mCaseListView = (RecyclerView) view.findViewById(R.id.recyclerview_home_cases);
+//        mCaseListView = (RecyclerView) view.findViewById(R.id.recyclerview_home_cases);
 
         mTodoListLayoutManager = new LinearLayoutManager(getActivity());
-        mCaseListLayoutManager = new LinearLayoutManager(getActivity());
-
+//        mCaseListLayoutManager = new LinearLayoutManager(getActivity());
+        mTodoListView.setNestedScrollingEnabled(false);
         mTodoListView.setLayoutManager(mTodoListLayoutManager);
         mTodoListView.setItemAnimator(new DefaultItemAnimator());
 
-        mCaseListView.setLayoutManager(mCaseListLayoutManager);
-        mCaseListView.setItemAnimator(new DefaultItemAnimator());
-
+//        mCaseListView.setLayoutManager(mCaseListLayoutManager);
+//        mCaseListView.setItemAnimator(new DefaultItemAnimator());
 
         mTodoListAdapter = new OrderListAdapter(todos, new LoadMoreListener() {
 
@@ -150,26 +154,26 @@ public class HomeFragment extends Fragment implements UserHelper.UserActionListe
 
         mTodoListView.setAdapter(mTodoListAdapter);
 
-        mCaseListAdapter = new CaseListAdapter(cases, new LoadMoreListener() {
+//        mCaseListAdapter = new CaseListAdapter(cases, new LoadMoreListener() {
+//
+//            @Override
+//            public void onLoadMore() {
+//
+//            }
+//
+//            @Override
+//            public boolean hasMore() {
+//                return false;
+//            }
+//        },true);
 
-            @Override
-            public void onLoadMore() {
-
-            }
-
-            @Override
-            public boolean hasMore() {
-                return false;
-            }
-        },true);
-
-        mCaseListView.setAdapter(mCaseListAdapter);
+//        mCaseListView.setAdapter(mCaseListAdapter);
 
         refresh();
     }
 
     List<OrderItem> todos = new ArrayList<>();
-    List<Case> cases = new ArrayList<>();
+//    List<Case> cases = new ArrayList<>();
 
     public void refresh() {
 
@@ -177,7 +181,7 @@ public class HomeFragment extends Fragment implements UserHelper.UserActionListe
 
         loadAds();
 
-        loadCaseList();
+//        loadCaseList();
 
     }
 
@@ -198,9 +202,9 @@ public class HomeFragment extends Fragment implements UserHelper.UserActionListe
             public void onCompleted(IO.GetCaseListResult result) {
 
                 if (result.cases != null) {
-                    cases.clear();
-                    cases.addAll(result.cases);
-                    mCaseListAdapter.notifyDataSetChanged();
+//                    cases.clear();
+//                    cases.addAll(result.cases);
+//                    mCaseListAdapter.notifyDataSetChanged();
                 }
 
             }

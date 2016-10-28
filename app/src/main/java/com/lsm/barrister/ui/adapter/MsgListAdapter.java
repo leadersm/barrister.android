@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.androidquery.AQuery;
 import com.lsm.barrister.R;
+import com.lsm.barrister.data.db.PushMessage;
 import com.lsm.barrister.data.entity.Message;
 import com.lsm.barrister.ui.UIHelper;
 
@@ -74,6 +75,63 @@ public class MsgListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     }
 
+    public String getTitle(Message msg){
+
+        String title = "";
+
+        if (msg.getType().equals(PushMessage.TYPE_ORDER_MONEY)) {
+            //订单服务费到账
+           title = "订单服务费到账通知";
+        }else if (msg.getType().equals(PushMessage.TYPE_ORDER_REWARD)) {
+            //打赏
+           title = "打赏通知";
+        }else if (msg.getType().equals(PushMessage.TYPE_ORDER_NEW)) {
+
+            //新订单
+           title = "订单通知";
+
+        }else if (msg.getType().equals(PushMessage.TYPE_ORDER_STATUS)) {
+
+            //订单状态
+           title = "订单通知";
+        }else if (msg.getType().equals(PushMessage.TYPE_RECEIVE_STAR)) {
+
+            //收到评价
+           title = "订单评价通知";
+        }else if (msg.getType().equals(PushMessage.TYPE_RECHARGE)) {
+
+            //充值
+           title = "充值通知";
+        }else if (msg.getType().equals(PushMessage.TYPE_VERIFY)) {
+
+            //律师段认证通知
+           title = "认证通知";
+        }else if (msg.getType().equals(PushMessage.TYPE_LEARNING)) {
+
+            //学习中心
+           title = "学习中心";
+
+        }else if (msg.getType().equals(PushMessage.TYPE_GET_MONEY)) {
+
+            //提现
+           title = "提现通知";
+
+        }else if (msg.getType().equals(PushMessage.TYPE_ORDER_BACK_MONEY)) {
+
+            //订单取消退款
+           title = "退款通知";
+        }else if (msg.getType().equals(PushMessage.TYPE_SYSTEM_MSG)) {
+            //处理
+           title = "系统通知";
+
+        }else if (msg.getType().equals(PushMessage.TYPE_HANG_OFF)){
+            //处理
+            title = "系统通知";
+        }
+
+        return title;
+    }
+
     @Override
     public int getItemViewType(int position) {
 
@@ -105,15 +163,38 @@ public class MsgListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if(mItem==null){
+                        return;
+                    }
 
+                    String type = mItem.getType();
+
+                    if (type.equals(PushMessage.TYPE_ORDER_STATUS) || type.equals(PushMessage.TYPE_ORDER_NEW)|| type.equals(PushMessage.TYPE_HANG_OFF)) {
+
+                        UIHelper.goOrderDetailActivity(v.getContext(),mItem.getContentId());
+
+                    } else if (type.equals(PushMessage.TYPE_LEARNING)) {
+
+
+                    }else if (type.equals(PushMessage.TYPE_ORDER_REWARD)||
+                            type.equals(PushMessage.TYPE_RECHARGE)||
+                            type.equals(PushMessage.TYPE_GET_MONEY)||
+                            type.equals(PushMessage.TYPE_ORDER_BACK_MONEY)||
+                            type.equals(PushMessage.TYPE_RECEIVE_STAR)) {
+
+                        UIHelper.goMyAccountActivity(v.getContext());
+
+                    }else if(type.equals(PushMessage.TYPE_SYSTEM_MSG)){
+
+                    }
                 }
             });
         }
 
         public void bind(Message item) {
             mItem = item;
-            aq.id(R.id.tv_item_msg_title).text(item.getTitle());
-            aq.id(R.id.tv_item_msg_type).text(item.getType());
+            aq.id(R.id.tv_item_msg_title).text(getTitle(item));
+            aq.id(R.id.tv_item_msg_content).text(item.getTitle());
             aq.id(R.id.tv_item_msg_date).text(item.getDate());
         }
     }

@@ -58,7 +58,20 @@ public class OrderDetailActivity extends BaseActivity {
         aq.id(R.id.btn_call_make).clicked(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                doMakeCall();
+                new AlertDialog.Builder(OrderDetailActivity.this)
+                        .setTitle(R.string.tip)
+                        .setMessage("确定要拨打电话吗？")
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                doMakeCall();
+                            }
+                        }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).create().show();
             }
         });
 
@@ -84,6 +97,8 @@ public class OrderDetailActivity extends BaseActivity {
             //订单完成或订单已取消可以添加小结
             if(mDetail.getStatus().equals(OrderDetail.STATUS_DONE) || mDetail.getStatus().equals(OrderDetail.STATUS_CANCELED)){
                 UIHelper.goAddOrderSummaryActivity(this,mOrderId);
+            }else{
+                UIHelper.showToast(getApplicationContext(),"订单还没有结束。");
             }
 
             return true;
@@ -155,8 +170,9 @@ public class OrderDetailActivity extends BaseActivity {
 
         //金额
         aq.id(R.id.tv_order_payment).text(String.format(Locale.CHINA,"%.1f",mDetail.getPaymentAmount()));
+
         //备注
-        aq.id(R.id.tv_order_remark).text("备注："+mDetail.getRemarks());
+        aq.id(R.id.tv_order_remark).text("备注："+ (TextUtils.isEmpty(mDetail.getRemarks())?"":mDetail.getRemarks()));
 
         //小结
         if(TextUtils.isEmpty(mDetail.getLawFeedback())){
@@ -174,9 +190,10 @@ public class OrderDetailActivity extends BaseActivity {
 
         //用户昵称
         String hidePhone = TextHandler.getHidePhone(mDetail.getCustomerPhone());
+        //昵称
         aq.id(R.id.tv_order_nickname).text(TextUtils.isEmpty(mDetail.getCustomerNickname())?hidePhone:mDetail.getCustomerNickname());
         //手机号码
-        aq.id(R.id.tv_order_phone_number).text(hidePhone);
+        aq.id(R.id.tv_order_phone_number).text("点击拨打电话");//.text(hidePhone);
         //头像
         SimpleDraweeView sdv = (SimpleDraweeView) aq.id(R.id.image_order_custom_icon).getView();
         if(!TextUtils.isEmpty(mDetail.getCustomerIcon())){
@@ -194,7 +211,7 @@ public class OrderDetailActivity extends BaseActivity {
                 aq.id(R.id.btn_order_finish).clicked(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        doFinishOrder();
+                        showFinishOrderDialog();
                     }
                 });
             }else{
@@ -230,9 +247,9 @@ public class OrderDetailActivity extends BaseActivity {
     boolean isOrderFinishing = false;
 
     /**
-     * 结束订单，等待用户评价后系统将服务费划分到律师账号
+     * 结束订单提示
      */
-    private void doFinishOrder() {
+    private void showFinishOrderDialog() {
 
         if(isOrderFinishing)
             return;
@@ -245,39 +262,9 @@ public class OrderDetailActivity extends BaseActivity {
 
                 dialog.dismiss();
 
-                new FinishOrderReq(OrderDetailActivity.this,mOrderId).execute(new Action.Callback<Boolean>() {
-                    @Override
-                    public void progress() {
-                        isOrderFinishing = true;
-                    }
+                doFinishOrder();
 
-                    @Override
-                    public void onError(int errorCode, String msg) {
-                        isOrderFinishing = false;
-                        UIHelper.showToast(getApplicationContext(),"结束订单失败："+msg);
-                    }
-
-                    @Override
-                    public void onCompleted(Boolean aBoolean) {
-
-                        isOrderFinishing = false;
-
-                        loadDetail();
-
-                        new AlertDialog.Builder(OrderDetailActivity.this)
-                                .setTitle("提示").setMessage("请对此订单作总结")
-                                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                        UIHelper.goAddOrderSummaryActivity(OrderDetailActivity.this,mOrderId);
-                                    }
-                                }).create().show();
-
-                    }
-                });
-            }
-        }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            }}).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -287,7 +274,56 @@ public class OrderDetailActivity extends BaseActivity {
 
     }
 
+    /**
+     * 结束订单，等待用户评价后系统将服务费划分到律师账号
+     */
+    private void doFinishOrder() {
+
+        if(isOrderFinishing)
+            return;
+
+        new FinishOrderReq(OrderDetailActivity.this,mOrderId).execute(new Action.Callback<Boolean>() {
+            @Override
+            public void progress() {
+                isOrderFinishing = true;
+            }
+
+            @Override
+            public void onError(int errorCode, String msg) {
+                isOrderFinishing = false;
+                UIHelper.showToast(getApplicationContext(),"结束订单失败："+msg);
+            }
+
+            @Override
+            public void onCompleted(Boolean aBoolean) {
+
+                isOrderFinishing = false;
+
+                //loadDetail();
+
+                showSummaryTipDialog();
+
+            }
+        });
+    }
+
+    /**
+     * 提示请总结
+     */
+    private void showSummaryTipDialog() {
+        new AlertDialog.Builder(OrderDetailActivity.this)
+                .setTitle(R.string.tip).setMessage(getString(R.string.tip_add_summary))
+                .setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        UIHelper.goAddOrderSummaryActivity(OrderDetailActivity.this,mOrderId);
+                    }
+                }).create().show();
+    }
+
     boolean isDisagreeing = false;
+
     /**
      * 同意取消
      */
@@ -306,6 +342,8 @@ public class OrderDetailActivity extends BaseActivity {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
+                dialog.dismiss();
 
                 new DisagreeRequestCancelReq(OrderDetailActivity.this,mOrderId).execute(new Action.Callback<Boolean>() {
                     @Override
@@ -327,15 +365,24 @@ public class OrderDetailActivity extends BaseActivity {
                         aq.id(R.id.layout_order_cancel_handle).gone();
 
                         //拒绝成功，提示联系用户
-                        new AlertDialog.Builder(OrderDetailActivity.this).setTitle("提示").setMessage("已拒绝用户的取消请求，请及时联系客户")
+                        showRefuseTipDialog();
+
+                        loadDetail();
+                    }
+
+                    /**
+                     * 已拒绝，提示
+                     */
+                    private void showRefuseTipDialog() {
+                        new AlertDialog.Builder(OrderDetailActivity.this)
+                                .setTitle(R.string.tip)
+                                .setMessage(getString(R.string.tip_refused_request))
                                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
                                     }
                                 }).create().show();
-
-                        loadDetail();
                     }
                 });
             }

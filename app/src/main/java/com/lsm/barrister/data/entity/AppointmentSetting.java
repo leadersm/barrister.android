@@ -45,9 +45,11 @@ public class AppointmentSetting implements Serializable{
 
     public static class HourItem implements Serializable {
 
+        String date;
         String hour;
         boolean isEnable;
         boolean isChangeAble;
+        int index;
 
         public String getHour() {
             return hour;
@@ -71,6 +73,22 @@ public class AppointmentSetting implements Serializable{
 
         public void setChangeAble(boolean changeAble) {
             isChangeAble = changeAble;
+        }
+
+        public String getDate() {
+            return date;
+        }
+
+        public void setDate(String date) {
+            this.date = date;
+        }
+
+        public int getIndex() {
+            return index;
+        }
+
+        public void setIndex(int index) {
+            this.index = index;
         }
     }
 }

@@ -5,6 +5,8 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.lsm.barrister.R;
 import com.lsm.barrister.data.entity.Case;
@@ -139,5 +141,21 @@ public class CaseListActivity extends BaseActivity implements SwipeRefreshLayout
     @Override
     public void onRefresh() {
         load();
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_case_list,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.action_add_case){
+            UIHelper.goUploadCaseActivity(this);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -12,6 +12,7 @@ public class PushMessage {
     public static final String TYPE_CLEAR_APP_DATA = "msg.type.app.clear";//清除APP数据
     public static final String TYPE_UPLOAD_PUSHID = "msg.type.app.upload.pushId";//上传pushId
     //===========================================================================
+    public static final String TYPE_ORDER_NEW = "type.order.new";//新订单
     public static final String TYPE_ORDER_STATUS = "type.order.status.changed";//订单状态改变
     public static final String TYPE_RECEIVE_STAR = "type.receive.star";//收到评价
     public static final String TYPE_ORDER_REWARD = "type.receive.order.reward";//收到打赏
@@ -22,6 +23,7 @@ public class PushMessage {
     public static final String TYPE_SYSTEM_MSG = "type.system.msg";//系统消息
     public static final String TYPE_VERIFY = "type.verify.msg";//律师认证通知
     public static final String TYPE_LEARNING = "type.learning.item";//学习中心
+    public static final String TYPE_HANG_OFF = "type.hang.off";//挂断电话
 
     /** Not-null value. */
     private String id;

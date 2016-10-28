@@ -67,13 +67,13 @@ public class MyOrdersFragment extends Fragment {
 
         aq = new AQuery(view);
 
-        aq.id(R.id.consult_tab_bespeak).clicked(new View.OnClickListener() {
+        aq.id(R.id.tab_appointment).clicked(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mViewPager.setCurrentItem(0);
             }
         });
-        aq.id(R.id.consult_tab_phone).clicked(new View.OnClickListener() {
+        aq.id(R.id.tab_im).clicked(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mViewPager.setCurrentItem(1);
@@ -108,11 +108,10 @@ public class MyOrdersFragment extends Fragment {
                 switch (position) {
 
                     case 0:
-                        aq.id(R.id.consult_tab_bespeak).checked(true);
+                        aq.id(R.id.tab_im).checked(true);
                         break;
                     case 1:
-                        aq.id(R.id.consult_tab_phone).checked(true);
-
+                        aq.id(R.id.tab_appointment).checked(true);
                         break;
                 }
 
@@ -145,9 +144,9 @@ public class MyOrdersFragment extends Fragment {
         public Fragment getItem(int position) {
             String type = null;
             if(position==0){
-                type = GetMyOrderListReq.TYPE_APPOINTMENT;
-            }else{
                 type = GetMyOrderListReq.TYPE_IM;
+            }else{
+                type = GetMyOrderListReq.TYPE_APPOINTMENT;
 
             }
 

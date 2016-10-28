@@ -52,22 +52,31 @@
         android:background="@color/white"
         android:numColumns="3" />
 
-    <TextView
-        android:id="@+id/tv_lable2"
+    <LinearLayout
+        android:id="@+id/layout_biz_types"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="7dp"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:textColor="@color/black"
-        android:layout_marginTop="5dp"
-        android:text="请选择擅长业务" />
+        android:visibility="gone"
+        android:layout_height="match_parent">
 
-    <GridView
-        android:id="@+id/gridview_biz_types"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/white"
-        android:numColumns="3" />
+        <TextView
+            android:id="@+id/tv_lable2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="7dp"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:layout_marginTop="5dp"
+            android:text="请选择擅长业务" />
+
+        <GridView
+            android:id="@+id/gridview_biz_types"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:numColumns="3" />
+    </LinearLayout>
+
 </LinearLayout>

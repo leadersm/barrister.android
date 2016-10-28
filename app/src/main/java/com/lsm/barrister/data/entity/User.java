@@ -18,7 +18,7 @@ public class User implements Serializable {
 
     public static final String KEY_GENDER = "gender";
     public static final String KEY_AGE = "age";
-    public static final String KEY_EMAIL = "mail";
+    public static final String KEY_EMAIL = "email";
     public static final String KEY_GOOD_AT = "goodAt";
     public static final String KEY_PHONE = "phone";
     public static final String KEY_NICKNAME = "nickname";
@@ -54,8 +54,8 @@ public class User implements Serializable {
 
     String verifyCode;//验证码 ，动态密码，每次用户相关操作需带此参数。
 
-    List<BusinessArea> bizAreas;
-    List<BusinessType> bizTypes;
+    List<BusinessArea> bizAreaList;
+    List<BusinessType> bizTypeList;
 
     public String getId() {
         return id;
@@ -217,20 +217,20 @@ public class User implements Serializable {
         this.employmentYears = employmentYears;
     }
 
-    public List<BusinessType> getBizTypes() {
-        return bizTypes;
+    public List<BusinessType> getBizTypeList() {
+        return bizTypeList;
     }
 
-    public void setBizTypes(List<BusinessType> bizTypes) {
-        this.bizTypes = bizTypes;
+    public void setBizTypeList(List<BusinessType> bizTypeList) {
+        this.bizTypeList = bizTypeList;
     }
 
-    public List<BusinessArea> getBizAreas() {
-        return bizAreas;
+    public List<BusinessArea> getBizAreaList() {
+        return bizAreaList;
     }
 
-    public void setBizAreas(List<BusinessArea> bizAreas) {
-        this.bizAreas = bizAreas;
+    public void setBizAreaList(List<BusinessArea> bizAreaList) {
+        this.bizAreaList = bizAreaList;
     }
 
     @Override

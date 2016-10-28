@@ -1,15 +1,28 @@
 package com.lsm.barrister.data.entity;
 
+import java.io.Serializable;
+
 /**
  * Created by lvshimin on 16/5/29.
  */
-public class Case {
+public class Case implements Serializable{
+
+    //idle (刚上传)>客服确认>发布中>（律师支付）代理中> 已签约（更新）> 已结算
+    //idle (刚上传)>客服确认>发布中>（律师支付）代理中> （律师退回）发布中
 
     public static final String STATUS_CONSULTING = "case.status.consulting";//咨询
     public static final String STATUS_INTERVIEW = "case.status.interview";//面谈
     public static final String STATUS_SIGNATORY = "case.status.signatory";//签约
     public static final String STATUS_FOLLOWUP = "case.status.followup";//跟进
     public static final String STATUS_CLEARING = "case.status.clearing";//结算
+
+    //====================================
+    public static final String STATUS_0_INIT = "case.status.init";//刚刚上传（或刚被退回），等待审核
+    public static final String STATUS_1_PUBLISHED = "case.status.published";//客服审核确认,发布
+    public static final String STATUS_2_WAIT_UPDATE = "case.status.agency";//代理中，等待更新进度
+    public static final String STATUS_3_WAIT_CLEARING = "case.status.clearing";//已代理，等待结算
+    public static final String STATUS_4_WAIT_CLEARED = "case.status.cleared";//结束，已结算
+    public static final String STATUS_5_CLOSE = "case.status.close";//关闭
 
     String id;
     String caseTypeId;//案件类型id
@@ -53,6 +66,13 @@ public class Case {
 
     //后期入账（金额？）
     String income;
+
+    double contractMoney;//合同金额
+    double percentagePayment;//(平台分成金额)
+    String company;//公司
+    String email;//邮箱
+
+    double price;//案源购买价格 16元
 
     public String getAddTime() {
         return addTime;
@@ -272,4 +292,43 @@ public class Case {
     }
 
 
+    public double getContractMoney() {
+        return contractMoney;
+    }
+
+    public void setContractMoney(double contractMoney) {
+        this.contractMoney = contractMoney;
+    }
+
+    public double getPercentagePayment() {
+        return percentagePayment;
+    }
+
+    public void setPercentagePayment(double percentagePayment) {
+        this.percentagePayment = percentagePayment;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
 }

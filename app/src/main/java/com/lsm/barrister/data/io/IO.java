@@ -8,6 +8,7 @@ import com.lsm.barrister.data.entity.BusinessType;
 import com.lsm.barrister.data.entity.Case;
 import com.lsm.barrister.data.entity.Channel;
 import com.lsm.barrister.data.entity.IncomeDetailItem;
+import com.lsm.barrister.data.entity.LawApp;
 import com.lsm.barrister.data.entity.LearningItem;
 import com.lsm.barrister.data.entity.Message;
 import com.lsm.barrister.data.entity.OrderDetail;
@@ -22,7 +23,7 @@ import java.util.List;
  */
 public class IO {
 
-    public static final String SERVER = "http://119.254.167.200:8080/lawerservice/";
+    public static final String SERVER = "http://app.dls.com.cn:8080/lawerservice/";
 //    public static final String SERVER = "http://192.168.1.25:8080/lawerservice/";//高荣威
 
     public static final String URL_LOGOUT = SERVER + "logout.do";
@@ -30,6 +31,14 @@ public class IO {
     public static final String URL_LOGIN = SERVER + "login.do";
 
     public static final String URL_GET_BANK_INFO = "http://apis.baidu.com/datatiny/cardinfo/cardinfo";
+
+    public static final String URL_UPLOAD_CASE = SERVER + "uploadCase.do";
+    public static final String URL_BUY_CASE = SERVER + "buyCase.do";
+    public static final String URL_UPDATE_CASE_PROGRESS = SERVER + "updateCaseProgress.do";
+    public static final String URL_GIVE_CASE_BACK = SERVER + "giveCaseBack.do";
+    public static final String URL_GET_MY_CASE_LIST = SERVER + "myCaseList.do";
+    public static final String URL_MODIFY_PRICE = SERVER + "fitPrice.do";
+    public static final String URL_IS_EXPERT = SERVER + "isExpert.do";
 
 
     /**
@@ -232,6 +241,16 @@ public class IO {
     public static class GetBizTypeAreaListResult extends Action.CommonResult{
         public List<BusinessArea> bizAreas ;//领域列表;
         public List<BusinessType> bizTypes ;//业务类型;
+    }
+
+    //应用大全列表
+    public static final String URL_GET_LAWAPP_LIST = SERVER + "getLegalApplictions.do";
+
+    /**
+     * 应用大全列表
+     */
+    public static class GetLawAppListResult extends Action.CommonResult {
+        public List<LawApp> legalList;
     }
 
 }

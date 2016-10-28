@@ -1,5 +1,6 @@
 package com.lsm.barrister.ui.adapter;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -11,6 +12,9 @@ import com.androidquery.AQuery;
 import com.lsm.barrister.R;
 import com.lsm.barrister.data.entity.Case;
 import com.lsm.barrister.ui.UIHelper;
+import com.lsm.barrister.ui.activity.CaseDetailActivity;
+import com.lsm.barrister.utils.OrderUtils;
+import com.lsm.barrister.utils.TextHandler;
 
 import java.util.List;
 
@@ -114,14 +118,18 @@ public class CaseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    Intent intent = new Intent(v.getContext(), CaseDetailActivity.class);
+                    intent.putExtra("item",mItem);
+                    v.getContext().startActivity(intent);
                 }
             });
         }
 
         public void bind(Case item) {
             mItem = item;
-            aq.id(R.id.tv_item_case_title).text(item.getTitle());
+
+            aq.id(R.id.tv_item_case_title).text(item.getCaseInfo());
+
             aq.id(R.id.tv_item_case_serial_num).text("案源号:"+item.getId());
             if(TextUtils.isEmpty(item.getAddTime())){
                 aq.id(R.id.tv_item_case_date).gone();
@@ -129,28 +137,11 @@ public class CaseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 aq.id(R.id.tv_item_case_date).text(item.getAddTime()).visible();
             }
 
-//            public static final String STATUS_CONSULTING = "case.status.consulting";//咨询
-//            public static final String STATUS_INTERVIEW = "case.status.interview";//面谈
-//            public static final String STATUS_SIGNATORY = "case.status.signatory";//签约
-//            public static final String STATUS_FOLLOWUP = "case.status.followup";//跟进
-//            public static final String STATUS_CLEARING = "case.status.clearing";//结算
+            String status = OrderUtils.getCaseStatusString(item.getStatus());
 
-            String status = "咨询";
-            if(item.getStatus()!=null){
-                if(item.getStatus().equals(Case.STATUS_CONSULTING)){
-                    status = "咨询";
-                }else if(item.getStatus().equals(Case.STATUS_INTERVIEW)){
-                    status = "面谈";
-                }else if(item.getStatus().equals(Case.STATUS_SIGNATORY)){
-                    status = "签约";
-                }else if(item.getStatus().equals(Case.STATUS_FOLLOWUP)){
-                    status = "跟进";
-                }else if(item.getStatus().equals(Case.STATUS_CLEARING)){
-                    status = "结算";
-                }
-            }
+            aq.id(R.id.tv_item_case_status).text("状态："+status).textColor(OrderUtils.getCaseStatusColor(item.getStatus()));
 
-            aq.id(R.id.tv_item_case_status).text("状态："+status+" , 联系方式："+ item.getContactPhone());
+            aq.id(R.id.tv_item_case_phone).text("联系方式："+ TextHandler.getHidePhone(item.getContactPhone()));
 
             aq.id(R.id.tv_item_case_type).text(item.getArea());
 

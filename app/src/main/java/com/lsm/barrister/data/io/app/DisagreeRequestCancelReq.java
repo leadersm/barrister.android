@@ -40,9 +40,6 @@ public class DisagreeRequestCancelReq extends Action {
     @Override
     public CommonResult parse(String json) throws Exception {
         CommonResult result = parseCommonResult(json);
-        if (result != null && result.resultCode == 200) {
-            onSafeCompleted(true);
-        }
         return result;
     }
 

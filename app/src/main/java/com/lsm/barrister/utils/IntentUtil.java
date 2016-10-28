@@ -1,7 +1,9 @@
 package com.lsm.barrister.utils;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.text.TextUtils;
 
 import java.io.File;
 
@@ -174,6 +176,16 @@ public class IntentUtil {
         Uri uri = Uri.fromParts("package", "com.tianwen.jjrb", null);
         Intent intent = new Intent(Intent.ACTION_PACKAGE_ADDED, uri);
         return intent;
+    }
+
+    public static void makeCall(Context context,String phone){
+
+        if(TextUtils.isEmpty(phone))
+            return;
+
+        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+phone));
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 
 }

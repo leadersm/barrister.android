@@ -8,10 +8,6 @@ import java.io.Serializable;
  */
 public class Message implements Serializable{
 
-    public static final String TYPE_SYSTEM = "msg.type.system";//系统通知
-    public static final String TYPE_ORDER = "msg.type.order";//订单通知
-    public static final String TYPE_LEARNING = "msg.type.learning";//学习中心
-
     String id;
     String icon;
     String title;

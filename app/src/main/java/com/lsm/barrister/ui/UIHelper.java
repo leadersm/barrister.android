@@ -20,18 +20,24 @@ import android.widget.Toast;
 
 import com.lsm.barrister.app.Constants;
 import com.lsm.barrister.data.entity.Account;
+import com.lsm.barrister.data.entity.Case;
 import com.lsm.barrister.ui.activity.AddOrderSummaryActivity;
 import com.lsm.barrister.ui.activity.AvatarDetailActivity;
 import com.lsm.barrister.ui.activity.CaseListActivity;
-import com.lsm.barrister.ui.activity.DocActivity;
 import com.lsm.barrister.ui.activity.GetMoneyActivity;
+import com.lsm.barrister.ui.activity.LawAppListActivity;
 import com.lsm.barrister.ui.activity.LoginActivity;
 import com.lsm.barrister.ui.activity.MainActivity;
 import com.lsm.barrister.ui.activity.ModifyAvaterActivity;
 import com.lsm.barrister.ui.activity.ModifyBizActivity;
+import com.lsm.barrister.ui.activity.ModifyPriceAcivity;
+import com.lsm.barrister.ui.activity.MyAccountActivity;
 import com.lsm.barrister.ui.activity.MyBankCardActivity;
+import com.lsm.barrister.ui.activity.OrderDetailActivity;
 import com.lsm.barrister.ui.activity.SetBankCardActivity;
 import com.lsm.barrister.ui.activity.SettingsActivity;
+import com.lsm.barrister.ui.activity.UpdateCaseActivity;
+import com.lsm.barrister.ui.activity.UploadCaseActivity;
 import com.lsm.barrister.ui.activity.UploadFilesActivity;
 import com.lsm.barrister.ui.activity.WebViewActivity;
 
@@ -221,6 +227,33 @@ public class UIHelper {
         activity.startActivity(intent);
     }
 
+    public static void goOrderDetailActivity(Context context,String id) {
+        Intent intent = new Intent(context, OrderDetailActivity.class);
+        intent.putExtra("id",id);
+        context.startActivity(intent);
+    }
+
+    public static void goMyAccountActivity(Context context) {
+        Intent intent = new Intent(context, MyAccountActivity.class);
+        context.startActivity(intent);
+    }
+
+    public static void goLappListAcitivity(Context context) {
+        Intent intent = new Intent(context, LawAppListActivity.class);
+        context.startActivity(intent);
+    }
+
+    public static void goUpdateCaseActivity(Context context, Case item) {
+        Intent intent = new Intent(context, UpdateCaseActivity.class);
+        intent.putExtra("item",item);
+        context.startActivity(intent);
+    }
+
+    public static void goModifyPriceActivity(Activity activity) {
+        Intent intent = new Intent(activity, ModifyPriceAcivity.class);
+        activity.startActivity(intent);
+    }
+
 
     public interface TrackDialogListener {
         void onClickOK(String mark);
@@ -258,9 +291,9 @@ public class UIHelper {
      * @param file
      */
     public static void goDocActivity(Context context, String title, String file) {
-        Intent intent = new Intent(context, DocActivity.class);
+        Intent intent = new Intent(context, WebViewActivity.class);
         intent.putExtra(Constants.KEY_TITLE, title);
-        intent.putExtra(Constants.KEY_FILE, file);
+        intent.putExtra(Constants.KEY_URL, file);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
@@ -288,4 +321,18 @@ public class UIHelper {
     }
 
 
+    /**
+     * 开启QQ与指定q号聊天
+     * @param context
+     * @param qq
+     */
+    public static void startQQ(Context context,String qq){
+        String url="mqqwpa://im/chat?chat_type=wpa&uin="+qq;
+        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+    }
+
+    public static void goUploadCaseActivity(Context context) {
+        Intent intent = new Intent(context, UploadCaseActivity.class);
+        context.startActivity(intent);
+    }
 }

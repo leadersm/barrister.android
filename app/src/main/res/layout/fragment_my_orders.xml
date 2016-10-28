@@ -16,28 +16,30 @@
             android:layout_gravity="center"
             android:orientation="horizontal">
 
+
             <RadioButton
-                android:id="@+id/consult_tab_bespeak"
+                android:id="@+id/tab_im"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:button="@null"
-                android:gravity="center"
-                android:checked="true"
-                android:padding="10dp"
                 android:background="@drawable/tab_left_selector"
-                android:text="@string/bespeak_consult"
+                android:button="@null"
+                android:checked="true"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="@string/phone_consult"
                 android:textColor="@color/bespeak_tab_textcolor_selector" />
 
             <RadioButton
-                android:id="@+id/consult_tab_phone"
+                android:id="@+id/tab_appointment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/tab_right_selector"
                 android:button="@null"
                 android:gravity="center"
                 android:padding="10dp"
-                android:background="@drawable/tab_right_selector"
-                android:text="@string/phone_consult"
+                android:text="@string/bespeak_consult"
                 android:textColor="@color/bespeak_tab_textcolor_selector" />
+
 
         </RadioGroup>
 
