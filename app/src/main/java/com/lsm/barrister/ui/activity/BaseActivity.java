@@ -8,6 +8,7 @@ import android.view.MenuItem;
 
 import com.lsm.barrister.R;
 import com.lsm.barrister.app.AppManager;
+import com.umeng.analytics.MobclickAgent;
 
 public class BaseActivity extends AppCompatActivity {
     public ProgressDialog progressDialog;
@@ -70,6 +71,15 @@ public class BaseActivity extends AppCompatActivity {
     public void startActivityForResult(Intent intent, int requestCode) {
         super.startActivityForResult(intent, requestCode);
         overridePendingTransition(R.anim.act_start_in, R.anim.act_start_out);
+    }
+
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
 }

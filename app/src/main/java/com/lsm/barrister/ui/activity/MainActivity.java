@@ -15,6 +15,7 @@ import com.androidquery.util.AQUtility;
 import com.lsm.barrister.R;
 import com.lsm.barrister.app.AppConfig;
 import com.lsm.barrister.app.AppManager;
+import com.lsm.barrister.app.Constants;
 import com.lsm.barrister.app.UserHelper;
 import com.lsm.barrister.app.VersionHelper;
 import com.lsm.barrister.data.entity.User;
@@ -24,6 +25,7 @@ import com.lsm.barrister.ui.fragment.LearningCenterFragment;
 import com.lsm.barrister.ui.fragment.MyOrdersFragment;
 import com.lsm.barrister.ui.widget.BottomNavigationItem;
 import com.lsm.barrister.ui.widget.BottomNavigationView;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.HashMap;
 
@@ -66,6 +68,9 @@ public class MainActivity extends BaseActivity {
             }
         },2000);
 
+        //友盟
+        MobclickAgent.setDebugMode(Constants.DEBUG);
+        MobclickAgent.openActivityDurationTrack(false);
     }
 
 
@@ -220,7 +225,7 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
 
         if(user!=null){
@@ -235,7 +240,7 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
     }
 

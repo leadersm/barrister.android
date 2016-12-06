@@ -24,6 +24,88 @@ android {
             abiFilters 'armeabi', 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
         }
 
+        manifestPlaceholders = [UMENG_CHANNEL_VALUE: "default_channel"
+                                , DEBUG            : true]
+
+
+    }
+
+
+    productFlavors.all { flavor ->
+        flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
+    }
+
+    productFlavors {
+        default_channel {}
+//        北京市（京）
+        a_city_beijing{}
+//        天津市（津）
+        a_city_tianjin{}
+//        上海市（沪）
+        a_city_shanghai{}
+//        重庆市（渝）
+        a_city_chongqing{}
+//        河北省（冀）
+        province_hebei{}
+//        河南省（豫）
+        province_henan{}
+//        云南省（云）
+        province_yunnan{}
+//        辽宁省（辽）
+        province_liaoning{}
+//        黑龙江省（黑）
+        province_heilongjiang {}
+//        湖南省（湘）
+        province_hunan {}
+//        安徽省（皖）
+        province_anhui {}
+//        山东省（鲁）
+        province_shandong {}
+//        新疆维吾尔（新）
+        province_xinjiang {}
+//        江苏省（苏）
+        province_jiangsu {}
+//        浙江省（浙）
+        province_zhejiang {}
+//        江西省（赣）
+        province_jiangxi {}
+//        湖北省（鄂）
+        province_hubei {}
+//        广西壮族（桂）
+        province_guangxi {}
+//        甘肃省（甘）
+        province_gansu {}
+//        山西省（晋）
+        province_shanxi {}
+//        内蒙古（蒙）
+        province_neimenggu {}
+//        陕西省（陕）
+        province_sh_an_xi {}
+//        吉林省（吉）
+        province_jilin {}
+//        福建省（闽）
+        province_fujian{}
+//        贵州省（贵）
+        province_guizhou{}
+//        广东省（粤）
+        province_guangdong{}
+//        青海省（青）
+        province_qinghai{}
+//        西藏（藏）
+        province_xizang{}
+//        四川省（川）
+        province_sichuan{}
+//        宁夏回族（宁）
+        province_ningxia{}
+//        海南省（琼）
+        province_hainan{}
+//        台湾省（台）
+        province_taiwan{}
+//        香港特别行政区
+        province_hongkong{}
+//        澳门特别行政区
+        province_aomen{}
+
     }
 
     buildTypes {
@@ -62,4 +144,6 @@ dependencies {
 //    compile 'com.mlsdev.rximagepicker:library:1.3.1'
     compile 'io.reactivex:rxjava:1.1.0'
     compile 'io.reactivex:rxandroid:1.1.0'
+    //umeng analytics
+    compile 'com.umeng.analytics:analytics:latest.integration'
 }

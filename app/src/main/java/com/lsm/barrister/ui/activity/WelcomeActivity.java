@@ -98,13 +98,13 @@ public class WelcomeActivity extends BaseActivity {
 
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         JPushInterface.onPause(this);
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         JPushInterface.onResume(this);
     }

@@ -51,7 +51,7 @@ public class CaseDetailActivity extends BaseActivity {
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
     }
 
@@ -319,7 +319,7 @@ public class CaseDetailActivity extends BaseActivity {
 
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
     }
 

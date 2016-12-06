@@ -303,7 +303,7 @@ public class AvatarDetailActivity extends BaseActivity implements UserHelper.Use
 
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         user = AppConfig.getUser(this);
     }

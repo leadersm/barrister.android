@@ -258,6 +258,9 @@ public class AvaterCenterFragment extends Fragment implements UserHelper.UserAct
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
+        if(!hidden){
+            doGetIsExpert();
+        }
     }
 
     @Override
@@ -265,7 +268,6 @@ public class AvaterCenterFragment extends Fragment implements UserHelper.UserAct
         super.setUserVisibleHint(isVisibleToUser);
         if(isVisibleToUser){
             doGetIsExpert();
-
         }
     }
 

@@ -116,7 +116,8 @@ public class WebViewActivity extends BaseActivity {
         webView.loadUrl(url);
     }
 
-    protected void onPause() {
+    @Override
+    public void onPause() {
         super.onPause();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {

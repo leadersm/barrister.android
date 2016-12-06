@@ -78,7 +78,7 @@ public class OrderDetailActivity extends BaseActivity {
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
 
         if(progressDialog!=null && progressDialog.isShowing())
@@ -523,7 +523,7 @@ public class OrderDetailActivity extends BaseActivity {
 
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         AudioHelper.getInstance().clearListener();
         AudioHelper.getInstance().release();
